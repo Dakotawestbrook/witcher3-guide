@@ -12,6 +12,21 @@ python -m witcher_guide
 - Double-click a quest to mark it done. Progress is saved to `%APPDATA%\witcher_guide\progress.json`.
 - Green `▶` = available now, `○` = blocked (select it to see what to do first), `✖` = missed, `⚠` = missable.
 
+## Launcher and autostart (Windows)
+
+- **Double-click `witcher_guide.pyw`** to start the overlay with no console window.
+- **Start with Windows:** double-click `install_autostart.bat` (or run `python witcher_guide.pyw --install`).
+  It adds a per-user startup entry (no admin rights needed) and runs in *watch* mode: the
+  overlay stays out of sight until Witcher 3 starts, appears while the game is running, and
+  hides again when you quit. F8 still toggles it manually.
+- `python witcher_guide.pyw --install --always` starts it with Windows and keeps it always visible.
+- `python witcher_guide.pyw --status` shows what is installed.
+- **Remove:** double-click `uninstall_autostart.bat` (or `python witcher_guide.pyw --uninstall`).
+- Watch mode looks for the process `witcher3.exe`. If your edition (for example the
+  remaster) uses a different executable name, install with
+  `python witcher_guide.pyw --install --process YourGame.exe`.
+- If you move or delete this folder, or reinstall Python, run the install step again.
+
 ## Quest data
 
 `witcher_guide/data/quests.json` holds 262 entries across White Orchard, Velen,

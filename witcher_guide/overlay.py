@@ -206,13 +206,20 @@ class Overlay:
         style = style | WS_EX_TRANSPARENT if on else style & ~WS_EX_TRANSPARENT
         u.SetWindowLongW(h, GWL_EXSTYLE, style)
 
+    def set_visible(self, visible):
+        self.visible = visible
+        (self.root.deiconify if visible else self.root.withdraw)()
+
     def _poll(self):
         try:
             while True:
                 ev = self.events.get_nowait()
                 if ev == "toggle":
-                    self.visible = not self.visible
-                    (self.root.deiconify if self.visible else self.root.withdraw)()
+                    self.set_visible(not self.visible)
+                elif ev == "show":
+                    self.set_visible(True)
+                elif ev == "hide":
+                    self.set_visible(False)
                 elif ev == "lock":
                     self._set_click_through(not self.locked)
         except queue.Empty:
@@ -220,14 +227,23 @@ class Overlay:
         self.root.after(80, self._poll)
 
 
-def main():
+def run(on_ready=None, start_hidden=False):
+    """Create the overlay and run the Tk loop. `on_ready(overlay)` runs once it exists."""
     root = tk.Tk()
     ov = Overlay(root)
+    if start_hidden:
+        ov.set_visible(False)
     if not IS_WINDOWS:  # dev fallback: no global hotkeys, so use local keys
         root.bind("<F8>", lambda e: ov.events.put("toggle"))
         root.bind("<F9>", lambda e: ov.events.put("lock"))
     root.bind("<Escape>", lambda e: root.destroy())
+    if on_ready:
+        on_ready(ov)
     root.mainloop()
+
+
+def main():
+    run()
 
 
 if __name__ == "__main__":
