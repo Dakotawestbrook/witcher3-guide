@@ -8,7 +8,8 @@ python -m witcher_guide
 ```
 
 - Run Witcher 3 in **borderless windowed** mode (exclusive fullscreen hides overlays).
-- **F8** shows/hides the overlay, **F9** locks it (click-through, so the mouse goes to the game) or unlocks it, **F10** quits it. The ✕ in the title bar also closes it (unlock with F9 first if it is locked). Global hotkeys are Windows only; elsewhere F8/F9 work while the overlay has focus.
+- **F8** shows/hides the overlay, **F9** locks it (click-through, so the mouse goes to the game) or unlocks it, **F10** quits it. The ✕ in the title bar also closes it (unlock with F9 first if it is locked).
+- **F11** switches between a fully transparent overlay (only the text is visible, and you can click through everything else) and a dark backing panel, which is easier to read over bright or busy scenes. Your choice is remembered in `settings.json` next to `progress.json`. On Windows only; elsewhere the window stays dark. Global hotkeys are Windows only; elsewhere F8/F9 work while the overlay has focus.
 - Double-click a quest to mark it done. Progress is saved to `%APPDATA%\witcher_guide\progress.json`.
 - Green `▶` = available now, `○` = blocked (select it to see what to do first), `✖` = missed, `⚠` = missable.
 
