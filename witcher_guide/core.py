@@ -173,7 +173,7 @@ def filter_decisions(decisions, text="", goal="all"):
     for d in decisions:
         if goal in _GOAL_FIELD and not d.get(_GOAL_FIELD[goal]):
             continue
-        hay = " ".join([d["name"], d["situation"], d.get("note", "")] +
+        hay = " ".join([d["name"], d["kind"], d["situation"], d.get("note", "")] +
                        [o["label"] + " " + o["result"] for o in d["options"]]).lower()
         if text and text not in hay:
             continue

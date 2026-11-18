@@ -311,34 +311,38 @@
    "quests": [
     "blood"
    ],
-   "situation": "Later in the same quest you decide whether to take Ciri to the emperor.",
+   "situation": "Later in the same quest you decide whether to take Ciri to the emperor. Emhyr then offers to pay you 2000 crowns.",
    "options": [
     {
      "label": "Don't go to the emperor; go to Velen instead",
      "type": "action",
-     "result": "Required for the witcher ending."
+     "result": "Required for the witcher ending (you are taken to the emperor from there anyway)."
     },
     {
      "label": "Go to the emperor and refuse his reward",
      "type": "action",
-     "result": "Used for the empress ending."
+     "result": "Used for the empress ending. You are not left empty-handed: you get a new horse instead of the money."
     },
     {
-     "label": "Go to the emperor and take the money",
+     "label": "Go to the emperor and take the 2000 crowns",
      "type": "action",
      "result": "Negative choice (counts toward Ciri's death)."
     }
    ],
-   "best_rewards": null,
+   "best_rewards": {
+    "pick": "Take the 2000 crowns",
+    "why": "It is the only option that pays money, but it counts against Ciri.",
+    "basis": "stated"
+   },
    "best_moral": null,
    "best_outcome": {
     "pick": "Velen (witcher ending) or refuse the reward (empress ending)",
     "why": "Only taking the money counts against Ciri.",
     "basis": "stated"
    },
-   "note": "This is the one mandatory choice for the witcher ending.",
+   "note": "Rewards and Ciri's outcome point opposite ways here. This is the one mandatory choice for the witcher ending.",
    "affects_ending": true,
-   "source": "gamepressure.com: Ciri's Fate"
+   "source": "gamepressure.com: Ciri's Fate; gamepressure.com: main quest walkthroughs"
   },
   {
    "id": "ciri_lodge",
@@ -581,33 +585,38 @@
     "for_the_advancement_of_learning",
     "an_invitation_from_keira_metz"
    ],
-   "situation": "On Fyke Isle you decide what happens to Keira.",
+   "situation": "On Fyke Isle you meet Keira at the tower and choose how the conversation ends. Choosing carefully matters because you can lose her as an ally.",
    "options": [
     {
-     "label": "Send her to Kaer Morhen",
-     "type": "dialogue",
-     "result": "She survives and becomes an ally in the Battle of Kaer Morhen (needed for an achievement)."
+     "label": "Don't let her take the notes (first dialogue option)",
+     "type": "action",
+     "result": "A duel with Keira. When you kill her, Geralt destroys the notes."
     },
     {
-     "label": "Let her die or skip her arc",
-     "type": "action",
-     "result": "Later unlocks the often-missed quest A Final Kindness."
+     "label": "Convince her to change her mind (second dialogue option)",
+     "type": "dialogue",
+     "result": "You persuade her the plan is too risky. Instead of going to Radovid she moves to Kaer Morhen, and she is guaranteed to take part in the battle there."
+    },
+    {
+     "label": "Let her take the notes (third option, the end-conversation icon)",
+     "type": "dialogue",
+     "result": "She teleports to King Radovid without a fight. She later dies, and this unlocks the often-missed quest A Final Kindness."
     }
    ],
    "best_rewards": null,
    "best_moral": {
-    "pick": "Send her to Kaer Morhen",
+    "pick": "Convince her to change her mind",
     "why": "Keeps her alive.",
     "basis": "judgement"
    },
    "best_outcome": {
-    "pick": "Send her to Kaer Morhen",
-    "why": "Recommended: she fights with you in the battle and the arc ends on friendly terms.",
+    "pick": "Convince her to change her mind",
+    "why": "Recommended: it guarantees her help in the Battle of Kaer Morhen (needed for an achievement).",
     "basis": "stated"
    },
    "note": "",
    "affects_ending": false,
-   "source": "game-checklists.com; allthings.how"
+   "source": "game-checklists.com; allthings.how; gamepressure.com: side quest and contract walkthroughs; gamepressure.com: Keira Metz"
   },
   {
    "id": "nithing",
@@ -2039,6 +2048,981 @@
    "note": "",
    "affects_ending": false,
    "source": "game-checklists.com"
+  },
+  {
+   "id": "junior_roene",
+   "name": "Get Junior: Gustaw Roene",
+   "kind": "main",
+   "quests": [
+    "junior"
+   ],
+   "situation": "In the fight arena you defeat Gustaw Roene.",
+   "options": [
+    {
+     "label": "Spare him after winning",
+     "type": "action",
+     "result": "He helps you against the later enemies in the arena."
+    },
+    {
+     "label": "Don't spare him",
+     "type": "action",
+     "result": "You fight those enemies without his help."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Spare him",
+    "why": "He helps you fight the later enemies (wild dogs, wyvern, endregas, Boris the bear).",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs"
+  },
+  {
+   "id": "junior_rico",
+   "name": "Get Junior: Rico",
+   "kind": "main",
+   "quests": [
+    "junior",
+    "honor_among_thieves"
+   ],
+   "situation": "If you raid the casino aggressively you find the imprisoned spy Rico, who has information on Junior's deal with the Redanians.",
+   "options": [
+    {
+     "label": "Free Rico",
+     "type": "action",
+     "result": "Starts the side quest Honor Among Thieves. Visit Bedlam some day for a reward."
+    },
+    {
+     "label": "Leave him",
+     "type": "action",
+     "result": "No side quest and no reward."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Free Rico",
+    "why": "You can collect a reward at Bedlam later.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Free Rico",
+    "why": "He is a prisoner.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs"
+  },
+  {
+   "id": "junior_fate",
+   "name": "Get Junior: Junior's fate",
+   "kind": "main",
+   "quests": [
+    "junior"
+   ],
+   "situation": "In the final confrontation you decide whether Junior lives. The game's ending mentions this plot.",
+   "options": [
+    {
+     "label": "Kill Junior",
+     "type": "action",
+     "result": "The doppler Dudu takes his place and the criminal group becomes harmless under him."
+    },
+    {
+     "label": "Spare Junior",
+     "type": "action",
+     "result": "He survives but is demoted and becomes harmless."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Both options are harmless for the city, and the guide does not rate either.",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs; gamepressure.com: Major supporting characters"
+  },
+  {
+   "id": "sara_godling",
+   "name": "Novigrad Dreaming: the godling Sara",
+   "kind": "main",
+   "quests": [
+    "dreaming"
+   ],
+   "situation": "A godling named Sara has moved into Corrine Tilly's house.",
+   "options": [
+    {
+     "label": "Make an agreement with Sara",
+     "type": "dialogue",
+     "result": "You then tell the owner the house is haunted or tell her the truth; it makes no difference. Sara befriends Corrine."
+    },
+    {
+     "label": "Chase her away",
+     "type": "action",
+     "result": "Buy Burdock from the herbalist and burn it in the stove with Igni. The owner promises you part of the profit from selling the house. Sara goes to the swamps and befriends someone else."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Chase her away",
+    "why": "The owner promises you some of the profit from selling the house.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Make an agreement with Sara",
+    "why": "Sara and Corrine become friends.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "The guide calls both outcomes positive.",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs; gamepressure.com: Major supporting characters"
+  },
+  {
+   "id": "mages_fate",
+   "name": "Now or Never: the mages of Novigrad",
+   "kind": "side",
+   "quests": [
+    "now_or_never"
+   ],
+   "situation": "Triss asks you to help the mages escape Novigrad. You decide the fate of the mages by completing or ignoring the quest.",
+   "options": [
+    {
+     "label": "Complete the quest (help Triss and the mages escape)",
+     "type": "action",
+     "result": "The mages survive, but hostility toward non-humans grows."
+    },
+    {
+     "label": "Ignore the quest",
+     "type": "action",
+     "result": "The mages are captured and killed in the slaughter in Novigrad."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Complete the quest",
+    "why": "The mages survive.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "The guide says both endings are bad. The quest also has the Triss romance choices (see the Triss entry) and must be started before The Isle of Mists.",
+   "affects_ending": true,
+   "source": "gamepressure.com: main quest walkthroughs; gamepressure.com: Major supporting characters"
+  },
+  {
+   "id": "reuven_spy",
+   "name": "Count Reuven's Treasure: the spy",
+   "kind": "main",
+   "quests": [
+    "reuven"
+   ],
+   "situation": "Triss tortures Menge's man for information and you learn Dandelion is on the temple island.",
+   "options": [
+    {
+     "label": "Kill the spy",
+     "type": "action",
+     "result": "He dies."
+    },
+    {
+     "label": "Wipe his memory",
+     "type": "action",
+     "result": "He lives and forgets."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Wipe his memory",
+    "why": "He is spared.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "Only comes up if you attack Menge's men (Option B).",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs"
+  },
+  {
+   "id": "flowers_vespula",
+   "name": "Broken Flowers: Vespula",
+   "kind": "main",
+   "quests": [
+    "flowers"
+   ],
+   "situation": "You meet Vespula, who is being held, and have three ways to deal with her captors.",
+   "options": [
+    {
+     "label": "Defeat them",
+     "type": "action",
+     "result": "A fight."
+    },
+    {
+     "label": "Lie that the woman is under the King of Beggars' protection",
+     "type": "dialogue",
+     "result": "No fight and no cost."
+    },
+    {
+     "label": "Pay 200 crowns for her",
+     "type": "dialogue",
+     "result": "It costs 200 crowns."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Lie about the King of Beggars",
+    "why": "It costs nothing and avoids the fight.",
+    "basis": "judgement"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs"
+  },
+  {
+   "id": "pyres_password",
+   "name": "Pyres of Novigrad: the password",
+   "kind": "main",
+   "quests": [
+    "pyres"
+   ],
+   "situation": "A thief leads you toward a trap or to the Putrid Grove and gives you a password.",
+   "options": [
+    {
+     "label": "Say the password",
+     "type": "dialogue",
+     "result": "Free, and the beggars' path is easier and quicker."
+    },
+    {
+     "label": "Don't give the password and pay 50 crowns",
+     "type": "dialogue",
+     "result": "It costs 50 crowns."
+    },
+    {
+     "label": "Don't give the password and use Axii",
+     "type": "action",
+     "result": "You get extra experience."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use Axii",
+    "why": "Extra experience and it costs nothing.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs"
+  },
+  {
+   "id": "practicum_succubus",
+   "name": "Practicum in Advanced Alchemy: the succubus",
+   "kind": "side",
+   "quests": [
+    "practicum_in_advanced_alchemy"
+   ],
+   "situation": "A succubus took the pimpernel plant you need.",
+   "options": [
+    {
+     "label": "Kill her",
+     "type": "action",
+     "result": "You obtain her ingredients and mutagens, then follow the path to the cave where the pimpernel is."
+    },
+    {
+     "label": "Spare her",
+     "type": "action",
+     "result": "You avoid the fight and are guided to the same cave to take the plant."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Kill her",
+    "why": "You get her ingredients and mutagens.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Spare her",
+    "why": "You get what you need without a fight.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs"
+  },
+  {
+   "id": "kaer_morhen_crew",
+   "name": "Brothers in Arms: who comes to Kaer Morhen",
+   "kind": "main",
+   "quests": [
+    "battle",
+    "brothers_in_arms_velen",
+    "brothers_in_arms_novigrad",
+    "brothers_in_arms_skellige"
+   ],
+   "situation": "You recruit allies for the battle with the Wild Hunt. Some need specific choices long before. Recruiting at least seven gives the \"Full Crew\" trophy.",
+   "options": [
+    {
+     "label": "Ermion",
+     "type": "action",
+     "result": "Meet her at Kaer Trolde on Skellige after reaching act 2 and ask for help."
+    },
+    {
+     "label": "Hjalmar",
+     "type": "action",
+     "result": "Meet him at Kaer Trolde after reaching act 2 and ask for help."
+    },
+    {
+     "label": "Keira Metz",
+     "type": "dialogue",
+     "result": "Finish her side quests, and in For the Advancement of Learning convince her to go to Kaer Morhen. Do not attack her and do not let her walk away."
+    },
+    {
+     "label": "Letho",
+     "type": "action",
+     "result": "Finish The Fall of the House of Reardon. He cannot be recruited if he died in Witcher 2."
+    },
+    {
+     "label": "Triss Merigold",
+     "type": "action",
+     "result": "Finish all her side quests; Now or Never is the most important."
+    },
+    {
+     "label": "Vernon Roche",
+     "type": "action",
+     "result": "Finish his side quests; An Eye for an Eye is the most important. After act 2 meet him at the Temerian partisan hideout and ask."
+    },
+    {
+     "label": "Ves",
+     "type": "action",
+     "result": "She joins once you have recruited Vernon Roche."
+    },
+    {
+     "label": "Zoltan Chivay",
+     "type": "action",
+     "result": "Finish his side quests; An Eye for an Eye is the most important. After act 2 meet him at Rosemary and Thyme and ask."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Recruit at least seven allies",
+    "why": "That unlocks the Full Crew trophy.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "In some cases a wrong decision makes an ally impossible to get. The guide specifically warns about Keira.",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs; game-checklists.com"
+  },
+  {
+   "id": "yen_romance_steps",
+   "name": "Yennefer: the small romance choices",
+   "kind": "romance",
+   "quests": [
+    "the_last_wish"
+   ],
+   "situation": "Besides The Last Wish, Yennefer has several smaller moments where you choose how close to get.",
+   "options": [
+    {
+     "label": "At the Skellige wake: refuse a drink",
+     "type": "dialogue",
+     "result": "Gains Yennefer's approval."
+    },
+    {
+     "label": "At the wake: protect her dignity by brawling with an old man",
+     "type": "action",
+     "result": "You then get pushed to drink again."
+    },
+    {
+     "label": "After the grotto battle: pick \"I want to kiss you\"",
+     "type": "dialogue",
+     "result": "Unlocks a love scene. Pick the option that clearly says you want to get close."
+    },
+    {
+     "label": "Convince her the wake can wait while she fixes her dress",
+     "type": "dialogue",
+     "result": "A love scene on a unicorn, then you return to the wake."
+    },
+    {
+     "label": "At the Kaer Morhen feast: go to her chamber",
+     "type": "dialogue",
+     "result": "The two have some fun upstairs. If you refuse you return to your colleagues."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "These do not decide Triss or Yennefer by themselves (see the Triss or Yennefer entry).",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs; gamepressure.com: Triss and Yennefer"
+  },
+  {
+   "id": "triss_romance_steps",
+   "name": "Triss: the romance choices",
+   "kind": "romance",
+   "quests": [
+    "a_matter_of_life_and_death",
+    "now_or_never"
+   ],
+   "situation": "Triss's romance builds over two quests.",
+   "options": [
+    {
+     "label": "At the mask ball (A Matter of Life and Death): kiss her in the garden",
+     "type": "action",
+     "result": "A step toward the romance. You only have a few seconds to react."
+    },
+    {
+     "label": "At the ball: beat up the guest who harasses her, or just walk away",
+     "type": "action",
+     "result": "You can do either when he harasses Triss."
+    },
+    {
+     "label": "At the harbor after the Katakan (Now or Never): tell her you love her",
+     "type": "dialogue",
+     "result": "Your last chance to start the relationship. It affects the ending."
+    },
+    {
+     "label": "Hesitate (the middle option)",
+     "type": "dialogue",
+     "result": "It counts as refusing."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Kiss her at the ball and say you love her at the harbor",
+    "why": "These are the steps that start the Triss romance, if you choose Triss.",
+    "basis": "stated"
+   },
+   "note": "Do not also tell Yennefer you love her: romancing both ends with neither. Both quests must be done before The Isle of Mists.",
+   "affects_ending": true,
+   "source": "gamepressure.com: main quest walkthroughs; gamepressure.com: Triss and Yennefer; allthings.how"
+  },
+  {
+   "id": "forefathers_eve",
+   "name": "Forefathers' Eve: the ritual",
+   "kind": "side",
+   "quests": [
+    "forefathers_eve"
+   ],
+   "situation": "Witch Hunters arrive during the Pellar's ritual on Fyke Isle.",
+   "options": [
+    {
+     "label": "Say you won't take part and let the hunters stop the ritual",
+     "type": "dialogue",
+     "result": "The quest ends there."
+    },
+    {
+     "label": "Help the Pellar",
+     "type": "action",
+     "result": "You fight the newcomers, then wraiths, and are then tasked with finding the corpse of the Pellar's father on the swamps."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "redania_crystal",
+   "name": "Redania's Most Wanted: the crystal",
+   "kind": "side",
+   "quests": [
+    "redanias_most_wanted"
+   ],
+   "situation": "You bring a crystal back to King Radovid, and Witch Hunters wait at the exit.",
+   "options": [
+    {
+     "label": "Give Radovid the crystal",
+     "type": "dialogue",
+     "result": "He pays you 135 crowns."
+    },
+    {
+     "label": "Refuse, or lie that you found nothing",
+     "type": "dialogue",
+     "result": "The Witch Hunters attack you, and you get no payment."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Give Radovid the crystal",
+    "why": "He pays you 135 crowns.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Redania's Most Wanted is one of the three quests needed for Reason of State.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "carnal_eustace",
+   "name": "Carnal Sins: Eustace",
+   "kind": "side",
+   "quests": [
+    "carnal_sins"
+   ],
+   "situation": "To make the corpse collector Eustace talk:",
+   "options": [
+    {
+     "label": "Pay him 200 crowns",
+     "type": "dialogue",
+     "result": "It costs 200 crowns."
+    },
+    {
+     "label": "Use the Axii sign",
+     "type": "action",
+     "result": "He talks for free."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use Axii",
+    "why": "It saves 200 crowns.",
+    "basis": "judgement"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "carnal_client",
+   "name": "Carnal Sins: the client at the brothel",
+   "kind": "side",
+   "quests": [
+    "carnal_sins"
+   ],
+   "situation": "You find the girl and one of the clients in the top room.",
+   "options": [
+    {
+     "label": "Kill him",
+     "type": "action",
+     "result": "You receive diagrams."
+    },
+    {
+     "label": "Use the Axii sign on him",
+     "type": "action",
+     "result": "No diagrams."
+    },
+    {
+     "label": "Ignore the situation",
+     "type": "action",
+     "result": "No diagrams."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Kill him",
+    "why": "You receive diagrams.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "lambert_elf",
+   "name": "Following the Thread: the elf in the inn",
+   "kind": "side",
+   "quests": [
+    "following_the_thread"
+   ],
+   "situation": "You talk to an elf in the inn, with Lambert nearby.",
+   "options": [
+    {
+     "label": "Say you don't care",
+     "type": "dialogue",
+     "result": "You must kill her and her four companions (level 11)."
+    },
+    {
+     "label": "Say not to kill her",
+     "type": "dialogue",
+     "result": "You walk away in peace."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Say not to kill her",
+    "why": "Nobody dies.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "This quest is lost when you start Ugly Baby.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "defender_faith",
+   "name": "Defender of the Faith: the vandals",
+   "kind": "side",
+   "quests": [
+    "defender_of_the_faith"
+   ],
+   "situation": "At the last shrine you meet the vandals who destroyed it.",
+   "options": [
+    {
+     "label": "Defeat them",
+     "type": "action",
+     "result": "You can loot their bodies and finish the quest."
+    },
+    {
+     "label": "Walk away without interfering",
+     "type": "dialogue",
+     "result": "You fail the quest."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Defeat them",
+    "why": "It is the only way to finish the quest, and you can loot the bodies.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "gw_baron",
+   "name": "Missable Gwent card: the Bloody Baron (Sigismund Dijkstra)",
+   "kind": "gwent",
+   "quests": [
+    "family1",
+    "family2"
+   ],
+   "situation": "You can win the Sigismund Dijkstra card (Northern Realms) by beating the Baron at Gwent at Crow's Perch, part of Gwent: Velen Players.",
+   "options": [
+    {
+     "label": "Play the Baron before Family Matters ends",
+     "type": "action",
+     "result": "You win the Sigismund Dijkstra card."
+    },
+    {
+     "label": "Wait until after Family Matters",
+     "type": "action",
+     "result": "He leaves Crow's Perch, so you can't win the card from him."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Play the Baron before Family Matters ends",
+    "why": "After that he leaves Crow's Perch and the card is lost.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards)"
+  },
+  {
+   "id": "gw_reason",
+   "name": "Missable Gwent cards: before Reason of State",
+   "kind": "gwent",
+   "quests": [
+    "reason_of_state",
+    "blinding",
+    "an_eye_for_an_eye"
+   ],
+   "situation": "Three people you can beat at Gwent may die or become unavailable depending on your choices in Reason of State.",
+   "options": [
+    {
+     "label": "Dijkstra: beat him in his bathhouse office in Novigrad",
+     "type": "action",
+     "result": "You win the Esterad Thyssen card (Northern Realms), part of Gwent: Big City Players. His Francesca Findabair: The Beautiful reward for that chain also needs him alive."
+    },
+    {
+     "label": "Thaler: beat him just after saving him in the Reason of State preparation quest",
+     "type": "action",
+     "result": "You win the Geralt of Rivia card (Neutral), part of Gwent: Playing Thaler or Gwent: Old Pals."
+    },
+    {
+     "label": "Vernon Roche: beat him at the Temerian partisan hideout",
+     "type": "action",
+     "result": "You win the Saesenthessis card (Scoia'tael), part of Gwent: Old Pals."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Play all three before Reason of State",
+    "why": "Depending on your choices there, either Dijkstra or Roche and Thaler die.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards)"
+  },
+  {
+   "id": "gw_olivier",
+   "name": "Missable Gwent card: Olivier at the Kingfisher",
+   "kind": "gwent",
+   "quests": [
+    "now_or_never"
+   ],
+   "situation": "Olivier, the innkeeper of the Kingfisher in Novigrad, has the Tibor Eggebracht card (Nilfgaard), part of Gwent: Playing Innkeeps.",
+   "options": [
+    {
+     "label": "Beat Olivier before you start Now or Never",
+     "type": "action",
+     "result": "You win the Tibor Eggebracht card."
+    },
+    {
+     "label": "Start Now or Never first",
+     "type": "action",
+     "result": "The card is missed."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Beat Olivier before starting Now or Never",
+    "why": "The checklist lists it among the missable cards.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards)"
+  },
+  {
+   "id": "gw_vegelbud",
+   "name": "Missable Gwent cards: the Vegelbud party tournament",
+   "kind": "gwent",
+   "quests": [
+    "a_matter_of_life_and_death"
+   ],
+   "situation": "At the Vegelbud Residence mask ball, in A Matter of Life and Death, there is a Gwent tournament in the courtyard (three players).",
+   "options": [
+    {
+     "label": "Win the tournament",
+     "type": "action",
+     "result": "You get Dandelion (Neutral), Milva (Scoia'tael) and Vampire: Bruxa (Scoia'tael)."
+    },
+    {
+     "label": "Skip it or lose",
+     "type": "action",
+     "result": "You only get one shot, so those three cards are missed."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Win the tournament",
+    "why": "It is the only chance for Dandelion, Milva and Vampire: Bruxa.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards)"
+  },
+  {
+   "id": "gw_high_stakes",
+   "name": "Missable Gwent cards: the High Stakes tournament",
+   "kind": "gwent",
+   "quests": [
+    "g_high_stakes"
+   ],
+   "situation": "Gwent: High Stakes is a tournament at the Passiflora in Novigrad. Entry is 1,000 crowns, so save first.",
+   "options": [
+    {
+     "label": "Beat Bernard Tulle",
+     "type": "action",
+     "result": "You win Foltest: The Steel-Forged."
+    },
+    {
+     "label": "Beat Sasha",
+     "type": "action",
+     "result": "You win Emhyr var Emreis: The Relentless."
+    },
+    {
+     "label": "Beat Finneas",
+     "type": "action",
+     "result": "You win Francesca Findabair: Queen of Dol Blathanna."
+    },
+    {
+     "label": "Beat Count Tybalt",
+     "type": "action",
+     "result": "You win Eredin: Bringer of Death."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Win every match",
+    "why": "Each match pays one leader card. Lose a match and that card is gone.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Don't walk out of the Passiflora in the middle of the tournament. The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards); allthings.how"
+  },
+  {
+   "id": "gw_dangerous_game",
+   "name": "Missable Gwent cards: A Dangerous Game",
+   "kind": "gwent",
+   "quests": [
+    "a_dangerous_game"
+   ],
+   "situation": "Zoltan asks you to help complete his Gwent collection by retrieving several cards.",
+   "options": [
+    {
+     "label": "Do the quest",
+     "type": "action",
+     "result": "You get John Natalis (Northern Realms) and Isengrim Faoiltiarna, which only come from this quest, and Fringilla Vigo (Nilfgaard)."
+    },
+    {
+     "label": "Skip it",
+     "type": "action",
+     "result": "John Natalis and Isengrim are missed. Fringilla Vigo can still drop from the prison warden you defeat in The Great Escape."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Do A Dangerous Game",
+    "why": "John Natalis and Isengrim Faoiltiarna come from nowhere else.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Also pick up the green statuette here, or you cannot finish The Soldier Statuette later. The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards); allthings.how"
+  },
+  {
+   "id": "gw_iorveth",
+   "name": "Missable Gwent card: Iorveth (Shock Therapy)",
+   "kind": "gwent",
+   "quests": [
+    "shock_therapy"
+   ],
+   "situation": "Iorveth (Scoia'tael) is the reward for the Shock Therapy side quest on Skellige, where Geralt scares a druid into breaking his vow of silence.",
+   "options": [
+    {
+     "label": "Finish Shock Therapy",
+     "type": "action",
+     "result": "You get the Iorveth card."
+    },
+    {
+     "label": "Skip it",
+     "type": "action",
+     "result": "The card is missed."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Finish Shock Therapy",
+    "why": "The checklist lists the card among the missable ones.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The checklist does not say exactly when the quest is lost, so do it before moving on from Skellige. The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards)"
+  },
+  {
+   "id": "gw_caged_merchant",
+   "name": "Missable Gwent cards: the caged merchant",
+   "kind": "gwent",
+   "quests": [
+    "g_vendors"
+   ],
+   "situation": "A merchant is caged near Boatmakers' Hut in Velen.",
+   "options": [
+    {
+     "label": "Free the merchant",
+     "type": "action",
+     "result": "He moves to Claywich and is the only one selling Puttkammer, Sweers, Black Infantry Archer #2 and Etolian Auxiliary Archers #2 (all Nilfgaard)."
+    },
+    {
+     "label": "Leave him",
+     "type": "action",
+     "result": "Those four cards can't be bought."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Free the merchant",
+    "why": "He is the only seller of four Nilfgaard cards.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Free the merchant",
+    "why": "He is caged.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards)"
+  },
+  {
+   "id": "gw_not_missable",
+   "name": "Gwent cards that look missable but aren't",
+   "kind": "gwent",
+   "quests": [],
+   "situation": "A few cards look like they can be lost, but the checklist says they can't.",
+   "options": [
+    {
+     "label": "Foltest: The Siegemaster (Vizima)",
+     "type": "action",
+     "result": "Beat the Nilfgaardian Nobleman. You return to Vizima before the Battle of Kaer Morhen, so you can still do it."
+    },
+    {
+     "label": "Zoltan Chivay",
+     "type": "action",
+     "result": "Normally from Aldert Geert in the White Orchard inn. If he dies, loot the card from his body under the Hanged Man's Tree."
+    },
+    {
+     "label": "Draug",
+     "type": "action",
+     "result": "Beat Crach an Craite in Gwent: Skellige Style. If you haven't played him before the battle in On Thin Ice, he gives you the card automatically."
+    },
+    {
+     "label": "Vampire: Katakan",
+     "type": "action",
+     "result": "From beating Madman Lugos in Gwent: Skellige Style, or, if he dies during The Sunstone, loot it from his house at Kaer Muire."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "No need to rush these. The Gwent checklist says 20 base-game cards can be missed; everything else stays available, even after the story ends.",
+   "affects_ending": false,
+   "source": "game-checklists.com: Gwent cards checklist (Missable Gwent Cards)"
+  },
+  {
+   "id": "gw_hos",
+   "name": "Hearts of Stone: Gwent players you meet only once",
+   "kind": "gwent",
+   "quests": [
+    "hos_open_sesame",
+    "hos_whatsoever_a_man_soweth"
+   ],
+   "situation": "In Hearts of Stone there are no random Gwent players: every opponent is tied to a quest, and in most cases you meet them only once.",
+   "options": [
+    {
+     "label": "Robert Hilbert",
+     "type": "action",
+     "result": "Beat him during Open Sesame! at the Borsodi auction house."
+    },
+    {
+     "label": "Shani",
+     "type": "action",
+     "result": "Beat her during the main story after visiting the professor in Whatsoever a Man Soweth..."
+    },
+    {
+     "label": "Olgierd von Everec",
+     "type": "action",
+     "result": "Beat him at Garin Estate after progressing the main story."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Play whenever you get the chance",
+    "why": "The guide says you usually meet each player only once, in one quest.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The checklist does not flag the Hearts of Stone cards as missable; this follows gamepressure's advice to play whenever you can.",
+   "affects_ending": false,
+   "source": "gamepressure.com: Gwent (Hearts of Stone); game-checklists.com: DLC Gwent cards checklist"
   }
  ]
 }

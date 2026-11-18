@@ -307,7 +307,8 @@ class Overlay:
         for d in rows:
             conflict = core.has_conflict(d)
             tags = (["missable"] if conflict else []) + (["tracked"] if set(d["quests"]) & tracked else [])
-            suffix = "  \u21C4" if conflict else ("  \u2022 ending" if d.get("affects_ending") else "")
+            suffix = ("  \u21C4" if conflict else "") + ("  \u2022 ending" if d.get("affects_ending") else "") + (
+                "  \u2022 gwent" if d["kind"] == "gwent" and "gwent" not in d["name"].lower() else "")
             self.tree.insert("", "end", iid="dec:" + d["id"], text=f' \u2696  {d["name"]}{suffix}', tags=tags)
 
     def _cycle_goal(self):

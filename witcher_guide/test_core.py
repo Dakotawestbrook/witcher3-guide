@@ -131,7 +131,7 @@ class TestCore(unittest.TestCase):
     # ---- Decisions ----
     def test_decisions_data_integrity(self):
         decs = core.load_decisions()
-        self.assertGreaterEqual(len(decs), 60)
+        self.assertGreaterEqual(len(decs), 90)
         self.assertEqual(len({d["id"] for d in decs}), len(decs), "duplicate decision ids")
         for d in decs:
             self.assertTrue(d["source"], d["id"])
@@ -192,6 +192,38 @@ class TestCore(unittest.TestCase):
             for f in ("best_rewards", "best_moral", "best_outcome"):
                 if d.get(f) and d[f]["basis"] == "stated":
                     self.assertTrue(d["source"], d["id"])
+
+    def test_every_missable_gwent_card_on_the_checklist_is_covered(self):
+        decs = [d for d in core.load_decisions() if d["kind"] == "gwent"]
+        self.assertGreaterEqual(len(decs), 9)
+        text = " ".join(" ".join([d["name"], d["situation"], d.get("note", "")] + [o["label"] + " " + o["result"] for o in d["options"]])
+                        for d in decs)
+        # the 20 base-game cards the Gwent checklist lists as missable (plus the one that depends on Dijkstra)
+        for card in ("Sigismund Dijkstra", "Esterad Thyssen", "Geralt of Rivia", "Saesenthessis", "Tibor Eggebracht",
+                     "Dandelion", "Milva", "Vampire: Bruxa", "Foltest: The Steel-Forged", "Emhyr var Emreis: The Relentless",
+                     "Francesca Findabair: Queen of Dol Blathanna", "Eredin: Bringer of Death", "John Natalis",
+                     "Isengrim Faoiltiarna", "Fringilla Vigo", "Iorveth", "Puttkammer", "Sweers",
+                     "Black Infantry Archer #2", "Etolian Auxiliary Archers #2", "Francesca Findabair: The Beautiful"):
+            self.assertIn(card, text, f"missable card not covered: {card}")
+        by = {d["id"]: d for d in decs}
+        # each missable entry names the cutoff and says what is lost
+        self.assertIn("Family Matters", by["gw_baron"]["best_rewards"]["pick"])
+        self.assertIn("Reason of State", by["gw_reason"]["best_rewards"]["pick"])
+        self.assertIn("Now or Never", by["gw_olivier"]["best_rewards"]["pick"])
+        self.assertIn("one shot", " ".join(o["result"] for o in by["gw_vegelbud"]["options"]))
+        self.assertIn("Lose a match", by["gw_high_stakes"]["best_rewards"]["why"])
+        self.assertEqual(len(by["gw_high_stakes"]["options"]), 4)  # four leader cards, one per opponent
+        # the "looks missable but isn't" entry tells you not to worry about four cards
+        self.assertEqual(len(by["gw_not_missable"]["options"]), 4)
+        # linked quests exist (or are empty for the reassurance entry)
+        self.assertEqual(by["gw_not_missable"]["quests"], [])
+        self.assertTrue(by["gw_dangerous_game"]["quests"] == ["a_dangerous_game"])
+
+    def test_searching_gwent_finds_the_gwent_entries(self):
+        decs = core.load_decisions()
+        found = {d["id"] for d in core.filter_decisions(decs, "gwent")}
+        self.assertTrue({d["id"] for d in decs if d["kind"] == "gwent"} <= found)
+        self.assertIn("gw_baron", {d["id"] for d in core.decisions_for(decs, {"family1"})})
 
     def test_decisions_cover_the_dlcs_and_endings(self):
         kinds = {d["kind"] for d in core.load_decisions()}
