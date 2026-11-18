@@ -18,6 +18,7 @@ python -m witcher_guide
 - Double-click a quest, or select it and press **Space**, to mark it done. Progress is saved to `%APPDATA%\witcher_guide\progress.json`.
 - **Progress:** the title bar shows how many quests are done in this tab (and overall when the window is wide enough). The active tab is bold and underlined, and a tab turns green when every quest in it is done. Hover a tab to see its count.
 - **Show filter:** the **Show** dropdown next to the search box narrows the list to *To do*, *Available now*, *Missable* or *Done*. Your choice is remembered. In the Decisions tab the same spot is **Best for** (everything, rewards, morals or the outcome).
+- **Scrolling:** the mouse wheel scrolls the list from anywhere over the overlay, including the see-through gaps between lines (in transparent mode those belong to the invisible window behind it, which now forwards the wheel). Over the detail text at the bottom it scrolls that text instead, so you can read a long entry without expanding it.
 - **Search:** type in the box (there is a hint inside it and a ✕ to clear it). If nothing matches, the list says so and tells you what to change.
 - **Keyboard:** `/` jumps to the search box, **Esc** clears it, **Down** moves from the search box to the results, **Ctrl+Left/Right** switch tabs, **Space/Enter** tick the selected quest. (Esc no longer quits the overlay; use F10, the ✕ or the menu.)
 - Green `▶` = available now, `○` = blocked (select it to see what to do first), `✖` = missed, `⚠` = missable.

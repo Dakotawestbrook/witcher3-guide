@@ -851,6 +851,42 @@ class Overlay:
         r.bind("<Control-Left>", lambda e: self._cycle_tab(-1))
         self.search_entry.bind("<Down>", self._search_down)
         self.search_entry.bind("<Return>", self._search_down)
+        # Mouse wheel: handled for the whole window, not just for the list. In transparent mode the gaps
+        # between the text belong to the invisible window behind the overlay, so the wheel is bound
+        # app-wide and routed by where the pointer is. The list and the detail text bind it too, to
+        # stop their built-in handling from scrolling a second time.
+        for w in (self.tree, self.detail):
+            for ev in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
+                w.bind(ev, self._on_wheel)
+        for ev in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
+            r.bind_all(ev, self._on_wheel)
+
+    def _wheel_target(self, x, y):
+        """What the mouse wheel should scroll for a pointer at screen position (x, y): the detail text
+        if the pointer is over it, otherwise the list. None when the pointer is outside the overlay."""
+        rx, ry = self.root.winfo_rootx(), self.root.winfo_rooty()
+        if not (rx <= x < rx + self.root.winfo_width() and ry <= y < ry + self.root.winfo_height()):
+            return None
+        d = self.detail
+        if d.winfo_ismapped() and d.winfo_rooty() <= y < d.winfo_rooty() + d.winfo_height():
+            return d
+        return self.tree
+
+    def _on_wheel(self, e):
+        num, delta = getattr(e, "num", None), getattr(e, "delta", 0)
+        if num == 4:
+            notches = -1
+        elif num == 5:
+            notches = 1
+        elif delta:  # Windows sends multiples of 120 (macOS small values); up is positive
+            notches = (-1 if delta > 0 else 1) * max(1, abs(delta) // 120)
+        else:
+            return None
+        target = self._wheel_target(e.x_root, e.y_root)
+        if target is None:
+            return None
+        target.yview_scroll(notches * (3 if target is self.tree else 2), "units")
+        return "break"
 
     def _focus_search(self, e):
         if isinstance(e.widget, tk.Entry):
