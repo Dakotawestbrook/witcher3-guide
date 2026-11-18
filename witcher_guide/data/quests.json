@@ -2046,231 +2046,949 @@
    "level": null
   },
   {
-   "id": "hos_open_sesame",
-   "name": "Open Sesame!",
+   "id": "hos_evils_soft_first_touches",
+   "name": "Evil's Soft First Touches",
    "region": "Hearts of Stone",
    "type": "main",
    "requires": [],
-   "notes": "Auction house heist.",
-   "warn": "Completing the auction heist closes Avid Collector and A Dark Legacy.",
-   "missable": true,
-   "source": "allthings.how",
-   "level": null
+   "level": 32,
+   "notes": "Evil's Soft First Touches is the DLC starter - used to begin Hearts of Stone. Simply go to the Seven Cats Inn (there is a cutscene), if you have the DLC active. Go meet Olgierd von Everec at the Garin Estate , then expect a boss fight at O",
+   "source": "game-checklists.com"
   },
   {
    "id": "hos_dead_mans_party",
    "name": "Dead Man's Party",
    "region": "Hearts of Stone",
    "type": "main",
-   "requires": [],
-   "notes": "Brunwich.",
-   "warn": "Closes A Midnight Clear.",
-   "missable": true,
-   "source": "allthings.how",
-   "level": null
+   "requires": [
+    "hos_evils_soft_first_touches"
+   ],
+   "level": 33,
+   "notes": "Olgierd von Everec's first wish - show Olgierd's brother Vlodimir to some fun times. The problem is, that he is dead. Geralt and Shani must first raise him from the dead - Vlodimir then possesses Geralt's body throughout the wedding. This",
+   "source": "game-checklists.com"
   },
   {
-   "id": "hos_midnight",
-   "name": "A Midnight Clear",
+   "id": "hos_open_sesame",
+   "name": "Open Sesame!",
    "region": "Hearts of Stone",
    "type": "main",
-   "requires": [],
-   "missable": true,
-   "expires_before": "hos_dead_mans_party",
-   "notes": "Brunwich.",
-   "warn": "Lost after Dead Man's Party.",
-   "source": "allthings.how",
-   "level": null
+   "requires": [
+    "hos_dead_mans_party"
+   ],
+   "level": 34,
+   "notes": "Olgierd von Everec's second wish - bring him Maximilian Borsodi's house, which is a name for a small box with Borsodi's will and documents. If you're confused at first, follow the quest and find yourself at the Borsodi Auction House in Oxe",
+   "source": "game-checklists.com"
   },
   {
-   "id": "hos_avid",
-   "name": "Avid Collector",
+   "id": "hos_open_sesame_breaking_and_entering",
+   "name": "Open Sesame: Breaking and Entering",
+   "region": "Hearts of Stone",
+   "type": "main",
+   "requires": [
+    "hos_open_sesame"
+   ],
+   "level": 34,
+   "notes": "One of the Open Sesame subquests, started at the Herbalist's Hut after visiting the Stranger. Geralt goes to recruit Eveline Gallo, a skilled acrobat needed to climb a nearby tower to gain access to the auction house. The objective also as",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_open_sesame_the_safecracker",
+   "name": "Open Sesame: The Safecracker",
+   "region": "Hearts of Stone",
+   "type": "main",
+   "requires": [
+    "hos_open_sesame"
+   ],
+   "level": 34,
+   "notes": "One of the Open Sesame subquests, started at the Herbalist's Hut after visiting the Stranger. Geralt goes to recruit somebody to get into the safe. Either recruit Casimir in Alness (explode the safe door) or Quinto near Oxenfurt (quiet opt",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_open_sesame_witcher_seasonings",
+   "name": "Open Sesame: Witcher Seasonings",
+   "region": "Hearts of Stone",
+   "type": "main",
+   "requires": [
+    "hos_open_sesame"
+   ],
+   "level": 34,
+   "notes": "One of the Open Sesame subquests, started at the Herbalist's Hut after visiting the Stranger. Geralt needs to reduce the numbers of nearby guards, so he asks the cook Maarten to help him and lace the food.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_scenes_from_a_marriage",
+   "name": "Scenes From a Marriage",
+   "region": "Hearts of Stone",
+   "type": "main",
+   "requires": [
+    "hos_open_sesame"
+   ],
+   "level": 35,
+   "notes": "Olgierd von Everec's third wish - bring him a rose flower he once gave to his wife Iris. Arrive at the estate and defeat The Caretaker boss to enter. Soon, you'll meet The Wraith - the remains of Iris. Defeat her by solving the puzzle (des",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_whatsoever_a_man_soweth",
+   "name": "Whatsoever a Man Soweth...",
+   "region": "Hearts of Stone",
+   "type": "main",
+   "requires": [
+    "hos_scenes_from_a_marriage"
+   ],
+   "level": 36,
+   "notes": "In The Alchemy inn , Gaunter O'Dimm has one last request - bring Von Everec to a meeting place in Velen. If you want the good ending, before going to the temple, you'll need to follow Shani to meet Professor Shakeslock in Oxenfurt. At the",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_without_a_trace",
+   "name": "Without a Trace",
    "region": "Hearts of Stone",
    "type": "side",
    "requires": [],
-   "missable": true,
-   "expires_before": "hos_open_sesame",
-   "notes": "Borsodi Brothers' Auction House.",
-   "warn": "Lost after Open Sesame!.",
-   "source": "allthings.how",
-   "level": null
+   "level": 32,
+   "notes": "Pick up Without a Trace from Brunwich 's Notice Board . Visit Otto Bamber, then go investigate Erde . In Erde , you'll quickly discover there is nobody alive, except for an elderly couple who likely was involved in the village residents' d",
+   "source": "game-checklists.com"
   },
   {
-   "id": "hos_dark_legacy",
+   "id": "hos_enchanting_start_up_costs",
+   "name": "Enchanting: Start-up Costs",
+   "region": "Hearts of Stone",
+   "type": "side",
+   "requires": [],
+   "level": 32,
+   "notes": "This quest is started along the first main DLC quest, Evil's Soft First Touches and serves to only lead you to the Runewright east of Brunwich , who you must pay 5000 Crowns to continue.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_enchanting_quality_has_its_price",
+   "name": "Enchanting: Quality Has Its Price",
+   "region": "Hearts of Stone",
+   "type": "side",
+   "requires": [
+    "hos_enchanting_start_up_costs"
+   ],
+   "level": 32,
+   "notes": "After you pay the Runewright the first time during Enchanting: Start-up Costs , he will ask for a jade mineral which you must acquire in an arachnomorph infested cave.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_the_taxman_cometh",
+   "name": "The Taxman Cometh",
+   "region": "Hearts of Stone",
+   "type": "side",
+   "requires": [],
+   "level": 32,
+   "notes": "When Geralt has more than 35 000 Crowns and is in Oxenfurt, a tax inspector can stop you and will investigate how you got it. He will ask you three questions on how you acquired the money, referring to the most common exploits players use",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_swift_as_the_western_winds",
+   "name": "Swift as the Western Winds",
+   "region": "Hearts of Stone",
+   "type": "race",
+   "requires": [],
+   "level": 32,
+   "notes": "Horse race started at the Ofieri merchant at Upper Mill, east of Brunwich . Talk to him about his horse. Rewards include 100 Crowns and Ofieri Stock Saddle.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_a_midnight_clear",
+   "name": "A Midnight Clear",
+   "region": "Hearts of Stone",
+   "type": "side",
+   "requires": [
+    "hos_evils_soft_first_touches"
+   ],
+   "level": 33,
+   "notes": "Only accessible during Dead Man's Party . After Vlodimir leaves your body at the end of the wedding, you can choose to stay in the area and romance Shani.",
+   "source": "game-checklists.com; allthings.how",
+   "missable": true,
+   "expires_before": "hos_dead_mans_party",
+   "warn": "Only accessible during Dead Man's Party. After Vlodimir leaves your body at the end of the wedding, stay in the area to romance Shani."
+  },
+  {
+   "id": "hos_rose_on_a_red_field",
+   "name": "Rose on a Red Field",
+   "region": "Hearts of Stone",
+   "type": "side",
+   "requires": [],
+   "level": 33,
+   "notes": "After you first meet Olgierd von Everec during Evil's Soft First Touches , Adela will approach you with Rose on a Red Field , asking you to investigate Kluivert's death.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_a_dark_legacy",
    "name": "A Dark Legacy",
    "region": "Hearts of Stone",
    "type": "side",
-   "requires": [],
+   "requires": [
+    "hos_dead_mans_party"
+   ],
+   "level": 33,
+   "notes": "Only possible to start during the Open Sesame! quest. Geralt obtains Count Romilly's figurine during Open Sesame! and dismantles it to find a will and key pointing to treasure beneath Arnskrone Castle Ruins. How to start: Obtain and disman",
+   "source": "game-checklists.com; allthings.how",
    "missable": true,
    "expires_before": "hos_open_sesame",
-   "notes": "Borsodi Brothers' Auction House.",
-   "warn": "Lost after Open Sesame!.",
-   "source": "allthings.how",
-   "level": null
+   "warn": "Treasure hunt that can only be started during Open Sesame! (from Count Romilly's figurine won at the auction). Finish that arc before leaving the auction storyline."
   },
   {
-   "id": "baw_wine",
+   "id": "hos_avid_collector",
+   "name": "Avid Collector",
+   "region": "Hearts of Stone",
+   "type": "side",
+   "requires": [
+    "hos_dead_mans_party"
+   ],
+   "level": 34,
+   "notes": "Only accessible during Open Sesame! . After arriving to the auction house, Vivaldi will introduce you to some nearby characters. Speak to the Art Collector Yaromir and he will ask you to identify a correct painting - choose the option \"Ind",
+   "source": "game-checklists.com; allthings.how",
+   "missable": true,
+   "expires_before": "hos_open_sesame",
+   "warn": "Only accessible during Open Sesame!. At the auction, speak to Art Collector Yaromir and indicate the portrait of the merchant."
+  },
+  {
+   "id": "baw_envoys_wineboys",
+   "name": "Envoys, Wineboys",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "poet"
+   ],
+   "level": 34,
+   "notes": "Starts the DLC via a notice board after saving Dandelion in Novigrad. This is the first quest that starts the DLC and transports you to the Toussaint region.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_the_beast_of_toussaint",
+   "name": "The Beast of Toussaint",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_envoys_wineboys"
+   ],
+   "level": 35,
+   "notes": "Geralt arrives in Toussaint and helps slay the giant Golyat before investigating a series of murders linked to a mysterious Beast. Identifying this Beast is the first overarching objective of Blood and Wine's main story. Meet Duchess Anna",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_blood_run",
+   "name": "Blood Run",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_the_beast_of_toussaint"
+   ],
+   "level": 36,
+   "notes": "Anna Henrietta joins Geralt in trying to save Milton de Peyrac-Peyran, but they are unsuccessful and the Beast slays him. After a brief fight, Regis intervenes, revealing the Beast is Dettlaff and forcing him to flee. After finishing this",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_la_cage_au_fou",
+   "name": "La Cage au Fou",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_blood_run"
+   ],
+   "level": 38,
+   "notes": "Meet Regis at the cemetery and help him prepare a potion to track Dettlaff. This requires several difficult ingredients, which you need to get. The last stop is at Tesham Mutna Ruins where Regis sacrifices himself to provide the last neede",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_where_children_toil_toys_waste_away",
+   "name": "Where Children Toil, Toys Waste Away",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_la_cage_au_fou"
+   ],
+   "level": 42,
+   "notes": "Geralt finds the boot cleaning boy in Beauclair and, with help from Regis, learns where Dettlaff has been staying. Investigate the abandoned toy shop, searching for clues about Dettlaff's actions. Geralt discovers Dettlaff is being blackma",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_wine_is_sacred",
    "name": "Wine is Sacred",
    "region": "Blood and Wine",
    "type": "main",
-   "requires": [],
-   "notes": "Cutoff point for other Blood and Wine quests.",
-   "source": "allthings.how",
-   "level": null
+   "requires": [
+    "baw_where_children_toil_toys_waste_away"
+   ],
+   "level": 42,
+   "notes": "Geralt reports to Anna Henrietta and learns the blackmailer is linked to rare Sangreal wine from Castel Ravello Vineyard. Investigate a vineyard to discover that a barrel of this wine was sold to a nobleman from Cintra, who is your next le",
+   "source": "game-checklists.com"
   },
   {
-   "id": "baw_capture",
+   "id": "baw_the_man_from_cintra",
+   "name": "The Man from Cintra",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_wine_is_sacred"
+   ],
+   "level": 43,
+   "notes": "Geralt and Anna Henrietta attend a masquerade to find the mysterious man from Cintra. They discover the murdered singer Cecilia and track the killer through the estate, uncovering evidence of a jewel theft.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_capture_the_castle",
    "name": "Capture the Castle",
    "region": "Blood and Wine",
    "type": "main",
-   "requires": [],
-   "notes": "Cutoff point for other Blood and Wine quests.",
-   "source": "allthings.how",
-   "level": null
+   "requires": [
+    "baw_the_man_from_cintra"
+   ],
+   "level": 47,
+   "notes": "Geralt joins Anna Henrietta and ducal forces in storming Dun Tynne Castle to rescue Syanna and confront the Cintrian's allies. Inside the castle, they discover Roderick and other bandits tied to Syanna, while Regis and Dettlaff help clear",
+   "source": "game-checklists.com"
   },
   {
-   "id": "baw_what_lies",
-   "name": "What Lies Unseen",
-   "region": "Blood and Wine",
-   "type": "main",
-   "requires": [],
-   "notes": "Cutoff point for other Blood and Wine quests.",
-   "source": "allthings.how",
-   "level": null
-  },
-  {
-   "id": "baw_tesham",
-   "name": "Tesham Mutna",
-   "region": "Blood and Wine",
-   "type": "main",
-   "requires": [],
-   "notes": "Cutoff point for other Blood and Wine quests.",
-   "source": "allthings.how",
-   "level": null
-  },
-  {
-   "id": "baw_night",
+   "id": "baw_the_night_of_long_fangs",
    "name": "The Night of Long Fangs",
    "region": "Blood and Wine",
    "type": "main",
-   "requires": [],
-   "notes": "Cutoff point for other Blood and Wine quests.",
-   "source": "allthings.how",
-   "level": null
-  },
-  {
-   "id": "baw_jailbird_c",
-   "name": "Be It Ever So Humble...",
-   "region": "Blood and Wine",
-   "type": "main",
-   "requires": [],
-   "notes": "Cutoff point for other Blood and Wine quests.",
-   "source": "allthings.how",
-   "level": null
-  },
-  {
-   "id": "baw_mill",
-   "name": "Amidst the Mill's Grist",
-   "region": "Blood and Wine",
-   "type": "side",
-   "requires": [],
-   "missable": true,
-   "expires_before": "baw_wine",
-   "notes": "",
-   "warn": "Lost once Wine is Sacred is done.",
-   "source": "allthings.how",
-   "level": null
-  },
-  {
-   "id": "baw_warble",
-   "name": "The Warble of a Smitten Knight",
-   "region": "Blood and Wine",
-   "type": "side",
-   "requires": [],
-   "missable": true,
-   "expires_before": "baw_capture",
-   "notes": "",
-   "warn": "Lost once Capture the Castle is done.",
-   "source": "allthings.how",
-   "level": null
-  },
-  {
-   "id": "baw_beyond",
-   "name": "Beyond Hill and Dale...",
-   "region": "Blood and Wine",
-   "type": "side",
-   "requires": [],
-   "missable": true,
-   "expires_before": "baw_what_lies",
-   "notes": "Path: Followed Damien.",
-   "warn": "Only exists if you followed Damien. Pulls you out of the Land of a Thousand Fables.",
-   "source": "allthings.how",
-   "level": null
-  },
-  {
-   "id": "baw_duck",
-   "name": "Duck, Duck, Goosed!",
-   "region": "Blood and Wine",
-   "type": "side",
-   "requires": [],
-   "missable": true,
-   "expires_before": "baw_tesham",
-   "notes": "Path: Followed Damien.",
-   "warn": "Eat the Golden Egg for a free skill point. The Land of a Thousand Fables is a one-time visit.",
-   "source": "allthings.how",
-   "level": null
+   "requires": [
+    "baw_capture_the_castle"
+   ],
+   "level": 47,
+   "notes": "Branches the story: your choice here decides which later quests exist. Dettlaff attacks Beauclair, unleashing vampires across the city in retaliation. Geralt must choose between hunting Syanna through different paths or pursuing Orianna. Th",
+   "source": "game-checklists.com"
   },
   {
    "id": "baw_blood_simple",
    "name": "Blood Simple",
    "region": "Blood and Wine",
-   "type": "side",
-   "requires": [],
-   "missable": true,
-   "expires_before": "baw_night",
-   "notes": "Path: Followed Orianna.",
-   "warn": "Only exists if you followed Orianna.",
-   "source": "allthings.how",
-   "level": null
+   "type": "main",
+   "requires": [
+    "baw_the_night_of_long_fangs"
+   ],
+   "level": 47,
+   "notes": "Path-exclusive (Orianna's trail). Only one branch quest line is playable per run. Geralt investigates the orphanage massacre caused by an alpha garkain while following Orianna's trail. He kills the beast, uncovers Orianna's hidden cruelty,",
+   "source": "game-checklists.com"
   },
   {
-   "id": "baw_burlap",
+   "id": "baw_beyond_hill_and_dale",
+   "name": "Beyond Hill and Dale...",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_the_night_of_long_fangs"
+   ],
+   "level": 47,
+   "notes": "Path-exclusive (Syanna's path after The Night of Long Fangs). Geralt and Syanna enter the Land of a Thousand Fables outside of the main map, collect three magic beans, climb a beanstalk to a cloud giant's castle, defeat him, and escape the",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_what_lies_unseen",
+   "name": "What Lies Unseen",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_the_night_of_long_fangs"
+   ],
+   "level": 47,
+   "notes": "Geralt, with or without Regis, enters the Unseen Elder's lair. Navigate the vampire caves and find the Elder, who will help you and force Dettlaff to meet you in the next quest.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_tesham_mutna",
+   "name": "Tesham Mutna",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_the_night_of_long_fangs"
+   ],
+   "level": 49,
+   "notes": "Short quest with several versions depending on earlier choices. This is a short quest with many different versions, depending on your previous choices. You can either directly fight Dettlaff, save Syanna or have an outcome where Syanna dies",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_burlap_is_the_new_stripe",
    "name": "Burlap is the New Stripe",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_tesham_mutna"
+   ],
+   "level": 49,
+   "notes": "Only happens if Syanna died during Tesham Mutna. This quest only happens if Syanna died during Tesham Mutna. Anna Henrietta will imprison Geralt in Toussaint Prison. Dandelion will later help him back to freedom.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_pomp_and_strange_circumstance",
+   "name": "Pomp and Strange Circumstance",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_tesham_mutna"
+   ],
+   "level": 49,
+   "notes": "Only happens if Syanna lives. Geralt investigates Syanna's planned revenge in Beauclair after defeating Dettlaff, uncovering a conspiracy that reveals Duchess Anna Henrietta was meant to be the fifth intended victim. A ceremony follows, aft",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_be_it_ever_so_humble",
+   "name": "Be It Ever So Humble...",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [
+    "baw_tesham_mutna"
+   ],
+   "level": 49,
+   "notes": "Geralt returns to Corvo Bianco where he meets an unexpected visitor. Depending on your base-game choices, this can be either Yennefer, Triss, Ciri or Dandelion. A last conversation happens in the vineyard and the Blood and Wine DLC main st",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_gwent_never_fear_skelliges_here",
+   "name": "Gwent: Never Fear, Skellige's Here",
+   "region": "Blood and Wine",
+   "type": "gwent",
+   "requires": [],
+   "level": null,
+   "notes": "Gwent Quest (Blood and Wine DLC)",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_gwent_to_everything_turn_turn_tournament",
+   "name": "Gwent: To Everything - Turn, Turn, Tournament!",
+   "region": "Blood and Wine",
+   "type": "gwent",
+   "requires": [],
+   "level": null,
+   "notes": "Gwent Quest (Blood and Wine DLC)",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_the_warble_of_a_smitten_knight",
+   "name": "The Warble of a Smitten Knight",
    "region": "Blood and Wine",
    "type": "side",
    "requires": [],
+   "level": 35,
+   "notes": "Only possible before Capture the Castle main quest, startable anytime before. Register at the Tourney Grounds and compete in the shooting range, horse race, and arena brawl. Between events, follow the oriole to discover Vivienne's curse in",
+   "source": "game-checklists.com; allthings.how",
    "missable": true,
-   "expires_before": "baw_tesham",
-   "notes": "Path: Syanna dies.",
-   "warn": "Only if Syanna dies.",
-   "source": "allthings.how",
-   "level": null
+   "expires_before": "baw_capture_the_castle",
+   "warn": "Only possible before Capture the Castle (startable any time before). Register at the Tourney Grounds."
   },
   {
-   "id": "baw_jailbird",
+   "id": "baw_there_can_only_be_one",
+   "name": "There Can Only Be One",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 35,
+   "notes": "Visit Lac Celavy south of Chuchote Cave (the lake on an island inside a lake) to start. The easiest way to get all five virtues with as little work as possible: progress the game until the Blood Run main quest, then do The Warble of a Smit",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_no_place_like_home",
+   "name": "No Place Like Home",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 35,
+   "notes": "Meet your majordomo, Barnabas-Basil, at your new estate, Corvo Bianco Vineyard. Take a tour of the grounds, then speak with him to begin upgrading the property. You must first pay for the general house renovation (5,000 crowns) and wait th",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_turn_and_face_the_strange",
+   "name": "Turn and Face the Strange",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 35,
+   "notes": "Geralt receives a letter after progressing the main story to the first confrontation with Dettlaff in the Blood Run main quest. Investigate Professor Moreau's empty grave at Orlemurs Cemetery, use the map to find a portal underwater at the",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_knight_for_hire",
+   "name": "Knight for Hire",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 35,
+   "notes": "Talk to the Ducal Camerlengo to begin this lengthy contract. You must clear 15 specific locations across Toussaint, including Abandoned Sites, Persons in Distress, and the heavily defended three Hanse bases on the map.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_goodness_gracious_great_balls_of_granite",
+   "name": "Goodness, Gracious, Great Balls of Granite!",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 36,
+   "notes": "Talk to the curator near The Gran'place and learn about the stolen \"crown jewels\" from a statue. Follow the scent trail to a house where you will find an old man using the stones to improve his bedroom performance. Deal with the angry husb",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_paperchase",
+   "name": "Paperchase",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 36,
+   "notes": "Visit Cianfanelli Bank to collect an old debt. You will be stuck in a loop of absurd bureaucracy requiring various permits and forms. After waiting out a break and bribing a teller, you discover the bank is broke. You can fight the guards",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_till_death_do_you_part",
+   "name": "Till Death Do You Part",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 36,
+   "notes": "Investigate noises at the Temple Cemetery to find a ghostly married couple arguing. To stop the racket, you must move one of their urns. Siding with the wife rewards you with Gwent cards, while siding with the husband earns you the sword F",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_fists_of_fury_toussaint",
+   "name": "Fists of Fury: Toussaint",
+   "region": "Blood and Wine",
+   "type": "fistfight",
+   "requires": [],
+   "level": 36,
+   "notes": "Defeat three challengers to qualify for the final bout against the Maestro.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_father_knows_worst",
+   "name": "Father Knows Worst",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 37,
+   "notes": "Collect this quest from The Gran'place Notice Board . Rescue Hugo from a cave filled with kikimores. He claims his brothers want him dead to control the family business. Retrieve a filter from boiling water for him to prove your honor. At",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_big_game_hunter",
+   "name": "Big Game Hunter",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 37,
+   "notes": "Pick this contract up on The Gran'place Notice Board . Escort Count Beledal near Chuchote Cave to \"preserve\" wildlife images for his daughter. You must avoid killing a bear, use Axii to free a panther, and lure centipedes into view without",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_wine_wars_belgaard",
+   "name": "Wine Wars: Belgaard",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 37,
+   "notes": "The quest can be picked up at The Cockatrice Inn Notice Board . Liam and Matilda are fighting over the Belgaard Vineyard. To resolve the first part, you must complete the subquests for Coronata and Vermentino to decide the new owner. In th",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_wine_wars_coronata",
+   "name": "Wine Wars: Coronata",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_wine_wars_belgaard"
+   ],
+   "level": 37,
+   "notes": "A subquest of Wine Wars: Belgaard set in the Coronata Vineyard. Geralt must clear five problems: kill archespores at a vineyard infestation and abandoned site , slay two rock trolls, and rescue a herbalist from bandits in a cave. Loot the",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_wine_wars_vermentino",
+   "name": "Wine Wars: Vermentino",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_wine_wars_belgaard"
+   ],
+   "level": 37,
+   "notes": "A subquest of Wine Wars: Belgaard located at the Vermentino Vineyard. Geralt must resolve five issues: kill archespores at two abandoned sites and a guarded treasure , clear rotfiends, and rescue an armorer. Loot the \"Letter on elegant sta",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_contract_bovine_blues",
+   "name": "Contract: Bovine Blues",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 38,
+   "notes": "Pick the quest up on the Ardaiso Quarry notice board . Investigate a cow falling from the sky at Ardaiso Quarry. Use Witcher Senses on the carcass and broken crane to track a trail of blood to a slyzard nest.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_vintners_contract_rivecalme_storehouse",
+   "name": "Vintner's Contract: Rivecalme Storehouse",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 38,
+   "notes": "Speak to the wine merchant west of Dulcinea Windmill. Enter the warehouse, kill the ghouls and alghoul inside, and return to the merchant for your reward.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_vintners_contract_dun_tynne_hillside",
+   "name": "Vintner's Contract: Dun Tynne Hillside",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 38,
+   "notes": "Talk to the injured vintner north of Dun Tynne Castle. Enter the nearby cave, kill three giant centipedes, and return for your reward.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_amidst_the_mills_grist",
+   "name": "Amidst the Mill's Grist",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_la_cage_au_fou"
+   ],
+   "level": 39,
+   "notes": "Only possible between La Cage au Fou and Wine is Sacred main quests. Go to Count de la Croix's Mill after La Cage au Fou main quest. Defeat the attacking peasants, then use Witcher Senses to find the Mill for Sale note and examine the bloo",
+   "source": "game-checklists.com; allthings.how",
+   "missable": true,
+   "expires_before": "baw_wine_is_sacred",
+   "warn": "Only possible between La Cage au Fou and Wine is Sacred. Go to Count de la Croix's Mill after La Cage au Fou."
+  },
+  {
+   "id": "baw_a_knights_tales",
+   "name": "A Knight's Tales",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 40,
+   "notes": "Collect this quest from the Castel Ravello Notice Board . Help Jacob the woodcutter free Daphne from a bleeding tree.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_extreme_cosplay",
+   "name": "Extreme Cosplay",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 40,
+   "notes": "Pick this quest by talking to Gaston east of Francollarts. Investigate a massacre at the Doren Alma Estate with Gaston. Find the owner, Durand, and agree to reenact an elven ritual.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_the_words_of_the_prophets_are_written_on_sarcophagi",
+   "name": "The Words of the Prophets Are Written on Sarcophagi",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 40,
+   "notes": "To start this quest, visit the temple near the Prophet Lebioda Statue to encounter the Great Beggar's Ghost. After defeating the spirit, loot the nearby skeleton for his bones. Place them into the empty urn.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_the_hunger_game",
+   "name": "The Hunger Game",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_la_cage_au_fou"
+   ],
+   "level": 40,
+   "notes": "Start this quest by visiting Marlene at least two days after finishing the La Cage au Fou main quest. You can encourage her to start a new life in town or offer her a permanent home as your cook.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_wine_wars_consorting",
+   "name": "Wine Wars: Consorting",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_wine_wars_the_deus_in_the_machina"
+   ],
+   "level": 40,
+   "notes": "This quest is a \"service quest\" which triggers only if you uncover the sabotage in Wine Wars: The Deus in the Machina before finishing all tasks from Wine Wars: Coronata and Wine Wars: Vermentino. Liam and Matilda ask Geralt to clear all r",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_big_feet_to_fill",
+   "name": "Big Feet to Fill",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_contract_bovine_blues"
+   ],
+   "level": 40,
+   "notes": "Obtained after Contract: Bovine Blues. Geralt must visit five locations around Toussaint to assist workers building a Prophet Lebioda statue. You must defeat bandits, wake drunkards, kill a spriggan, clear a kikimore nest, and rescue kidna",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_big_feet_to_fill_the_first_group",
+   "name": "Big Feet to Fill: The First Group",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_big_feet_to_fill"
+   ],
+   "level": 40,
+   "notes": "A subquest of Big Feet to Fill located northeast of Fox Hollow. Geralt finds a group of master builders under attack by bandits while transporting tools to the statue. Help the workers defeat the bandits. Once they are safe, a cutscene tri",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_big_feet_to_fill_the_second_group",
+   "name": "Big Feet to Fill: The Second Group",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_big_feet_to_fill"
+   ],
+   "level": 40,
+   "notes": "A subquest of Big Feet to Fill located southwest of Plegmund's Bridge. Geralt must handle a group of workers who are too drunk to work.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_big_feet_to_fill_the_third_group",
+   "name": "Big Feet to Fill: The Third Group",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_big_feet_to_fill"
+   ],
+   "level": 40,
+   "notes": "A subquest of Big Feet to Fill north of Castel Ravello Vineyard. Geralt finds a destroyed transport wagon and must track the missing workers. Defeat the wolves, then follow footprints to a spriggan's den. Kill the beast and check the nearb",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_big_feet_to_fill_the_fourth_group",
+   "name": "Big Feet to Fill: The Fourth Group",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_big_feet_to_fill"
+   ],
+   "level": 40,
+   "notes": "A subquest of Big Feet to Fill located on the road leading southeast from The Silver Salamander Inn toward Trading Post. Geralt investigates an abandoned camp to find a missing group of workers. Follow the footprints using Witcher Senses t",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_big_feet_to_fill_the_fifth_group",
+   "name": "Big Feet to Fill: The Fifth Group",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_big_feet_to_fill"
+   ],
+   "level": 40,
+   "notes": "A subquest of Big Feet to Fill located north of the Prophet Lebioda Statue. Geralt must defeat bandits holding a transport boat's crew hostage. Kill the bandits and free the merchant to progress the statue's construction.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_vintners_contract_chuchote_cave",
+   "name": "Vintner's Contract: Chuchote Cave",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 40,
+   "notes": "Talk to the wine merchant at Chuchote Cave. Kill all arachnomorphs inside and return for your reward.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_raging_wolf",
+   "name": "Raging Wolf",
+   "region": "Blood and Wine",
+   "type": "fistfight",
+   "requires": [
+    "baw_fists_of_fury_toussaint"
+   ],
+   "level": 40,
+   "notes": "Challenge the Maestro at Beauclair Port. To fight him, you must first get drunk and manage the fight that way.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_master_master_master_master",
+   "name": "Master Master Master Master!",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 40,
+   "notes": "Talk to Lazare Lafargue at his workshop in Beauclair, south of The Gran'place. He tasks you with finding Grandmaster diagrams from five different witcher schools, starting the DLC's five scavenger hunts listed below. This unlocks the abili",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_scavenger_hunt_grandmaster_feline_gear",
+   "name": "Scavenger Hunt: Grandmaster Feline Gear",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_master_master_master_master"
+   ],
+   "level": 40,
+   "notes": "Infiltrate Bartolomé de Launay's house to find the armor diagram. Next, head to Arthach Palace Ruins, a bandit-heavy Hanse base, to loot boots and trousers from a chest near the signal fire. Finally, kill the archespores in the Pits of Bru",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_scavenger_hunt_grandmaster_griffin_gear",
+   "name": "Scavenger Hunt: Grandmaster Griffin Gear",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_master_master_master_master"
+   ],
+   "level": 40,
+   "notes": "Go to Fort Ussar Ruins to find the steel sword, gauntlets, and boots diagrams under the stairs. Then head to Mont Crane Castle, a bandit Hanse base. Use the Eye of Nehaleni on the courtyard wall, find the power crystal, and activate the po",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_scavenger_hunt_grandmaster_manticore_gear",
+   "name": "Scavenger Hunt: Grandmaster Manticore Gear",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_master_master_master_master"
+   ],
+   "level": 40,
+   "notes": "Search the prison ruins south of Fort Astre Ruins for the steel sword diagram. Then find the armor at Lebioda's cave and the trousers and boots at Lebioda's temple (requires Aard ). Next, investigate near Seidhe Llygad Amphitheater for the",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_scavenger_hunt_grandmaster_ursine_gear",
+   "name": "Scavenger Hunt: Grandmaster Ursine Gear",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_master_master_master_master"
+   ],
+   "level": 40,
+   "notes": "Go to the collapsed house near Tufo Vineyard. Clear the rubble with Aard and enter the cavern to find the armor, silver sword, and gauntlets diagrams. Next, head to Owl Eye Grottos. Kill the giant centipedes inside and follow the symbols o",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_scavenger_hunt_grandmaster_wolven_gear",
+   "name": "Scavenger Hunt: Grandmaster Wolven Gear",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_master_master_master_master"
+   ],
+   "level": 40,
+   "notes": "Go to Termes Palace Ruins and find the purple ruby at the camp. Use it to open the magical barrier nearby. Inside, fight through wraiths, barghests, and a giant centipede. You will find three diagrams on a witcher's corpse and the other th",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_wine_wars_the_deus_in_the_machina",
+   "name": "Wine Wars: The Deus in the Machina",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_wine_wars_belgaard"
+   ],
+   "level": 42,
+   "notes": "Investigate the Abandoned Storehouse using notes from both rivals. Defeat the archespore in the cellar and use Witcher Senses to find the stocktaking report. Burn the seedlings with Igni and reveal Count Crespi as the saboteur to the owner",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_vintners_contract_duchaton_crest",
+   "name": "Vintner's Contract: Duchaton Crest",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 42,
+   "notes": "Find the wine merchant southeast of Rioux-Cannes Outpost. Enter the nearby cave and slay the shaelmaar. This quest was named \"Vintner's Contract: Griffin-in-the-Vines\" in previous versions of the game. It is still the same quest.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_vintners_contract_cleaning_those_hard_to_reach_places",
+   "name": "Vintner's Contract: Cleaning Those Hard-to-Reach Places",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 42,
+   "notes": "Talk to the wine merchant north of Gelenser Farm. Enter the area, kill the two gargoyles inside, and return for your crowns.",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_a_portrait_of_the_witcher_as_an_old_man",
+   "name": "A Portrait of the Witcher as an Old Man",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 43,
+   "notes": "Talk to the painter near The Gran'place to start the quest. First track his gear, then follow him to the hill with a viewpoint. You can choose one of three poses (horseback, standing, reclining), then defend him against the surprise griffi",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_of_sheers_and_a_witcher_i_sing",
+   "name": "Of Sheers and a Witcher I Sing",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 43,
+   "notes": "Speak to Le Papillon near the Nilfgaardian Embassy signpost to start this quest. Investigate the salon and track the barber's scent to a cave, where he is being held by a knight named Beau Duvall. You can duel the knight or fight his entir",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_equine_phantoms",
+   "name": "Equine Phantoms",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 44,
+   "notes": "Start this quest by talking to Pinastri northeast of Dun Tynne Crossroads signpost. Geralt helps a hermit named Pinastri who is haunted by an invisible specter. To see the demon, Geralt drinks a hallucinogenic brew that allows him to speak",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_feet_as_cold_as_ice",
+   "name": "Feet as Cold as Ice",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 45,
+   "notes": "Start this quest by talking to Jacquette near the Nilfgaardian Embassy signpost. Jacquette asks Geralt to find her fiancé, François, who is attempting to slay a monster called Grottore. Find him at a cave northwest of Beauclair Palace and",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_mutual_of_beauclairs_wild_kingdom",
+   "name": "Mutual of Beauclair's Wild Kingdom",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 46,
+   "notes": "Either get recruited by the Guild or go directly to Trading Post and investigate the destruction with your Witcher Senses to start the quest. Find the silver basilisk and choose to spare it or kill it. Sparing grants you 350 crowns, but ha",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_duck_duck_goosed",
+   "name": "Duck, Duck, Goosed!",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [
+    "baw_the_night_of_long_fangs"
+   ],
+   "level": 47,
+   "notes": "Only possible during the Beyond Hill and Dale... main quest (Syanna's path after The Night of Long Fangs). In the Land of a Thousand Fables, check the notice board near the flint girl. Go to the goose's hut, follow the feather trail, and d",
+   "source": "game-checklists.com; allthings.how",
+   "missable": true,
+   "expires_before": "baw_beyond_hill_and_dale",
+   "warn": "Only possible during Beyond Hill and Dale... (Syanna's path after The Night of Long Fangs). The Land of a Thousand Fables is a one-time visit, so eat the Golden Egg for a free skill point before leaving."
+  },
+  {
+   "id": "baw_contract_the_tufo_monster",
+   "name": "Contract: The Tufo Monster",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "level": 48,
+   "notes": "Pick this contract on the Flovive Notice Board . Investigate tremors at Tufo Vineyard by entering the cellar at night. Use Aard to break a wall, clear the kikimore tunnels, and destroy their eggs for an extra reward. Track the missing farm",
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_the_perks_of_being_a_jailbird",
    "name": "The Perks of Being a Jailbird",
    "region": "Blood and Wine",
    "type": "side",
-   "requires": [],
+   "requires": [
+    "baw_tesham_mutna"
+   ],
+   "level": 49,
+   "notes": "Only possible during the Burlap is the New Stripe main quest, which only happens if Syanna dies and Geralt gets imprisoned. Speak to another prisoner, Handsome Jacques, and follow him to the washing room to begin the quest. Once the items",
+   "source": "game-checklists.com; allthings.how",
    "missable": true,
-   "expires_before": "baw_jailbird_c",
-   "notes": "Path: Syanna dies.",
-   "warn": "Appears only if Geralt is imprisoned after Syanna's death. Clear it before Burlap is the New Stripe wraps.",
-   "source": "allthings.how",
-   "level": null
-  },
-  {
-   "id": "baw_pomp",
-   "name": "Pomp and Strange Circumstance",
-   "region": "Blood and Wine",
-   "type": "side",
-   "requires": [],
-   "missable": true,
-   "expires_before": "baw_tesham",
-   "notes": "Path: Syanna lives.",
-   "warn": "Only if Syanna lives.",
-   "source": "allthings.how",
-   "level": null
+   "expires_before": "baw_burlap_is_the_new_stripe",
+   "warn": "Only possible during Burlap is the New Stripe, which only happens if Syanna dies and Geralt is imprisoned."
   }
  ]
 }

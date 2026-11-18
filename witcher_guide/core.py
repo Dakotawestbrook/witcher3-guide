@@ -5,8 +5,6 @@ from pathlib import Path
 
 DONE, MISSED, AVAILABLE, BLOCKED = "done", "missed", "available", "blocked"
 
-DLC_REGIONS = {"Hearts of Stone", "Blood and Wine"}
-
 DATA_FILE = Path(__file__).parent / "data" / "quests.json"
 
 
@@ -69,8 +67,9 @@ def next_up(data, done, region=None):
 
 def alerts(data, done):
     """Missable quests that are already lost, or that must be done before a
-    base-game main-story cutoff quest which can be started right now (side-quest
-    and DLC cutoffs are only flagged once lost). Each row gets an `urgent`
+    main-story cutoff quest which can be started right now. Cutoffs with no
+    prerequisites (startable from the beginning) and side-quest cutoffs are only
+    flagged once lost, to keep the banner quiet. Each row gets an `urgent`
     flag; lost rows come first."""
     rows = annotate(data, done)
     by_id = {q["id"]: q for q in rows}
@@ -82,7 +81,7 @@ def alerts(data, done):
         if q["status"] == MISSED:
             out.append(dict(q, urgent=False))
         elif (cutoff and cutoff["status"] == AVAILABLE and cutoff["type"] == "main"
-              and cutoff["region"] not in DLC_REGIONS):
+              and cutoff.get("requires")):
             out.append(dict(q, urgent=True))
     out.sort(key=lambda q: q["status"] != MISSED)
     return out

@@ -14,25 +14,28 @@ python -m witcher_guide
 
 ## Quest data
 
-`witcher_guide/data/quests.json` holds 198 entries across White Orchard, Velen,
-Novigrad, Skellige, Kaer Morhen, the finale, general items/Gwent, and the
-Hearts of Stone and Blood and Wine DLC. It was compiled from:
+`witcher_guide/data/quests.json` holds 262 entries across White Orchard, Velen,
+Novigrad, Skellige, Kaer Morhen, the finale, general items/Gwent, and the full
+quest lists for the Hearts of Stone and Blood and Wine DLC. It was compiled from:
 
 - main-story order: [gamepressure.com](https://www.gamepressure.com/thewitcher3/main-storyline/z978a9)
-- side quests and recommended levels: [game-checklists.com](https://game-checklists.com/witcher3/all-side-quests-checklist.html)
-- missable quests and cutoffs: [allthings.how](https://allthings.how/the-witcher-3-every-missable-quest-and-its-point-of-no-return/)
+- base-game side quests and recommended levels: [game-checklists.com](https://game-checklists.com/witcher3/all-side-quests-checklist.html)
+- DLC quests, levels and missables: game-checklists.com ([Hearts of Stone](https://game-checklists.com/witcher3/hearts-of-stone.html), [Blood and Wine](https://game-checklists.com/witcher3/blood-and-wine-checklist.html))
+- base-game missables and cutoffs: [allthings.how](https://allthings.how/the-witcher-3-every-missable-quest-and-its-point-of-no-return/)
 
 Each entry has a `source` field. The guides disagree in small ways (for example
 gamepressure calls Imperial Audience "Royal Audience"), and none were checked in
 the game itself, so treat the data as a well-sourced starting point. Known gaps:
-the Hearts of Stone and Blood and Wine coverage is limited to their missable
-cutoffs, and the level and prerequisite edges between side quests are not
-modelled (only main-story order, Reason of State, and the cutoffs are).
+treasure hunts (except the one missable Hearts of Stone hunt) and fast-travel
+signposts are not included, and prerequisites between base-game side quests are
+not modelled (only main-story order, Reason of State, DLC chains and the
+cutoffs are). In Blood and Wine, the branch-exclusive quests of the Syanna/Orianna
+paths all show as available; only one path is playable per run.
 
 Fields: `requires` (order), `missable` + `warn` (warnings), `expires_before`
 (becomes MISSED once that quest is marked done), `level`, `source`. The banner
-at the top of the overlay warns "Before <main quest>: ..." when a base-game
-main-story cutoff is available to start.
+at the top of the overlay warns "Before <main quest>: ..." when a main-story
+cutoff that has prerequisites becomes available to start.
 
 ## Tests
 

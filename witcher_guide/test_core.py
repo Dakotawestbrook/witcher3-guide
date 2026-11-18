@@ -42,6 +42,39 @@ class TestCore(unittest.TestCase):
             done.add(nxt[0]["id"])
         self.assertIn("ending", done)
 
+    def _play(self, region):
+        done = set()
+        for _ in range(200):
+            nxt = [q for q in core.next_up(self.data, done, region) if q["type"] == "main"]
+            if not nxt:
+                break
+            done.add(nxt[0]["id"])
+        return done
+
+    def test_hearts_of_stone_is_playable(self):
+        self.assertIn("hos_whatsoever_a_man_soweth", self._play("Hearts of Stone"))
+
+    def test_blood_and_wine_needs_base_game_then_is_playable(self):
+        self.assertEqual(self.by_id["baw_envoys_wineboys"]["requires"], ["poet"])
+        done = {"poet"}
+        for _ in range(200):
+            nxt = [q for q in core.next_up(self.data, done, "Blood and Wine") if q["type"] == "main"]
+            if not nxt:
+                break
+            done.add(nxt[0]["id"])
+        self.assertIn("baw_be_it_ever_so_humble", done)
+
+    def test_dlc_missed_and_urgent(self):
+        # Mill's Grist lives between La Cage au Fou and Wine is Sacred.
+        chain = {"poet", "baw_envoys_wineboys", "baw_the_beast_of_toussaint", "baw_blood_run", "baw_la_cage_au_fou",
+                 "baw_where_children_toil_toys_waste_away"}
+        urgent = {a["id"] for a in core.alerts(self.data, chain) if a["urgent"]}
+        self.assertIn("baw_amidst_the_mills_grist", urgent)
+        lost = {a["id"] for a in core.alerts(self.data, chain | {"baw_wine_is_sacred"}) if a["status"] == core.MISSED}
+        self.assertIn("baw_amidst_the_mills_grist", lost)
+        self.assertEqual({a["id"] for a in core.alerts(self.data, {"hos_evils_soft_first_touches"}) if a["urgent"]},
+                         {"hos_a_midnight_clear"})
+
     def test_next_up_follows_order(self):
         first = core.next_up(self.data, set(), "White Orchard")
         self.assertEqual(first[0]["id"], "lilac")
