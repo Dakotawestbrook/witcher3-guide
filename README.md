@@ -43,10 +43,17 @@ manual ticking.
 
 ## Resizing
 
-Drag the **◢** grip in the bottom-right corner to make the window wider or taller (unlock with F9
-first). The quest list takes the extra height, always in whole rows, and the warnings and detail text
-re-wrap to the new width. The window can't get smaller than its content needs (at least 400 px wide).
-The size is remembered in `settings.json`.
+Drag **any edge or corner** of the window (a 6 px band around the border), or the **◢** grip in the
+bottom-right, to make it wider or taller. The pointer changes to a resize arrow over the edges. Unlock
+with F9 first if the overlay is locked.
+
+- Dragging the left or top edge moves the window as well, so the opposite side stays where it is.
+- The quest list takes the extra height, always in whole rows. The warnings and detail text re-wrap to
+  the new width.
+- The window can't get smaller than its content needs (at least 400 px wide).
+- In transparent mode the edges are caught by the near-invisible window behind the overlay (see
+  `backing_alpha` below), so the thin gap around the content is what you grab.
+- The size is remembered in `settings.json`.
 
 ## Warnings
 

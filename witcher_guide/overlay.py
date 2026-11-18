@@ -28,6 +28,7 @@ PANEL = {"base": "#14110f", "head": "#1f1a15", "entry": "#241e18", "alert": "#2a
 PANEL_SELECTED = "#2c2620"
 WIDTH = 470  # default width
 MIN_W = 400
+EDGE = 6  # px band along each edge (and corner) that resizes the window
 ROW_H = 24  # list row height in px (matches the Treeview style)
 MIN_ROWS = 3  # list rows at the smallest size
 DEFAULT_EXTRA_ROWS, MAX_EXTRA_ROWS = 8, 60  # rows added on top of MIN_ROWS
@@ -76,7 +77,7 @@ class Overlay:
         self.locked = False
         self.visible = True
         self.events = queue.Queue()
-        self._drag = (0, 0)
+        self._action = None  # the drag in progress: ('move', offset) or ('resize', state)
         self._roles = {}
         self.transparent = False
         self._settings_path = self.progress.path.parent / "settings.json"
@@ -104,6 +105,9 @@ class Overlay:
         self._ready = True
         if self._want_backing:
             self._make_backing()
+        for ev, fn in (("<ButtonPress-1>", self._press), ("<B1-Motion>", self._drag_motion),
+                       ("<ButtonRelease-1>", self._release), ("<Motion>", self._hover), ("<Leave>", self._hover_end)):
+            root.bind(ev, fn, add="+")
         self._set_click_through(False)
         self._apply_backdrop()
         start_hotkey_thread(self.events)
@@ -130,16 +134,19 @@ class Overlay:
                                   font=("Segoe UI", 12, "bold"), anchor="w")
         self.title_lbl.pack(side="left", padx=8, pady=6)
         close = tk.Label(head, text="\u2715", bg=BG, fg=DIM, font=("Segoe UI", 12), padx=8, cursor="hand2")
-        close.pack(side="right")
+        close.pack(side="right", padx=(0, EDGE))
         close.bind("<Button-1>", lambda e: self.quit())
         close.bind("<Enter>", lambda e: close.config(fg=RED))
         close.bind("<Leave>", lambda e: close.config(fg=DIM))
         self.lock_lbl = tk.Label(head, text="", bg=BG, fg=DIM, font=("Segoe UI", 8))
         self.lock_lbl.pack(side="right", padx=4)
         self._tag("head", head, self.title_lbl, close, self.lock_lbl)
-        for w in (head, self.title_lbl):
-            w.bind("<ButtonPress-1>", lambda e: setattr(self, "_drag", (e.x_root - r.winfo_x(), e.y_root - r.winfo_y())))
-            w.bind("<B1-Motion>", lambda e: r.geometry(f"+{e.x_root - self._drag[0]}+{e.y_root - self._drag[1]}"))
+        for w in (head, self.title_lbl):  # drag to move the window (unless the pointer is on an edge)
+            w.bind("<ButtonPress-1>", lambda e: self._press(e, movable=True))
+            w.bind("<B1-Motion>", self._drag_motion)
+            w.bind("<ButtonRelease-1>", self._release)
+        head.bind("<Motion>", self._hover)
+        head.bind("<Leave>", self._hover_end)
 
         tabs = tk.Frame(r, bg=BG)
         tabs.pack(fill="x", padx=6, pady=(6, 0))
@@ -204,11 +211,11 @@ class Overlay:
         self._set_detail("Double-click a quest to mark it done.")
 
         # drag this corner to resize the window
-        self.grip = tk.Label(r, text="\u25E2", bg=BG, fg=DIM, font=("Segoe UI", 11), cursor="size_nw_se" if IS_WINDOWS else "bottom_right_corner")
+        self.grip = tk.Label(r, text="\u25E2", bg=BG, fg=DIM, font=("Segoe UI", 11), cursor=self._cursor_for({"r", "b"}))
         self.grip.place(relx=1.0, rely=1.0, anchor="se")
-        self.grip.bind("<ButtonPress-1>", self._grip_press)
-        self.grip.bind("<B1-Motion>", self._grip_drag)
-        self.grip.bind("<ButtonRelease-1>", lambda e: self._save_size())
+        self.grip.bind("<ButtonPress-1>", lambda e: self._begin_resize(e, {"r", "b"}))
+        self.grip.bind("<B1-Motion>", self._drag_motion)
+        self.grip.bind("<ButtonRelease-1>", self._release)
         self._tag("base", self.grip)
 
     # ---- State ----------------------------------------------------------
@@ -339,18 +346,105 @@ class Overlay:
         except (TypeError, ValueError):
             return DEFAULT_EXTRA_ROWS
 
-    def _grip_press(self, e):
-        self._rs = (e.x_root, e.y_root, self.width, self.root.winfo_reqheight() + self.extra_rows * ROW_H)
+    @staticmethod
+    def _cursor_for(edges):
+        """Mouse cursor for the edges being grabbed (Windows and X11 use different names)."""
+        e = set(edges)
+        if not e:
+            return ""
+        horiz, vert = bool(e & {"l", "r"}), bool(e & {"t", "b"})
+        if horiz and vert:
+            nwse = e in ({"l", "t"}, {"r", "b"})
+            if IS_WINDOWS:
+                return "size_nw_se" if nwse else "size_ne_sw"
+            return "bottom_right_corner" if nwse else "bottom_left_corner"
+        if horiz:
+            return "size_we" if IS_WINDOWS else "sb_h_double_arrow"
+        return "size_ns" if IS_WINDOWS else "sb_v_double_arrow"
 
-    def _grip_drag(self, e):
-        x0, y0, w0, h0 = self._rs
-        width = self._clamp_width(w0 + e.x_root - x0)
-        rows = self._clamp_rows(round((h0 + e.y_root - y0 - self.root.winfo_reqheight()) / ROW_H))
-        if (width, rows) == (self.width, self.extra_rows):
+    def _edges_at(self, x_root, y_root):
+        """Which window edges the pointer is within EDGE px of (empty set: none)."""
+        rx, ry = x_root - self.root.winfo_rootx(), y_root - self.root.winfo_rooty()
+        w, h = self.root.winfo_width(), self.root.winfo_height()
+        if not (0 <= rx < w and 0 <= ry < h):
+            return set()
+        return ({"l"} if rx < EDGE else set()) | ({"r"} if rx >= w - EDGE else set()) | \
+               ({"t"} if ry < EDGE else set()) | ({"b"} if ry >= h - EDGE else set())
+
+    def _own_event(self, e):
+        """Events bubble up from child widgets; only the window's own margins count here."""
+        return e.widget is self.root or e.widget is self.back
+
+    def _hover(self, e):
+        if e.widget is self.root or e.widget is self.back or str(e.widget) == str(self.title_lbl.master):
+            try:
+                e.widget.config(cursor=self._cursor_for(self._edges_at(e.x_root, e.y_root)))
+            except tk.TclError:
+                pass
+
+    def _hover_end(self, e):
+        if self._own_event(e) or str(e.widget) == str(self.title_lbl.master):
+            try:
+                e.widget.config(cursor="")  # children inherit a parent's cursor, so always reset
+            except tk.TclError:
+                pass
+
+    def _press(self, e, movable=False):
+        if not movable and not self._own_event(e):
             return
-        widened = width != self.width
-        self.width, self.extra_rows = width, rows
-        self._fit()
+        edges = self._edges_at(e.x_root, e.y_root)
+        if edges:
+            self._begin_resize(e, edges)
+        elif movable:
+            self._action = ("move", (e.x_root - self.root.winfo_x(), e.y_root - self.root.winfo_y()))
+        else:
+            self._action = None
+
+    def _begin_resize(self, e, edges):
+        self._action = ("resize", dict(
+            edges=set(edges), x0=e.x_root, y0=e.y_root, win_x=self.root.winfo_x(), win_y=self.root.winfo_y(),
+            w0=self.width, h0=self.root.winfo_reqheight() + self.extra_rows * ROW_H))
+
+    def _drag_motion(self, e):
+        if not self._action:
+            return
+        kind, state = self._action
+        if kind == "move":
+            self.root.geometry(f"+{e.x_root - state[0]}+{e.y_root - state[1]}")
+        else:
+            self._do_resize(e, state)
+
+    def _release(self, e):
+        if self._action and self._action[0] == "resize":
+            self._save_size()
+        self._action = None
+
+    def _do_resize(self, e, st):
+        """Resize from any edge or corner. Left/top edges also move the window so the opposite
+        side stays put. Width is free (>= MIN_W); height changes in whole list rows."""
+        need = self.root.winfo_reqheight()  # the content's minimum height
+        dx, dy, ed = e.x_root - st["x0"], e.y_root - st["y0"], st["edges"]
+        w, x, y, rows = st["w0"], st["win_x"], st["win_y"], self.extra_rows
+        if "r" in ed:
+            w = st["w0"] + dx
+        if "l" in ed:
+            w = st["w0"] - dx
+        w = self._clamp_width(w)
+        if "l" in ed:
+            x = st["win_x"] + st["w0"] - w
+        if "b" in ed:
+            rows = self._clamp_rows(round((st["h0"] + dy - need) / ROW_H))
+        if "t" in ed:
+            rows = self._clamp_rows(round((st["h0"] - dy - need) / ROW_H))
+        h = need + rows * ROW_H
+        if "t" in ed:
+            y = st["win_y"] + st["h0"] - h
+        if (w, rows) == (self.width, self.extra_rows) and (x, y) == (self.root.winfo_x(), self.root.winfo_y()):
+            return
+        widened = w != self.width
+        self.width, self.extra_rows = w, rows
+        self.root.geometry(f"{w}x{h}+{x}+{y}")
+        self.grip.lift()
         if widened:
             self._reflow()
 
@@ -417,6 +511,9 @@ class Overlay:
             b.attributes("-alpha", min(max(alpha, 0.01), 0.5))
         except (tk.TclError, TypeError, ValueError):
             pass
+        for ev, fn in (("<ButtonPress-1>", self._press), ("<B1-Motion>", self._drag_motion),
+                       ("<ButtonRelease-1>", self._release), ("<Motion>", self._hover), ("<Leave>", self._hover_end)):
+            b.bind(ev, fn)
         self.root.bind("<Configure>", self._on_configure, add="+")
         self._sync_back()
 
