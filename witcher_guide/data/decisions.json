@@ -2093,7 +2093,7 @@
     {
      "label": "Free Rico",
      "type": "action",
-     "result": "Starts the side quest Honor Among Thieves. Visit Bedlam some day for a reward."
+     "result": "Starts the side quest Honor Among Thieves. He sends you to the Putrid Grove, where the King of Beggars rewards you with the great sword Eirlithrad and an armor."
     },
     {
      "label": "Leave him",
@@ -2103,7 +2103,7 @@
    ],
    "best_rewards": {
     "pick": "Free Rico",
-    "why": "You can collect a reward at Bedlam later.",
+    "why": "The King of Beggars gives you the sword Eirlithrad and an armor.",
     "basis": "stated"
    },
    "best_moral": {
@@ -2114,7 +2114,7 @@
    "best_outcome": null,
    "note": "",
    "affects_ending": false,
-   "source": "gamepressure.com: main quest walkthroughs"
+   "source": "gamepressure.com: main quest walkthroughs; gamepressure.com: side quest and contract walkthroughs"
   },
   {
    "id": "junior_fate",
@@ -3023,6 +3023,470 @@
    "note": "The checklist does not flag the Hearts of Stone cards as missable; this follows gamepressure's advice to play whenever you can.",
    "affects_ending": false,
    "source": "gamepressure.com: Gwent (Hearts of Stone); game-checklists.com: DLC Gwent cards checklist"
+  },
+  {
+   "id": "fake_papers",
+   "name": "Fake Papers: the border pass",
+   "kind": "side",
+   "quests": [
+    "fake_papers",
+    "bitter_harvest",
+    "thou_shalt_not_pass"
+   ],
+   "situation": "A shady merchant near the Pontar river sells a transit pass. You can get it three ways.",
+   "options": [
+    {
+     "label": "Buy it for 100 crowns",
+     "type": "dialogue",
+     "result": "The full price."
+    },
+    {
+     "label": "Use the developed Axii sign on him",
+     "type": "action",
+     "result": "He sells you the pass for 50 crowns, and you get 40 experience."
+    },
+    {
+     "label": "Help his brother-in-law in Bitter Harvest",
+     "type": "action",
+     "result": "The merchant lowers the price by 50 crowns."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use Axii",
+    "why": "The pass costs 50 crowns instead of 100, and you get 40 experience.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Bitter Harvest is risky for this: if the brother-in-law dies in the ghoul fight the merchant gets angry and won't sell even at full price.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "thou_shalt_not_pass",
+   "name": "Thou Shalt Not Pass: crossing the border",
+   "kind": "side",
+   "quests": [
+    "thou_shalt_not_pass",
+    "fake_papers",
+    "family2"
+   ],
+   "situation": "Redanian troops block the border outposts of Velen and nobody without a proper document gets through.",
+   "options": [
+    {
+     "label": "Bribe the guard (10 crowns) to learn how to get a pass",
+     "type": "dialogue",
+     "result": "You learn it, but this is not mandatory."
+    },
+    {
+     "label": "Use Axii on the guard to learn how to get a pass",
+     "type": "action",
+     "result": "25 experience. Also not mandatory."
+    },
+    {
+     "label": "Get a pass and show it to the guard",
+     "type": "action",
+     "result": "From Fake Papers, from the Baron's Letter of Safe Conduct in Family Matters, or from the Woodland Beast contract. The guard lets you through and you get 75 experience."
+    },
+    {
+     "label": "Skip the guard and bypass the barricade",
+     "type": "action",
+     "result": "For example by taking a boat to the other side."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Get a pass and show it to the guard",
+    "why": "75 experience, against 25 for the Axii trick.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "loves_snares",
+   "name": "Love's Cruel Snares: the reward",
+   "kind": "side",
+   "quests": [
+    "loves_cruel_snares"
+   ],
+   "situation": "A woman's fiance has been killed by wild dogs and she offers you a reward.",
+   "options": [
+    {
+     "label": "Take the reward",
+     "type": "dialogue",
+     "result": "40 crowns and less experience."
+    },
+    {
+     "label": "Refuse the reward",
+     "type": "dialogue",
+     "result": "More experience."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Refuse the reward",
+    "why": "She has just lost her fiance, and you get more experience.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "It trades 40 crowns for more experience.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "worthy_of_trust",
+   "name": "Worthy of Trust: the crook",
+   "kind": "side",
+   "quests": [
+    "worthy_of_trust"
+   ],
+   "situation": "A Skelligian merchant asked you for a 150-crown loan. You meet him again and find out he lied.",
+   "options": [
+    {
+     "label": "Kill him",
+     "type": "action",
+     "result": "You fight him and recover your 150 crowns, plus 20 crowns for completing the quest."
+    },
+    {
+     "label": "Give him to the jarl",
+     "type": "action",
+     "result": "You fight him either way."
+    },
+    {
+     "label": "Spare him",
+     "type": "dialogue",
+     "result": "The quest is not added to the journal and you only get 20 crowns."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Kill him",
+    "why": "You get your 150 crowns back, plus 20.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "He is a level 12 non-fighter and no one comes to his aid.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "little_red",
+   "name": "Little Red: the werewolf girl",
+   "kind": "side",
+   "quests": [
+    "little_red"
+   ],
+   "situation": "A group of bandits led by a werewolf girl asks the villagers to hand over one of their own.",
+   "options": [
+    {
+     "label": "Agree to give them a villager",
+     "type": "dialogue",
+     "result": "No fight, the villagers say nothing, and you receive 20 crowns."
+    },
+    {
+     "label": "Fight them",
+     "type": "action",
+     "result": "You can collect werewolf alchemy ingredients and the villagers pay you 10 crowns."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Fight them",
+    "why": "You don't hand a villager over.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "The sources do not say which option pays better: crowns versus ingredients.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "empty_coop",
+   "name": "Empty Coop: the hen thieves",
+   "kind": "side",
+   "quests": [
+    "empty_coop"
+   ],
+   "situation": "Grandma Yanina's hens are being stolen, and the trail leads to a group of kids.",
+   "options": [
+    {
+     "label": "Tell Yanina about the thieves",
+     "type": "dialogue",
+     "result": "You get 20 crowns."
+    },
+    {
+     "label": "Convince her to take the kids in",
+     "type": "dialogue",
+     "result": "You get nothing."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Tell Yanina",
+    "why": "20 crowns.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "the_volunteer",
+   "name": "The Volunteer: the Rock Ogre",
+   "kind": "side",
+   "quests": [
+    "the_volunteer"
+   ],
+   "situation": "A friendly Rock Ogre sings Redanian army songs.",
+   "options": [
+    {
+     "label": "Attack the ogre",
+     "type": "action",
+     "result": "He is level 13 and not hard. You can take precious alchemy ingredients from his body."
+    },
+    {
+     "label": "Bring him the paint, then help him paint the eagle",
+     "type": "action",
+     "result": "The result is not astonishing, but the ogre is happy."
+    },
+    {
+     "label": "Bring him the paint, then convince him to paint it himself",
+     "type": "dialogue",
+     "result": "The result is much better."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Bring him the paint",
+    "why": "He is friendly.",
+    "basis": "judgement"
+   },
+   "best_outcome": {
+    "pick": "Convince him to paint it himself",
+    "why": "The source says the result is much better.",
+    "basis": "stated"
+   },
+   "note": "If you befriend him the reward is the same either way: some gold, a few diagrams and many kinds of leather.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "groom_contract",
+   "name": "Contract: Here Comes the Groom: Britt's payment",
+   "kind": "contract",
+   "quests": [],
+   "situation": "After killing the melusine, you agree to tell Britt what happened to her fiance.",
+   "options": [
+    {
+     "label": "Take the gold from her",
+     "type": "dialogue",
+     "result": "You collect extra payment."
+    },
+    {
+     "label": "Refuse any additional payment",
+     "type": "dialogue",
+     "result": "You take only what Kevan agreed."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Take the gold from her",
+    "why": "It is extra money.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Refuse any additional payment",
+    "why": "She has just lost her fiance.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "eldberg_contract",
+   "name": "Contract: The Phantom of Eldberg: Mikkjaal",
+   "kind": "contract",
+   "quests": [],
+   "situation": "After the penitent is beaten, you decide Mikkjaal's fate.",
+   "options": [
+    {
+     "label": "Exile him",
+     "type": "dialogue",
+     "result": "He is sent away."
+    },
+    {
+     "label": "Let him stay",
+     "type": "dialogue",
+     "result": "He remains."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The sources do not rate either choice, and the reward is not described as different.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "fists_novigrad",
+   "name": "Fists of Fury: Novigrad: the powder",
+   "kind": "side",
+   "quests": [],
+   "situation": "In the second illegal fight, the organizer asks you to take a powder and lose on purpose.",
+   "options": [
+    {
+     "label": "Agree to take the powder",
+     "type": "dialogue",
+     "result": "You get more money, but your win statistics get worse. You can still beat the challenger afterwards."
+    },
+    {
+     "label": "Beat him fairly",
+     "type": "action",
+     "result": "Better win statistics."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Agree to take the powder",
+    "why": "You get more money.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Beat him fairly",
+    "why": "The guide says your win statistics are better.",
+    "basis": "stated"
+   },
+   "note": "Rewards and the fight record point opposite ways. The maximum bet in this fight is 80 crowns.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "out_on_your_arse",
+   "name": "Out on Your Arse!: the Skelligian guests",
+   "kind": "side",
+   "quests": [
+    "out_on_your_arse"
+   ],
+   "situation": "A courtesan asks you to get rid of the Skelligians from inside the inn. You can do it three ways.",
+   "options": [
+    {
+     "label": "Fist fight the group leader",
+     "type": "action",
+     "result": "A duel."
+    },
+    {
+     "label": "Fight the whole group (three people)",
+     "type": "action",
+     "result": "A fight."
+    },
+    {
+     "label": "Use Axii",
+     "type": "action",
+     "result": "You get additional experience."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use Axii",
+    "why": "It is the only option that gives additional experience.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "You get 15 crowns from the girl whichever you choose, even if you refuse taking the reward.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "dumplings",
+   "name": "Of Swords and Dumplings: Sukrus and the honey",
+   "kind": "side",
+   "quests": [
+    "of_swords_and_dumplings"
+   ],
+   "situation": "Helping the elf get his dumpling business back, you are given two jobs.",
+   "options": [
+    {
+     "label": "Convince Sukrus's brother-in-law to pay (Axii)",
+     "type": "action",
+     "result": "You solve it with a sign and no fight."
+    },
+    {
+     "label": "Destroy three honey barrels",
+     "type": "action",
+     "result": "The crew attacks you unless you are fast enough."
+    },
+    {
+     "label": "At the warehouse, use Axii on the guarding dwarf",
+     "type": "action",
+     "result": "Free."
+    },
+    {
+     "label": "At the warehouse, bribe the dwarf with 200 crowns",
+     "type": "dialogue",
+     "result": "It costs 200 crowns."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use Axii both times",
+    "why": "No fight with the crew and no 200 crowns to pay.",
+    "basis": "judgement"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "You fight a bandit group in the warehouse whatever you say. Hattori then becomes available as a blacksmith.",
+   "affects_ending": false,
+   "source": "gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "play_preparations",
+   "name": "The Play's the Thing: the preparations",
+   "kind": "main",
+   "quests": [
+    "play"
+   ],
+   "situation": "To get your play seen, you need advertising and security.",
+   "options": [
+    {
+     "label": "Puffins' bandits: attack them (you must kill only one, level 11)",
+     "type": "action",
+     "result": "A fight."
+    },
+    {
+     "label": "Puffins' bandits: bribe them with 50 crowns",
+     "type": "dialogue",
+     "result": "It costs 50 crowns."
+    },
+    {
+     "label": "Puffins' bandits: use Axii",
+     "type": "action",
+     "result": "Free."
+    },
+    {
+     "label": "Docks security: pay 70 crowns upfront",
+     "type": "dialogue",
+     "result": "It costs 70 crowns."
+    },
+    {
+     "label": "Docks security: fight two enemies at once",
+     "type": "action",
+     "result": "If you win they help for free; if you lose you pay twice."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use Axii on the bandits and win the fight at the docks",
+    "why": "Both are free.",
+    "basis": "judgement"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The play itself pays about 100-150 crowns and how you cast it does not matter much.",
+   "affects_ending": false,
+   "source": "gamepressure.com: main quest walkthroughs"
   }
  ]
 }

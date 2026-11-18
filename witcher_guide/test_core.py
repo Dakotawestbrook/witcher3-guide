@@ -131,7 +131,7 @@ class TestCore(unittest.TestCase):
     # ---- Decisions ----
     def test_decisions_data_integrity(self):
         decs = core.load_decisions()
-        self.assertGreaterEqual(len(decs), 90)
+        self.assertGreaterEqual(len(decs), 100)
         self.assertEqual(len({d["id"] for d in decs}), len(decs), "duplicate decision ids")
         for d in decs:
             self.assertTrue(d["source"], d["id"])
@@ -173,7 +173,7 @@ class TestCore(unittest.TestCase):
 
     def test_more_decisions_with_stated_rewards(self):
         decs = {d["id"]: d for d in core.load_decisions()}
-        self.assertEqual(sum(1 for d in decs.values() if d["kind"] == "contract"), 7)
+        self.assertEqual(sum(1 for d in decs.values() if d["kind"] == "contract"), 9)
         # reward comparisons that the guides state outright
         self.assertIn("60 crowns", decs["nithing"]["best_rewards"]["why"])
         self.assertEqual(decs["novi_thief"]["best_rewards"]["pick"], "Free him")
@@ -192,6 +192,23 @@ class TestCore(unittest.TestCase):
             for f in ("best_rewards", "best_moral", "best_outcome"):
                 if d.get(f) and d[f]["basis"] == "stated":
                     self.assertTrue(d["source"], d["id"])
+
+    def test_latest_decisions_state_their_rewards(self):
+        decs = {d["id"]: d for d in core.load_decisions()}
+        self.assertIn("50 crowns", decs["fake_papers"]["best_rewards"]["why"])      # Axii: pass for 50 and 40 XP
+        self.assertEqual(decs["fake_papers"]["best_rewards"]["basis"], "stated")
+        self.assertIn("75 experience", decs["thou_shalt_not_pass"]["best_rewards"]["why"])
+        self.assertIn("150 crowns", decs["worthy_of_trust"]["best_rewards"]["why"])
+        self.assertIn("Eirlithrad", decs["junior_rico"]["best_rewards"]["why"])
+        self.assertEqual(decs["the_volunteer"]["best_outcome"]["basis"], "stated")
+        # rewards and the fight record disagree in the Novigrad illegal fights
+        self.assertNotEqual(decs["fists_novigrad"]["best_rewards"]["pick"], decs["fists_novigrad"]["best_outcome"]["pick"])
+        # decisions with no source-backed pick stay unrated rather than guessed
+        self.assertIsNone(decs["eldberg_contract"]["best_rewards"])
+        self.assertIsNone(decs["eldberg_contract"]["best_moral"])
+        # every contract decision is flagged as a contract
+        for did in ("groom_contract", "eldberg_contract"):
+            self.assertEqual(decs[did]["kind"], "contract")
 
     def test_every_missable_gwent_card_on_the_checklist_is_covered(self):
         decs = [d for d in core.load_decisions() if d["kind"] == "gwent"]
