@@ -2,6 +2,240 @@
  "_note": "Best choices compiled from gamepressure.com, game-checklists.com and allthings.how. basis=stated means a source says it; basis=judgement is my inference from the outcomes the source describes. Edit freely.",
  "decisions": [
   {
+   "id": "baron_inn",
+   "name": "Inn at the Crossroads: the Baron's men",
+   "kind": "main",
+   "quests": [
+    "baron"
+   ],
+   "situation": "How you treat the Baron's men in the inn decides how you reach the Baron at Crow's Perch.",
+   "options": [
+    {
+     "label": "Stay friendly in the timed conversation",
+     "type": "dialogue",
+     "result": "The guards on the bridge don't react. You get permission to see the Baron."
+    },
+    {
+     "label": "Kill the bandits in the inn",
+     "type": "action",
+     "result": "The guards run away. You fight the Baron's henchmen, then pay a peasant 15 crowns to learn about an underwater tunnel into the castle."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Stay friendly",
+    "why": "Nobody has to die.",
+    "basis": "judgement"
+   },
+   "best_outcome": {
+    "pick": "Stay friendly",
+    "why": "It is the easy way in: no fight and no 15 crowns to pay.",
+    "basis": "judgement"
+   },
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: Bloody Baron"
+  },
+  {
+   "id": "baron_pellar",
+   "name": "Family Matters: the Baron's men at the Pellar's hut",
+   "kind": "main",
+   "quests": [
+    "family1"
+   ],
+   "situation": "A group of the Baron's men is trying to get into the Pellar's house. You can react three ways.",
+   "options": [
+    {
+     "label": "Attack them",
+     "type": "action",
+     "result": "A fight against level 6 men. The crossbowmen can drop rare bolt types."
+    },
+    {
+     "label": "Ask why they are there and offer to heal their friend",
+     "type": "dialogue",
+     "result": "They leave the Pellar alone in exchange."
+    },
+    {
+     "label": "Use Axii during the conversation",
+     "type": "action",
+     "result": "Needs a developed Axii sign. They leave and you get 40 experience points."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use Axii",
+    "why": "40 experience points with no fight.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Offer to heal their friend",
+    "why": "Solves it without anyone being hurt.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "Attacking is the only way to loot the rare bolts.",
+   "affects_ending": false,
+   "source": "gamepressure.com: Family Matters"
+  },
+  {
+   "id": "baron_barn",
+   "name": "Family Matters: the burning barn",
+   "kind": "main",
+   "quests": [
+    "family1",
+    "family2"
+   ],
+   "situation": "On the way back to the castle a barn is on fire and you are asked to save the stable boy Oswin. It is a decision with a time limit.",
+   "options": [
+    {
+     "label": "Help save Oswin",
+     "type": "action",
+     "result": "You run through the barn and open the exit door to save Oswin and the horses. Later Oswin may thank you with 20 crowns."
+    },
+    {
+     "label": "Go straight to the Baron",
+     "type": "dialogue",
+     "result": "Skips the rescue."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Help save Oswin",
+    "why": "He gives you 20 crowns afterwards.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Help save Oswin",
+    "why": "A boy and the horses are saved.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: Family Matters"
+  },
+  {
+   "id": "baron_botchling",
+   "name": "Family Matters: the botchling",
+   "kind": "main",
+   "quests": [
+    "family2"
+   ],
+   "situation": "After the fist fight the Baron takes you to where he buried his newborn. Save your game first.",
+   "options": [
+    {
+     "label": "Attack the botchling to kill it",
+     "type": "action",
+     "result": "It turns into a much larger beast and you fight it as a mini-boss. Afterwards you take Botchling Blood and help the Pellar perform a ritual."
+    },
+    {
+     "label": "Try to transform it into a lubberkin",
+     "type": "action",
+     "result": "The Baron carries it to the courtyard while wraiths attack; you calm it with Axii. You then follow the lubberkin to the fisherman's cabin."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Transform it into a lubberkin",
+    "why": "It saves the spirit instead of killing it.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "The walkthrough says both options end at the fisherman's cabin and continue the same way, while the main-quest list calls this an important choice with great impact on the follow-up. The sources I could read do not say what the lasting difference is.",
+   "affects_ending": false,
+   "source": "gamepressure.com: Family Matters"
+  },
+  {
+   "id": "baron_tamara",
+   "name": "Tamara in Oxenfurt",
+   "kind": "main",
+   "quests": [
+    "family2",
+    "witch"
+   ],
+   "situation": "The Baron asks you to meet his daughter Tamara in Oxenfurt.",
+   "options": [
+    {
+     "label": "Agree with no conditions",
+     "type": "dialogue",
+     "result": "You receive an additional 50 crowns."
+    },
+    {
+     "label": "Agree, but with conditions",
+     "type": "dialogue",
+     "result": "No bonus."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Agree with no conditions",
+    "why": "An extra 50 crowns.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Guides disagree on whether skipping Tamara matters: one page says a family reunion happens anyway, another warns you can lose the chance to continue the Baron's storyline if you report Anna without looking for his daughter. Meet Tamara to be safe.",
+   "affects_ending": false,
+   "source": "gamepressure.com: Family Matters; gamepressure.com: Return to the Crookback Bog"
+  },
+  {
+   "id": "baron_keira",
+   "name": "Wandering in the Dark: Keira's affection",
+   "kind": "main",
+   "quests": [
+    "dark"
+   ],
+   "situation": "After closing the rifts the game gives you a time-limited dialogue choice.",
+   "options": [
+    {
+     "label": "Pick the first option",
+     "type": "dialogue",
+     "result": "You fight for Keira's affection."
+    },
+    {
+     "label": "Pick another option",
+     "type": "dialogue",
+     "result": "You don't."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The source says this is not a very important decision.",
+   "affects_ending": false,
+   "source": "gamepressure.com: Wandering in the Dark"
+  },
+  {
+   "id": "baron_hillock",
+   "name": "The spirit in the tree (Whispering Hillock)",
+   "kind": "main",
+   "quests": [
+    "whisper",
+    "ladies",
+    "return_to_crookback_bog"
+   ],
+   "situation": "In The Whispering Hillock you decide the fate of the ghost in the tree. It sets how Return to the Crookback Bog goes and how the Baron's story ends. It is irreversible.",
+   "options": [
+    {
+     "label": "Kill the spirit (Option A, shorter)",
+     "type": "action",
+     "result": "Anna is left incurably sick in her mind and the Baron takes her home to a healer. The people of Downwarren are safe. The orphans' fate is unknown. The military rules Velen."
+    },
+    {
+     "label": "Free the spirit (Option B, longer)",
+     "type": "action",
+     "result": "After the fiend fight Anna is a water hag. To save her find Johny, then the hidden basement altar, and pick the doll with the violet flower (the wrong doll and she burns). She returns to human form and dies at once; the Baron hangs himself; the freed spirit kills the people of Downwarren. The spirit says the children will be freed. The military rules Velen."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Kill the spirit",
+    "why": "Anna and Downwarren survive, whereas freeing it ends with Anna, the Baron and the villagers dead.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "Both endings are grim and the sources call the Baron's fate similar either way. To play Option B you must not start The Whispering Hillock until you have found the swamp village. Read the Return to the Crookback Bog walkthrough before starting Ladies of the Wood. Guides disagree on what happens to the orphans.",
+   "affects_ending": false,
+   "source": "gamepressure.com: Return to the Crookback Bog; gamepressure.com: Major supporting characters; gamepressure.com: Family Matters"
+  },
+  {
    "id": "ciri_overview",
    "name": "Ciri's ending: the five decisions",
    "kind": "ending",

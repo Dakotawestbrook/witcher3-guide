@@ -131,7 +131,7 @@ class TestCore(unittest.TestCase):
     # ---- Decisions ----
     def test_decisions_data_integrity(self):
         decs = core.load_decisions()
-        self.assertGreaterEqual(len(decs), 30)
+        self.assertGreaterEqual(len(decs), 40)
         self.assertEqual(len({d["id"] for d in decs}), len(decs), "duplicate decision ids")
         for d in decs:
             self.assertTrue(d["source"], d["id"])
@@ -147,6 +147,23 @@ class TestCore(unittest.TestCase):
                 if pk:
                     self.assertTrue(pk["pick"] and pk["why"], (d["id"], field))
                     self.assertIn(pk["basis"], ("stated", "judgement"), (d["id"], field))
+
+    def test_bloody_baron_decisions(self):
+        decs = {d["id"]: d for d in core.load_decisions()}
+        baron = [d for d in decs.values() if d["id"].startswith("baron_")]
+        self.assertEqual(len(baron), 7)
+        for d in baron:  # all happen in Velen main quests
+            self.assertTrue(all(self.by_id[q]["region"] == "Velen" for q in d["quests"]), d["id"])
+        hill = decs["baron_hillock"]
+        self.assertEqual(len(hill["options"]), 2)
+        text = " ".join(o["result"] for o in hill["options"])
+        for fact in ("incurably sick", "violet flower", "hangs himself", "Downwarren"):
+            self.assertIn(fact, text)
+        self.assertEqual(hill["best_moral"]["basis"], "judgement")  # my inference, so it is labelled as such
+        self.assertIn("baron_hillock", {d["id"] for d in core.decisions_for(core.load_decisions(), {"whisper"})})
+        self.assertTrue(core.has_conflict(decs["baron_pellar"]))    # rewards: Axii, morals: offer to heal
+        self.assertEqual(decs["baron_barn"]["best_rewards"]["basis"], "stated")
+        self.assertIn("50 crowns", decs["baron_tamara"]["best_rewards"]["why"])
 
     def test_decisions_cover_the_dlcs_and_endings(self):
         kinds = {d["kind"] for d in core.load_decisions()}

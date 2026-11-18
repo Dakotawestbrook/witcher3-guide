@@ -43,8 +43,8 @@ manual ticking.
 
 ## Decisions tab
 
-The **⚖ Decisions: best choices** tab lists quests with several dialogue or action options (33 so far:
-the endings, the romances, base-game side quests and both DLCs). Select one to see the options, what
+The **⚖ Decisions: best choices** tab lists quests with several dialogue or action options (40 so far:
+the Bloody Baron questline, the endings, the romances, base-game side quests and both DLCs). Select one to see the options, what
 each does, and the recommended pick for each goal:
 
 - **Best for rewards**, **Best for morals** and **Best for the outcome**, each marked *(source says so)*
@@ -58,8 +58,8 @@ each does, and the recommended pick for each goal:
 Data lives in `witcher_guide/data/decisions.json`. Sources: gamepressure.com (Ciri's fate, fate of the
 world, Keira Metz, Triss and Yennefer), game-checklists.com (quest descriptions, including the DLCs) and
 allthings.how. **Gaps:** reward comparisons are only included where a guide states them (8 so far), the
-Bloody Baron decisions are left out because the pages I could read don't spell out their outcomes and
-guides disagree, and the most detailed decision lists (Game8, the Witcher wiki) block automated access.
+Bloody Baron's lasting consequences are only as detailed as gamepressure.com's walkthroughs (guides disagree
+on the orphans' fate and on what the Botchling choice changes), and the most detailed decision lists (Game8, the Witcher wiki) block automated access.
 Add entries by copying an existing one: `quests` links a decision to quest ids in `quests.json`.
 
 ## Resizing
