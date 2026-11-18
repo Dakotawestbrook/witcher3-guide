@@ -1,0 +1,32 @@
+{
+  "_note": "STARTER DATASET written from memory. Names/order/missable flags are flagged verify:true where unsure. Edit freely - the overlay reloads this file on start.",
+  "regions": ["White Orchard", "Velen", "Novigrad", "Skellige", "Kaer Morhen", "General"],
+  "quests": [
+    {"id": "lilac", "name": "Lilac and Gooseberries", "region": "White Orchard", "type": "main", "requires": [], "notes": "Opening quest. Talk to Yennefer.", "verify": true},
+    {"id": "beast_wo", "name": "The Beast of White Orchard", "region": "White Orchard", "type": "main", "requires": ["lilac"], "notes": "Kill the griffin. Tutorial contract.", "verify": true},
+    {"id": "imperial", "name": "Imperial Audience", "region": "White Orchard", "type": "main", "requires": ["beast_wo"], "notes": "Leads you to Velen.", "verify": true},
+
+    {"id": "family", "name": "Family Matters", "region": "Velen", "type": "main", "requires": ["imperial"], "notes": "Bloody Baron arc starts. Choices here carry through the whole arc.", "verify": true},
+    {"id": "witch", "name": "Hunting a Witch", "region": "Velen", "type": "main", "requires": ["family"], "notes": "Part of the Baron arc.", "verify": true},
+    {"id": "dark", "name": "Wandering in the Dark", "region": "Velen", "type": "main", "requires": ["witch"], "notes": "Your choices shape the Baron's fate.", "missable": true, "warn": "Dialogue/choice quest: outcome of the Baron arc is decided here. Save before.", "verify": true},
+    {"id": "ladies", "name": "Ladies of the Wood", "region": "Velen", "type": "main", "requires": ["dark"], "notes": "Crones of Crookback Bog.", "verify": true},
+
+    {"id": "junior", "name": "Get Junior", "region": "Novigrad", "type": "main", "requires": ["ladies"], "notes": "Novigrad main arc begins.", "verify": true},
+    {"id": "ugly", "name": "Ugly Baby", "region": "Novigrad", "type": "main", "requires": ["junior"], "verify": true},
+    {"id": "flowers", "name": "Broken Flowers", "region": "Novigrad", "type": "main", "requires": ["junior"], "verify": true},
+    {"id": "pyres", "name": "Pyres of Novigrad", "region": "Novigrad", "type": "main", "requires": ["flowers"], "notes": "Triss/Yennefer relationship dialogue lives around this stretch.", "missable": true, "warn": "Romance flirt choices (Triss vs Yennefer) are made through dialogue in this stretch and cannot be redone.", "verify": true},
+
+    {"id": "most_wanted", "name": "Skellige's Most Wanted", "region": "Skellige", "type": "main", "requires": ["pyres"], "verify": true},
+    {"id": "king", "name": "The King is Dead - Long Live the King", "region": "Skellige", "type": "main", "requires": ["most_wanted"], "notes": "Choose Cerys or Hjalmar. This decides who rules Skellige.", "missable": true, "warn": "Permanent choice: Cerys vs Hjalmar. Affects the ending.", "verify": true},
+
+    {"id": "prep", "name": "Final Preparations", "region": "Kaer Morhen", "type": "main", "requires": ["king"], "notes": "Game warns about the point of no return before the final push.", "missable": true, "warn": "POINT OF NO RETURN. Finish every side quest, contract, and Gwent match you want BEFORE starting this.", "verify": true},
+    {"id": "battle", "name": "The Battle of Kaer Morhen", "region": "Kaer Morhen", "type": "main", "requires": ["prep"], "verify": true},
+
+    {"id": "gear_wolf", "name": "Scavenger Hunt: Wolf School Gear", "region": "General", "type": "side", "requires": [], "notes": "Collect diagrams for Wolf gear. Not missable but long.", "verify": true},
+    {"id": "gwent", "name": "Gwent: collect all cards", "region": "General", "type": "side", "requires": [], "missable": true, "expires_before": "prep", "warn": "Many Gwent cards/players are locked to regions or quests. Beat every player in a region before leaving it.", "verify": true}
+  ],
+  "items": [
+    {"id": "i_wolf", "name": "Wolf School armor/swords (diagram hunt)", "region": "General", "rarity": "rare", "missable": false, "notes": "Upgrade tiers come from Scavenger Hunt quests.", "verify": true},
+    {"id": "i_gwent", "name": "Gwent cards (region-locked players)", "region": "General", "rarity": "rare", "missable": true, "warn": "Some players/cards disappear with quest progression. Check before leaving a region.", "verify": true}
+  ]
+}
