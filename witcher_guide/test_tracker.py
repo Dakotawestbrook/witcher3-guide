@@ -95,6 +95,12 @@ class TestTracker(unittest.TestCase):
         self.assertEqual(self.tr.feed("@@WG@@|tracked|"), "tracked")
         self.assertIsNone(self.progress.tracked)
 
+    def test_tracked_all_holds_every_matching_id(self):
+        self.tr.feed("@@WG@@|tracked|Family Matters")  # one game quest, two entries here
+        self.assertEqual(self.progress.tracked_all, {"family1", "family2"})
+        self.tr.feed("@@WG@@|tracked|")
+        self.assertEqual(self.progress.tracked_all, set())
+
     def test_unmatched_titles_are_recorded_for_the_user(self):
         self.tr.feed("@@WG@@|q|Some Brand New Quest|success")
         out = (self.progress.path.parent / "unmatched_quests.txt").read_text()

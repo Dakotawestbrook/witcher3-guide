@@ -31,6 +31,7 @@ class Progress:
         self.path = Path(path) if path else default_progress_path()
         self.done, self.auto_done, self.auto_failed = set(), set(), set()
         self.tracked = None
+        self.tracked_all = set()  # every quest id the tracked title maps to (some game quests are split here)
         self.load()
 
     def load(self):
@@ -109,6 +110,19 @@ def alerts(data, done, failed=frozenset()):
             out.append(dict(q, urgent=True))
     out.sort(key=lambda q: q["status"] != MISSED)
     return out
+
+
+def tracked_risks(data, done, failed, tracked_ids):
+    """Missable quests, not yet finished or lost, that the tracked quest(s) would close.
+
+    A quest is closed by its `expires_before` quest, so tracking that quest (and so most likely
+    doing it next) puts the missable quests tied to it at risk."""
+    tracked_ids = set(tracked_ids or ())
+    if not tracked_ids:
+        return []
+    return [q for q in annotate(data, done, failed)
+            if q.get("missable") and q["status"] in (AVAILABLE, BLOCKED)
+            and q.get("expires_before") in tracked_ids]
 
 
 def missing_prereqs(quest, data, done):

@@ -104,6 +104,30 @@ class TestCore(unittest.TestCase):
         self.assertEqual(lost[0]["status"], core.MISSED)
         self.assertFalse(lost[0]["urgent"])
 
+    def test_tracked_quest_that_closes_missables_is_flagged(self):
+        risks = core.tracked_risks(self.data, set(), frozenset(), {"imperial"})
+        self.assertEqual({q["name"] for q in risks}, {"Twisted Firestarter", "Missing in Action", "On Death's Bed"})
+        self.assertTrue(all(q["expires_before"] == "imperial" for q in risks))
+
+    def test_tracked_risks_ignore_finished_lost_and_unrelated(self):
+        names = {q["name"]: q["id"] for q in self.data["quests"]}
+        done = {names["Missing in Action"]}
+        risks = {q["id"] for q in core.tracked_risks(self.data, done, frozenset(), {"imperial"})}
+        self.assertNotIn(names["Missing in Action"], risks)  # already finished: nothing to lose
+        self.assertEqual(len(risks), 2)
+        lost = frozenset({names["Twisted Firestarter"]})      # the game already failed it
+        self.assertEqual(len(core.tracked_risks(self.data, done, lost, {"imperial"})), 1)
+        self.assertEqual(core.tracked_risks(self.data, set(), frozenset(), {"lilac"}), [])  # closes nothing
+        self.assertEqual(core.tracked_risks(self.data, set(), frozenset(), set()), [])
+        self.assertEqual(core.tracked_risks(self.data, set(), frozenset(), None), [])
+
+    def test_isle_of_mists_puts_many_quests_at_risk(self):
+        self.assertGreaterEqual(len(core.tracked_risks(self.data, set(), frozenset(), {"isle"})), 15)
+
+    def test_every_cutoff_quest_triggers_a_warning(self):
+        for cutoff in {q["expires_before"] for q in self.data["quests"] if q.get("expires_before")}:
+            self.assertTrue(core.tracked_risks(self.data, set(), frozenset(), {cutoff}), cutoff)
+
     def test_no_noise_at_game_start(self):
         self.assertEqual(core.alerts(self.data, set()), [])
 

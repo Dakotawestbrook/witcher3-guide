@@ -115,9 +115,9 @@ class Tracker:
         if ev[0] == "tracked":
             ids = self._ids(ev[1]) if ev[1] else []
             new = ids[0] if ids else None
-            if new == pr.tracked:
+            if new == pr.tracked and set(ids) == pr.tracked_all:
                 return None
-            pr.tracked = new
+            pr.tracked, pr.tracked_all = new, set(ids)
             return "tracked"
         _, title, state = ev
         if self._snap is not None:

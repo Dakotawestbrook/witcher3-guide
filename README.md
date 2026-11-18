@@ -41,6 +41,16 @@ the game's vanilla scripts, but **not yet run in the game**. Setup is in
 the game with `-debugscripts`). Until the mod is installed, everything works as before with
 manual ticking.
 
+## Warnings
+
+- **Tracking a quest that closes others:** if the quest you are tracking in the game would make you miss
+  missable quests you haven't finished (for example tracking *Imperial Audience* while *Missing in Action*
+  is still open), a red warning appears under the tracking line and the overlay pops up even if you hid it
+  with F8. Needs the in-game mod (see below). The affected rows are marked "will be lost".
+- **Long lists and long descriptions never get cut off:** anything that doesn't fit shows a
+  "+N more (click)" or "N more lines (click to expand)" link. Click it to expand, and click again to collapse.
+  The window grows to fit.
+
 ## Closing a stuck or old copy
 
 Only one copy can run at a time; launching a second shows a message instead of starting. To close

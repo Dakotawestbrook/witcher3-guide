@@ -27,6 +27,7 @@ BG, FG, DIM = KEY, "#f2e8d0", "#a89d86"
 PANEL = {"base": "#14110f", "head": "#1f1a15", "entry": "#241e18", "alert": "#2a1411", "detail": "#1f1a15"}
 PANEL_SELECTED = "#2c2620"
 WIDTH = 470
+DETAIL_LINES = 7  # detail text taller than this collapses behind a clickable 'more'
 SHORT = {"Hearts of Stone": "Hearts", "Blood and Wine": "Blood&Wine"}  # keep the tab rows from overflowing
 GOLD, RED, GREEN, BLUE = "#e8b85a", "#ff6b62", "#7fd685", "#7ab8f0"
 ICON = {core.DONE: "✔", core.AVAILABLE: "▶", core.BLOCKED: "○", core.MISSED: "✖"}
@@ -77,6 +78,10 @@ class Overlay:
         self._settings_path = self.progress.path.parent / "settings.json"
         self.backdrop = self._load_settings().get("backdrop", False)
         self.back = None  # the click-catching window, created below
+        self._open = set()  # which truncated texts the user has expanded: alerts / risk / detail
+        self._ready = False
+        self._detail_text = ""
+        self._last_banners = ([], [])
         self._want_backing = IS_WINDOWS if backing is None else backing
 
         root.title("Witcher 3 Guide")
@@ -89,6 +94,7 @@ class Overlay:
         self.refresh()
         root.update_idletasks()
         root.geometry(f"{WIDTH}x{root.winfo_reqheight()}+30+60")
+        self._ready = True
         if self._want_backing:
             self._make_backing()
         self._set_click_through(False)
@@ -144,6 +150,11 @@ class Overlay:
         self.track_lbl = tk.Label(r, text="", bg=BG, fg=BLUE, anchor="w", font=("Segoe UI", 9, "bold"))
         self.track_lbl.pack(fill="x", padx=8)
         self._tag("base", self.track_lbl)
+        # shown only while the tracked quest would close a missable quest you haven't finished
+        self.risk_lbl = tk.Label(r, text="", bg=BG, fg=RED, justify="left", anchor="w",
+                                 wraplength=WIDTH - 30, font=("Segoe UI", 10, "bold"))
+        self.risk_lbl.bind("<Button-1>", lambda e: self._toggle("risk"))
+        self._tag("alert", self.risk_lbl)
 
         bar = tk.Frame(r, bg=BG)
         bar.pack(fill="x", padx=8, pady=6)
@@ -163,19 +174,25 @@ class Overlay:
         self.alert_lbl = tk.Label(r, text="", bg=BG, fg=RED, justify="left", anchor="w",
                                   wraplength=WIDTH - 30, font=("Segoe UI", 9, "bold"))
         self.alert_lbl.pack(fill="x", padx=8)
+        self.alert_lbl.bind("<Button-1>", lambda e: self._toggle("alerts"))
         self._tag("alert", self.alert_lbl)
 
         self.tree = ttk.Treeview(r, style="T.Treeview", show="tree", selectmode="browse", height=11)
         self.tree.pack(fill="x", padx=8, pady=6)  # fixed rows: no half-cut row at the bottom
-        for tag, col in (("done", DIM), ("available", GREEN), ("blocked", FG), ("missed", RED), ("missable", GOLD), ("tracked", BLUE)):
+        for tag, col in (("done", DIM), ("available", GREEN), ("blocked", FG), ("missed", RED), ("missable", GOLD), ("tracked", BLUE), ("atrisk", RED)):
             self.tree.tag_configure(tag, foreground=col)
         self.tree.bind("<<TreeviewSelect>>", self._show_detail)
         self.tree.bind("<Double-1>", self._toggle_selected)
 
-        self.detail = tk.Label(r, text="Double-click a quest to mark it done.", bg=BG, fg=FG,
-                               justify="left", anchor="nw", wraplength=WIDTH - 30, font=("Segoe UI", 9), height=8)
-        self.detail.pack(fill="x", padx=8, pady=(0, 8))
-        self._tag("detail", self.detail)
+        self.detail = tk.Text(r, bg=BG, fg=FG, wrap="word", height=3, relief="flat", bd=0,
+                              highlightthickness=0, font=("Segoe UI", 9), cursor="arrow", padx=0, pady=0,
+                              takefocus=0, state="disabled")
+        self.detail.pack(fill="x", padx=8)
+        self.more_lbl = tk.Label(r, text="", bg=BG, fg=BLUE, anchor="w", font=("Segoe UI", 9, "bold"))
+        self.more_lbl.bind("<Button-1>", lambda e: self._toggle("detail"))
+        self.more_lbl.pack(fill="x", padx=8, pady=(0, 8))
+        self._tag("detail", self.detail, self.more_lbl)
+        self._set_detail("Double-click a quest to mark it done.")
 
     # ---- State ----------------------------------------------------------
     def set_region(self, name):
@@ -184,6 +201,8 @@ class Overlay:
 
     def refresh(self):
         done, failed = self.progress.all_done(), self.progress.auto_failed
+        risks = core.tracked_risks(self.data, done, failed, self.progress.tracked_all)
+        risk_ids = {q["id"] for q in risks}
         for n, b in self.tab_btns.items():
             b.config(fg=GOLD if n == self.region else DIM)
         self.tree.delete(*self.tree.get_children())
@@ -194,27 +213,97 @@ class Overlay:
             tags = [q["status"]] + (["missable"] if q.get("missable") and q["status"] != core.DONE else [])
             if q["id"] == self.progress.tracked:
                 tags.append("tracked")
+            if q["id"] in risk_ids:
+                tags.append("atrisk")
             star = " ⚠" if q.get("missable") else ""
+            if q["id"] in risk_ids:
+                star = " \u203C will be lost"
             mark = "\u25C9" if q["id"] == self.progress.tracked else ICON[q["status"]]
             self.tree.insert("", "end", iid=q["id"], text=f' {mark}  {q["name"]}{star}', tags=tags)
         names = {q["id"]: q["name"] for q in self.data["quests"]}
         t = self.progress.tracked
         self.track_lbl.config(text=f"\u25C9 Tracking in game: {names[t]}" if t in names else "")
-        al = core.alerts(self.data, done, failed)
+        self._render_banners(core.alerts(self.data, done, failed), risks)
+
+    # ---- Warnings, and text that can be expanded when it doesn't fit ---------
+    def _clip(self, key, names, limit):
+        """Join names. Past `limit`, show a clickable summary that expands to the full list."""
+        if len(names) <= limit:
+            return ", ".join(names), False
+        if key in self._open:
+            return ", ".join(names) + "  \u25B2 show less", True
+        return ", ".join(names[:limit]) + f"  \u25BC +{len(names) - limit} more (click)", True
+
+    def _render_banners(self, alerts, risks):
+        self._last_banners = (alerts, risks)
         by_id = {q["id"]: q["name"] for q in self.data["quests"]}
-        lost = [a["name"] for a in al if a["status"] == core.MISSED]
-        msg = []
+        msg, clipped = [], False
+        lost = [a["name"] for a in alerts if a["status"] == core.MISSED]
         if lost:
-            msg.append("MISSED: " + ", ".join(lost[:4]) + ("\u2026" if len(lost) > 4 else ""))
+            text, c = self._clip("alerts", lost, 4)
+            msg.append("MISSED: " + text)
+            clipped |= c
         groups = {}
-        for a in al:
+        for a in alerts:
             if a["urgent"]:
                 groups.setdefault(a["expires_before"], []).append(a["name"])
         for cutoff, names in groups.items():
-            msg.append(f"Before {by_id.get(cutoff, cutoff)}: " + ", ".join(names[:3]) +
-                       (f" +{len(names) - 3} more" if len(names) > 3 else ""))
-        self.alert_lbl.config(text="\n".join(msg[:5]))
-        self.alert_lbl.pack_forget() if not msg else self.alert_lbl.pack(fill="x", padx=8, before=self.tree)
+            if cutoff in self.progress.tracked_all:
+                continue  # the red tracking warning below already lists these
+            text, c = self._clip("alerts", names, 3)
+            msg.append(f"Before {by_id.get(cutoff, cutoff)}: " + text)
+            clipped |= c
+        self.alert_lbl.config(text="\n".join(msg), cursor="hand2" if clipped else "arrow")
+        if msg:
+            self.alert_lbl.pack(fill="x", padx=8, before=self.tree)
+        else:
+            self.alert_lbl.pack_forget()
+
+        if risks:
+            text, c = self._clip("risk", [q["name"] for q in risks], 4)
+            tracked = by_id.get(self.progress.tracked, "this quest")
+            self.risk_lbl.config(text=f"\u26A0 You are tracking {tracked}. Starting it will make you miss: "
+                                      f"{text}. Finish those first.", cursor="hand2" if c else "arrow")
+            self.risk_lbl.pack(fill="x", padx=8, pady=(2, 0), after=self.track_lbl)
+        else:
+            self.risk_lbl.pack_forget()
+        self._fit()
+
+    def _toggle(self, key):
+        self._open ^= {key}
+        if key == "detail":
+            self._set_detail(self._detail_text)
+        else:
+            self._render_banners(*self._last_banners)
+
+    def _set_detail(self, text):
+        """Show text in full if it fits; otherwise collapse it with a clickable 'more'."""
+        self._detail_text = text
+        d = self.detail
+        d.config(state="normal")
+        d.delete("1.0", "end")
+        d.insert("1.0", text)
+        d.config(state="disabled")
+        self.root.update_idletasks()
+        count = d.count("1.0", "end", "displaylines")
+        n = max(1, count[0] if count else 1)
+        over, open_ = n > DETAIL_LINES, "detail" in self._open
+        d.config(height=n if (open_ or not over) else DETAIL_LINES)
+        if over:
+            self.more_lbl.config(text="\u25B2 show less" if open_ else
+                                 f"\u25BC {n - DETAIL_LINES} more lines (click to expand)", cursor="hand2")
+        else:
+            self.more_lbl.config(text="", cursor="arrow")
+        self._fit()
+
+    def _fit(self):
+        """Resize the window to its content so expanded text is never cut off."""
+        if not self._ready:
+            return
+        self.root.update_idletasks()
+        h = self.root.winfo_reqheight()
+        if h != self.root.winfo_height():
+            self.root.geometry(f"{WIDTH}x{h}")  # size only: the position is kept
 
     def _quest(self, qid):
         return next((q for q in core.annotate(self.data, self.progress.all_done(), self.progress.auto_failed) if q["id"] == qid), None)
@@ -234,7 +323,8 @@ class Overlay:
             lines.append("⚠ " + q["warn"])
         if q.get("source"):
             lines.append("Source: " + q["source"])
-        self.detail.config(text="\n".join(lines))
+        self._open.discard("detail")  # a newly selected quest starts collapsed
+        self._set_detail("\n".join(lines))
 
     def _toggle_selected(self, _e=None):
         sel = self.tree.selection()
@@ -309,6 +399,9 @@ class Overlay:
         changes = {c for c in (self.tracker.feed(l) for l in lines) if c}
         if not changes:
             return
+        if "tracked" in changes and core.tracked_risks(
+                self.data, self.progress.all_done(), self.progress.auto_failed, self.progress.tracked_all):
+            self.set_visible(True)  # an important warning must not stay hidden behind F8
         if "tracked" in changes and self.progress.tracked:
             qid = self.progress.tracked
             if not self.tree.exists(qid):  # hidden by a filter: clear filters so it shows
