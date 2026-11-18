@@ -88,6 +88,16 @@ class TestInstaller(unittest.TestCase):
         self.assertIn("Error:", out.getvalue())
         self.assertTrue(any("Press Enter" in p for p in prompts))
 
+    def test_script_does_not_use_witcherscript_keywords_as_names(self):
+        """The game's compiler rejected `quest` as a variable name (TOKEN_QUEST)."""
+        import re
+        src = (Path(im.__file__).parent / "witcherGuide.ws").read_text()
+        code = re.sub(r"//.*|\"[^\"]*\"|'[^']*'", "", src)
+        words = set(re.findall(r"\b[A-Za-z_]\w*\b", code))
+        reserved = {"quest", "state", "entry", "timer", "event", "storyscene", "latent", "exec",
+                    "cleanup", "import", "final", "class", "struct", "enum"}
+        self.assertEqual(words & reserved, set())
+
     def test_mod_script_defines_every_function_the_patches_call(self):
         ws = (Path(im.__file__).parent / "witcherGuide.ws").read_text()
         for _, stmt in im.PATCHES.values():

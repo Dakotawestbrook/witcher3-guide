@@ -1,5 +1,5 @@
 // Witcher Guide companion mod.
-// Reports quest state to the script log so the overlay can follow the game.
+// Reports journalQuest state to the script log so the overlay can follow the game.
 // Output only appears when the game is launched with -debugscripts.
 // Message format: see mod/README.md in the overlay repository.
 //
@@ -23,16 +23,16 @@ function WG_StatusName( status : EJournalStatus ) : string
 	return "inactive";
 }
 
-function WG_QuestTitle( quest : CJournalQuest ) : string
+function WG_QuestTitle( journalQuest : CJournalQuest ) : string
 {
-	return GetLocStringById( quest.GetTitleStringId() );
+	return GetLocStringById( journalQuest.GetTitleStringId() );
 }
 
-function WG_LogTracked( quest : CJournalQuest )
+function WG_LogTracked( journalQuest : CJournalQuest )
 {
-	if ( quest )
+	if ( journalQuest )
 	{
-		LogChannel( 'modWG', "@@WG@@|tracked|" + WG_QuestTitle( quest ) );
+		LogChannel( 'modWG', "@@WG@@|tracked|" + WG_QuestTitle( journalQuest ) );
 	}
 	else
 	{
@@ -40,12 +40,12 @@ function WG_LogTracked( quest : CJournalQuest )
 	}
 }
 
-// Writes the state of every quest in the journal, then the tracked quest.
+// Writes the state of every journalQuest in the journal, then the tracked journalQuest.
 function WG_Snapshot()
 {
 	var manager : CWitcherJournalManager;
 	var entries : array< CJournalBase >;
-	var quest : CJournalQuest;
+	var journalQuest : CJournalQuest;
 	var i : int;
 
 	manager = theGame.GetJournalManager();
@@ -63,10 +63,10 @@ function WG_Snapshot()
 	LogChannel( 'modWG', "@@WG@@|snapshot|begin" );
 	for ( i = 0; i < entries.Size(); i += 1 )
 	{
-		quest = ( CJournalQuest )entries[i];
-		if ( quest )
+		journalQuest = ( CJournalQuest )entries[i];
+		if ( journalQuest )
 		{
-			LogChannel( 'modWG', "@@WG@@|q|" + WG_QuestTitle( quest ) + "|" + WG_StatusName( manager.GetEntryStatus( quest ) ) );
+			LogChannel( 'modWG', "@@WG@@|q|" + WG_QuestTitle( journalQuest ) + "|" + WG_StatusName( manager.GetEntryStatus( journalQuest ) ) );
 		}
 	}
 	LogChannel( 'modWG', "@@WG@@|snapshot|end" );
