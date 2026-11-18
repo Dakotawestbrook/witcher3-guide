@@ -225,11 +225,15 @@
     }
    ],
    "best_rewards": null,
-   "best_moral": null,
+   "best_moral": {
+    "pick": "Kill the spirit",
+    "why": "Anna, the Baron and the people of Downwarren survive. It costs the orphans' lives, whereas freeing the spirit saves the children but costs Anna, the Baron and the villagers.",
+    "basis": "player"
+   },
    "best_outcome": null,
-   "note": "No clear better pick for morals: killing the spirit costs the orphans' lives, while freeing it saves the children but costs Anna, the Baron and the people of Downwarren. The sources call the Baron's fate similar either way. To play Option B you must not start The Whispering Hillock until you have found the swamp village. Read the Return to the Crookback Bog walkthrough before starting Ladies of the Wood.",
+   "note": "Both endings are grim and the sources call the Baron's fate similar either way. Killing the spirit is the player's pick for morals, even though the orphans die. To play Option B you must not start The Whispering Hillock until you have found the swamp village. Read the Return to the Crookback Bog walkthrough before starting Ladies of the Wood.",
    "affects_ending": false,
-   "source": "gamepressure.com: Return to the Crookback Bog; gamepressure.com: Major supporting characters; gamepressure.com: Family Matters; player report (orphans)"
+   "source": "gamepressure.com: Return to the Crookback Bog; gamepressure.com: Major supporting characters; gamepressure.com: Family Matters; player report (orphans, and which choice is better)"
   },
   {
    "id": "ciri_overview",

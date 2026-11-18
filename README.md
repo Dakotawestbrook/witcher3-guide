@@ -48,7 +48,8 @@ the Bloody Baron questline, the endings, the romances, base-game side quests and
 each does, and the recommended pick for each goal:
 
 - **Best for rewards**, **Best for morals** and **Best for the outcome**, each marked *(source says so)*
-  when a guide states it, or *(my judgement)* when I inferred it from the outcomes the guide describes.
+  when a guide states it, *(my judgement)* when I inferred it from the outcomes a guide describes, or
+  *(player's call)* when it reflects a player's own rating (for example killing the spirit in the tree).
 - **⇄** marks decisions where the best choice for rewards and for morals differ.
 - Click **Best for: …** (next to the search box) to switch the goal and show only decisions that have an
   answer for it. Search also looks inside the options.
@@ -59,7 +60,7 @@ Data lives in `witcher_guide/data/decisions.json`. Sources: gamepressure.com (Ci
 world, Keira Metz, Triss and Yennefer), game-checklists.com (quest descriptions, including the DLCs) and
 allthings.how. **Gaps:** reward comparisons are only included where a guide states them (8 so far), the
 Bloody Baron's lasting consequences are only as detailed as gamepressure.com's walkthroughs (guides don't say what the Botchling choice
-changes; the orphans dying if you kill the tree comes from a player report), and the most detailed decision lists (Game8, the Witcher wiki) block automated access.
+changes; the orphans dying if you kill the tree, and rating that choice better for morals, come from a player), and the most detailed decision lists (Game8, the Witcher wiki) block automated access.
 Add entries by copying an existing one: `quests` links a decision to quest ids in `quests.json`.
 
 ## Resizing

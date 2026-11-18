@@ -193,7 +193,7 @@ def format_decision(d, goal="all"):
     for key, field, title in order:
         pk = d.get(field)
         if pk:
-            basis = "source says so" if pk["basis"] == "stated" else "my judgement"
+            basis = {"stated": "source says so", "player": "player's call"}.get(pk["basis"], "my judgement")
             lines.append(f'{title}: {pk["pick"]} - {pk["why"]} ({basis})')
         elif goal == key:
             lines.append(f"{title}: nothing in my sources")

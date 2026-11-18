@@ -146,7 +146,7 @@ class TestCore(unittest.TestCase):
                 pk = d.get(field)
                 if pk:
                     self.assertTrue(pk["pick"] and pk["why"], (d["id"], field))
-                    self.assertIn(pk["basis"], ("stated", "judgement"), (d["id"], field))
+                    self.assertIn(pk["basis"], ("stated", "judgement", "player"), (d["id"], field))
 
     def test_bloody_baron_decisions(self):
         decs = {d["id"]: d for d in core.load_decisions()}
@@ -161,8 +161,11 @@ class TestCore(unittest.TestCase):
             self.assertIn(fact, text)
         self.assertIn("orphans die", text)                           # killing the tree kills the orphans (player-confirmed)
         self.assertNotIn("orphans' fate is unknown. The military", text)
-        self.assertIsNone(hill["best_moral"])                        # genuinely a trade-off: no recommended pick
-        self.assertIn("No clear better pick", hill["note"])
+        self.assertEqual(hill["best_moral"]["pick"], "Kill the spirit")
+        self.assertEqual(hill["best_moral"]["basis"], "player")      # your call, so it is not labelled as a source or as my judgement
+        self.assertIn("orphans", hill["best_moral"]["why"])          # and it states the cost honestly
+        self.assertIn("Both endings are grim", hill["note"])
+        self.assertIn("player's call", core.format_decision(hill, "morals"))
         self.assertIn("baron_hillock", {d["id"] for d in core.decisions_for(core.load_decisions(), {"whisper"})})
         self.assertTrue(core.has_conflict(decs["baron_pellar"]))    # rewards: Axii, morals: offer to heal
         self.assertEqual(decs["baron_barn"]["best_rewards"]["basis"], "stated")
