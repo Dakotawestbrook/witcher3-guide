@@ -60,7 +60,7 @@ class Overlay:
         root.attributes("-topmost", True)
         root.attributes("-alpha", 0.9)
         root.configure(bg=BG)
-        root.geometry("430x560+30+60")
+        root.geometry("430x600+30+60")
 
         self._style()
         self._build()
@@ -95,9 +95,9 @@ class Overlay:
         tabs = tk.Frame(r, bg=BG)
         tabs.pack(fill="x", padx=6, pady=(6, 0))
         self.tab_btns = {}
-        for name in [None] + self.data["regions"]:
+        for n, name in enumerate([None] + self.data["regions"]):
             b = tk.Label(tabs, text=name or "All", bg=BG, fg=DIM, font=("Segoe UI", 9), padx=5, cursor="hand2")
-            b.pack(side="left")
+            b.grid(row=n // 5, column=n % 5, sticky="w")
             b.bind("<Button-1>", lambda e, n=name: self.set_region(n))
             self.tab_btns[name] = b
 
@@ -125,7 +125,7 @@ class Overlay:
         self.tree.bind("<Double-1>", self._toggle_selected)
 
         self.detail = tk.Label(r, text="Double-click a quest to mark it done.", bg="#1f1a15", fg=FG,
-                               justify="left", anchor="nw", wraplength=410, font=("Segoe UI", 9), height=7)
+                               justify="left", anchor="nw", wraplength=410, font=("Segoe UI", 9), height=8)
         self.detail.pack(fill="x", padx=8, pady=(0, 8))
 
     # ---- State ----------------------------------------------------------
@@ -146,14 +146,19 @@ class Overlay:
             star = " ⚠" if q.get("missable") else ""
             self.tree.insert("", "end", iid=q["id"], text=f' {ICON[q["status"]]}  {q["name"]}{star}', tags=tags)
         al = core.alerts(self.data, done)
+        by_id = {q["id"]: q["name"] for q in self.data["quests"]}
         lost = [a["name"] for a in al if a["status"] == core.MISSED]
-        now = [a["name"] for a in al if a["status"] == core.AVAILABLE]
         msg = []
         if lost:
-            msg.append("MISSED: " + ", ".join(lost))
-        if now:
-            msg.append("Act soon: " + ", ".join(now[:3]) + ("…" if len(now) > 3 else ""))
-        self.alert_lbl.config(text="\n".join(msg))
+            msg.append("MISSED: " + ", ".join(lost[:4]) + ("\u2026" if len(lost) > 4 else ""))
+        groups = {}
+        for a in al:
+            if a["urgent"]:
+                groups.setdefault(a["expires_before"], []).append(a["name"])
+        for cutoff, names in groups.items():
+            msg.append(f"Before {by_id.get(cutoff, cutoff)}: " + ", ".join(names[:3]) +
+                       (f" +{len(names) - 3} more" if len(names) > 3 else ""))
+        self.alert_lbl.config(text="\n".join(msg[:5]))
         self.alert_lbl.pack_forget() if not msg else self.alert_lbl.pack(fill="x", padx=8, before=self.tree)
 
     def _quest(self, qid):
@@ -172,8 +177,8 @@ class Overlay:
             lines.append(q["notes"])
         if q.get("warn"):
             lines.append("⚠ " + q["warn"])
-        if q.get("verify"):
-            lines.append("(unverified entry)")
+        if q.get("source"):
+            lines.append("Source: " + q["source"])
         self.detail.config(text="\n".join(lines))
 
     def _toggle_selected(self, _e=None):

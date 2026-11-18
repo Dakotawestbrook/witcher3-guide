@@ -1,32 +1,2276 @@
 {
-  "_note": "STARTER DATASET written from memory. Names/order/missable flags are flagged verify:true where unsure. Edit freely - the overlay reloads this file on start.",
-  "regions": ["White Orchard", "Velen", "Novigrad", "Skellige", "Kaer Morhen", "General"],
-  "quests": [
-    {"id": "lilac", "name": "Lilac and Gooseberries", "region": "White Orchard", "type": "main", "requires": [], "notes": "Opening quest. Talk to Yennefer.", "verify": true},
-    {"id": "beast_wo", "name": "The Beast of White Orchard", "region": "White Orchard", "type": "main", "requires": ["lilac"], "notes": "Kill the griffin. Tutorial contract.", "verify": true},
-    {"id": "imperial", "name": "Imperial Audience", "region": "White Orchard", "type": "main", "requires": ["beast_wo"], "notes": "Leads you to Velen.", "verify": true},
-
-    {"id": "family", "name": "Family Matters", "region": "Velen", "type": "main", "requires": ["imperial"], "notes": "Bloody Baron arc starts. Choices here carry through the whole arc.", "verify": true},
-    {"id": "witch", "name": "Hunting a Witch", "region": "Velen", "type": "main", "requires": ["family"], "notes": "Part of the Baron arc.", "verify": true},
-    {"id": "dark", "name": "Wandering in the Dark", "region": "Velen", "type": "main", "requires": ["witch"], "notes": "Your choices shape the Baron's fate.", "missable": true, "warn": "Dialogue/choice quest: outcome of the Baron arc is decided here. Save before.", "verify": true},
-    {"id": "ladies", "name": "Ladies of the Wood", "region": "Velen", "type": "main", "requires": ["dark"], "notes": "Crones of Crookback Bog.", "verify": true},
-
-    {"id": "junior", "name": "Get Junior", "region": "Novigrad", "type": "main", "requires": ["ladies"], "notes": "Novigrad main arc begins.", "verify": true},
-    {"id": "ugly", "name": "Ugly Baby", "region": "Novigrad", "type": "main", "requires": ["junior"], "verify": true},
-    {"id": "flowers", "name": "Broken Flowers", "region": "Novigrad", "type": "main", "requires": ["junior"], "verify": true},
-    {"id": "pyres", "name": "Pyres of Novigrad", "region": "Novigrad", "type": "main", "requires": ["flowers"], "notes": "Triss/Yennefer relationship dialogue lives around this stretch.", "missable": true, "warn": "Romance flirt choices (Triss vs Yennefer) are made through dialogue in this stretch and cannot be redone.", "verify": true},
-
-    {"id": "most_wanted", "name": "Skellige's Most Wanted", "region": "Skellige", "type": "main", "requires": ["pyres"], "verify": true},
-    {"id": "king", "name": "The King is Dead - Long Live the King", "region": "Skellige", "type": "main", "requires": ["most_wanted"], "notes": "Choose Cerys or Hjalmar. This decides who rules Skellige.", "missable": true, "warn": "Permanent choice: Cerys vs Hjalmar. Affects the ending.", "verify": true},
-
-    {"id": "prep", "name": "Final Preparations", "region": "Kaer Morhen", "type": "main", "requires": ["king"], "notes": "Game warns about the point of no return before the final push.", "missable": true, "warn": "POINT OF NO RETURN. Finish every side quest, contract, and Gwent match you want BEFORE starting this.", "verify": true},
-    {"id": "battle", "name": "The Battle of Kaer Morhen", "region": "Kaer Morhen", "type": "main", "requires": ["prep"], "verify": true},
-
-    {"id": "gear_wolf", "name": "Scavenger Hunt: Wolf School Gear", "region": "General", "type": "side", "requires": [], "notes": "Collect diagrams for Wolf gear. Not missable but long.", "verify": true},
-    {"id": "gwent", "name": "Gwent: collect all cards", "region": "General", "type": "side", "requires": [], "missable": true, "expires_before": "prep", "warn": "Many Gwent cards/players are locked to regions or quests. Beat every player in a region before leaving it.", "verify": true}
-  ],
-  "items": [
-    {"id": "i_wolf", "name": "Wolf School armor/swords (diagram hunt)", "region": "General", "rarity": "rare", "missable": false, "notes": "Upgrade tiers come from Scavenger Hunt quests.", "verify": true},
-    {"id": "i_gwent", "name": "Gwent cards (region-locked players)", "region": "General", "rarity": "rare", "missable": true, "warn": "Some players/cards disappear with quest progression. Check before leaving a region.", "verify": true}
-  ]
+ "_note": "Compiled from gamepressure.com (main order), game-checklists.com (side quests, levels) and allthings.how (missables). Each entry lists its source. Verify against your own game version.",
+ "regions": [
+  "White Orchard",
+  "Velen",
+  "Novigrad",
+  "Skellige",
+  "Kaer Morhen",
+  "Finale",
+  "General",
+  "Hearts of Stone",
+  "Blood and Wine"
+ ],
+ "quests": [
+  {
+   "id": "incident",
+   "name": "The Incident at White Orchard",
+   "region": "White Orchard",
+   "type": "main",
+   "requires": [
+    "beast"
+   ],
+   "notes": "Talk to Vesemir in the inn.",
+   "source": "gamepressure.com",
+   "warn": "Starting this can cancel some White Orchard side quests. Finish them first.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "imperial",
+   "name": "Imperial Audience",
+   "region": "White Orchard",
+   "type": "main",
+   "requires": [
+    "incident"
+   ],
+   "notes": "Starts automatically at the Royal Palace in Vizima. Gamepressure calls it 'Royal Audience'.",
+   "source": "gamepressure.com",
+   "warn": "Point of no return for White Orchard: you cannot return after sailing to the Emperor.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "lilac",
+   "name": "Lilac and Gooseberries",
+   "region": "White Orchard",
+   "type": "main",
+   "requires": [],
+   "notes": "Starts automatically after talking to Vesemir.",
+   "source": "gamepressure.com",
+   "level": 1
+  },
+  {
+   "id": "beast",
+   "name": "The Beast of White Orchard",
+   "region": "White Orchard",
+   "type": "main",
+   "requires": [
+    "lilac"
+   ],
+   "notes": "Talk to the garrison commander in White Orchard.",
+   "source": "gamepressure.com",
+   "level": 1
+  },
+  {
+   "id": "a_frying_pan_spick_and_span",
+   "name": "A Frying Pan, Spick and Span",
+   "region": "White Orchard",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Woesong Bridge. Geralt helps an old lady find her frying pan. You can destroy a door to find an old corpse to unlock more dialogue option with the old lady. You can also pick up Thaler's monocle and return it to him in A Deadly Plot qu..."
+  },
+  {
+   "id": "twisted_firestarter",
+   "name": "Twisted Firestarter",
+   "region": "White Orchard",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Woesong Bridge. Geralt investigates a burnt forge, owned by Blacksmith Willis.",
+   "missable": true,
+   "expires_before": "imperial",
+   "warn": "Fails once Imperial Audience is reached/completed."
+  },
+  {
+   "id": "missing_in_action",
+   "name": "Missing in Action",
+   "region": "White Orchard",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Ransacked Village. Geralt visits the Ransacked Village and helps Dune find his brother Bastien, who was found deserting. This quest can appear on a Notice Board near Woesong Bridge .",
+   "missable": true,
+   "expires_before": "imperial",
+   "warn": "Fails once Imperial Audience is reached/completed."
+  },
+  {
+   "id": "precious_cargo",
+   "name": "Precious Cargo",
+   "region": "White Orchard",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Sawmill. Geralt helps a supposed Merchant with lost cargo, but discovers the trader is the one who ordered the attack on the cargo transport. This quest appears between Sawmill and Nilfgaardian Garrison Signposts."
+  },
+  {
+   "id": "devil_well",
+   "name": "Contract: Devil by the Well",
+   "region": "White Orchard",
+   "type": "contract",
+   "requires": [],
+   "missable": true,
+   "expires_before": "thin_ice",
+   "level": 1,
+   "notes": "White Orchard notice-board contract.",
+   "warn": "The only contract in the game that can fail. Do it before On Thin Ice.",
+   "source": "allthings.how"
+  },
+  {
+   "id": "on_deaths_bed",
+   "name": "On Death's Bed",
+   "region": "White Orchard",
+   "type": "side",
+   "requires": [],
+   "level": 2,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Sawmill. Geralt visits the Herbalist Tomira in White Orchard and decides whether to help sick woman Lena with a Swallow potion.",
+   "missable": true,
+   "expires_before": "imperial",
+   "warn": "Fails once Imperial Audience is reached/completed."
+  },
+  {
+   "id": "faithful_friend",
+   "name": "Faithful Friend",
+   "region": "White Orchard",
+   "type": "side",
+   "requires": [],
+   "level": 30,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Woesong Bridge. Only accessible during the Empress ending and just before closing out the game! A small local side quest which paints a grim image about the war and the chosen ending.",
+   "missable": true,
+   "warn": "The only White Orchard errand that survives Imperial Audience."
+  },
+  {
+   "id": "nilf",
+   "name": "The Nilfgaardian Connection",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "imperial"
+   ],
+   "notes": "Starts automatically after Imperial Audience.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "baron",
+   "name": "Bloody Baron",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "nilf"
+   ],
+   "notes": "Starts automatically after The Nilfgaardian Connection.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "ciri_wolves",
+   "name": "Ciri's Story: The King of the Wolves",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "baron"
+   ],
+   "notes": "Starts during the conversation with the Baron.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "family1",
+   "name": "Family Matters (part 1)",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "baron"
+   ],
+   "notes": "Starts after meeting the Baron at Crow's Perch. Play until you meet the Pellar.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "princess",
+   "name": "A Princess in Distress",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "family1"
+   ],
+   "notes": "Talk to the Pellar.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "family2",
+   "name": "Family Matters (part 2)",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "princess"
+   ],
+   "notes": "Go back to the Baron.",
+   "source": "gamepressure.com",
+   "warn": "Important choice about the Botchling: kill it or turn it into a Lubberkin. It heavily affects the rest of the quest.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "ciri_race",
+   "name": "Ciri's Story: The Race",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "family2"
+   ],
+   "notes": "Starts during the conversation with the Baron.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "witch",
+   "name": "Hunting a Witch",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "nilf"
+   ],
+   "notes": "Start it after finding Tamara, the Baron's daughter.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "dark",
+   "name": "Wandering in the Dark",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "witch"
+   ],
+   "notes": "Starts during the conversation with Keira Metz in Hunting a Witch.",
+   "source": "gamepressure.com",
+   "warn": "You cannot cancel it once started. Have at least level 6-7 first.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "ladies",
+   "name": "Ladies of the Wood",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "dark"
+   ],
+   "notes": "Play until the witches give you a task.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "whisper",
+   "name": "The Whispering Hillock",
+   "region": "Velen",
+   "type": "main",
+   "requires": [
+    "ladies"
+   ],
+   "notes": "From the witches in Crookback Bog. Reach the cave and talk to the ghost, then go back to the witches.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "fake_papers",
+   "name": "Fake Papers",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Border Post. Part of the Thou Shalt Not Pass quest. Merchant near Pontar river offers Geralt the pass, if he helps Alvin in Bitter Harvest side quest. If Alvin dies, informing the Merchant of this fails this quest."
+  },
+  {
+   "id": "the_truth_is_in_the_stars",
+   "name": "The Truth is in the Stars",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Benek. Geralt meets an Old Sage in Benek village and brings dragonsroot for him. He then shares information about Ithlinne's Prophecy. This quest can appear on a Notice Board near Oxenfurt Harbor ."
+  },
+  {
+   "id": "funeral_pyres",
+   "name": "Funeral Pyres",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 3,
+   "source": "game-checklists.com",
+   "notes": "Near Mulbrydale. Geralt encounters an Eternal Fire priest west of Mulbrydale who requests Geralt burns dead bodies on nearby battlefields. Geralt discovers the priest is behind the dead and confronts him at the Border Post ."
+  },
+  {
+   "id": "ciris_room",
+   "name": "Ciri's Room",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 5,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Crow's Perch. Geralt investigates the room where Ciri stayed on Crow's Perch during the Family Matters main quest .",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "hazardous_goods",
+   "name": "Hazardous Goods",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 5,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Lurtch. On a main road north of Lurtch , Geralt encounters a man trapped under a cart, attacked by ghoul. The man admits to transport plagued bodies. Geralt can either burn the cart or continue. He later encounters the man near Reardon...",
+   "missable": true,
+   "expires_before": "ghosts_of_the_past",
+   "warn": "Fails once ghosts_of_the_past is reached/completed."
+  },
+  {
+   "id": "a_dogs_life",
+   "name": "A Dog's Life",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 5,
+   "source": "game-checklists.com",
+   "notes": "Near Oreton. East of Oreton , Geralt encounters a stray dog that leads him straight into a Bandit Camp . Use Witcher Senses in the camp to locate a treasure inside a house."
+  },
+  {
+   "id": "magic_lamp",
+   "name": "Magic Lamp",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 6,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Midcopse. Geralt helps Keira retrieve the Magic Lamp.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails when you leave Kaer Morhen for the Isle of Mists."
+  },
+  {
+   "id": "an_invitation_from_keira_metz",
+   "name": "An Invitation from Keira Metz",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 6,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Midcopse. Geralt visits Keira after the events of Hunting a Witch quest and she explains the situation on Fyke Isle . This quest is immediately followed by A Towerful of Mice quest.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "With For the Advancement of Learning this decides Keira's fate. Send her to Kaer Morhen to have her fight in the final battle. Letting her die or skipping her arc unlocks A Final Kindness."
+  },
+  {
+   "id": "a_towerful_of_mice",
+   "name": "A Towerful of Mice",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 6,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Fyke Isle. Geralt embarks for Fyke Isle for the first time. Using Xenovox, he breaks the tower's curse for Keira. This quest is immediately followed by A Favor for a Friend quest. After a Towerful of Mice, if you solved the botchling i...",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "a_favor_for_a_friend",
+   "name": "A Favor for a Friend",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 6,
+   "source": "game-checklists.com",
+   "notes": "Near Midcopse. After the events at Fyke Isle , Geralt and Keira Metz enjoy a dinner together. Keira tricks Geralt and leaves for Fyke Isle . This quest is immediately followed by For the Advancement of Learning quest."
+  },
+  {
+   "id": "ghosts_of_the_past",
+   "name": "Ghosts of the Past",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 6,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Lindenvale. Near Lindenvale and Rearden Manor, Geralt encounters the witcher Letho. This event is dependent on whether you uploaded your The Witcher 2 save.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "the_fall_of_the_house_of_reardon",
+   "name": "The Fall of the House of Reardon",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 6,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Lindenvale. Lady in Lindenvale hires Geralt to clear the Reardon Manor haunted by Wraiths.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "fools_gold",
+   "name": "Fools' Gold",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 6,
+   "source": "game-checklists.com",
+   "notes": "Near Lurtch. Geralt meets a deranged man named Yontek in Lurtch and defends him from bandits and nekkers."
+  },
+  {
+   "id": "lynch_mob",
+   "name": "Lynch Mob",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 7,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Hangman's Alley. While travelling around Blackbough , Geralt encounters a party of soldiers hanging a man and intervenes.",
+   "missable": true,
+   "expires_before": "a_favor_for_a_friend",
+   "warn": "Fails once a_favor_for_a_friend is reached/completed."
+  },
+  {
+   "id": "thou_shalt_not_pass",
+   "name": "Thou Shalt Not Pass",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 7,
+   "source": "game-checklists.com",
+   "notes": "Near Border Post. Overarching side quest covering multiple ways across the Pontar river to reach Novigrad ."
+  },
+  {
+   "id": "forefathers_eve",
+   "name": "Forefathers' Eve",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 7,
+   "source": "game-checklists.com",
+   "notes": "Near Fyke Isle. Help the Pellar with a ritual on Fyke Isle ."
+  },
+  {
+   "id": "wild_at_heart",
+   "name": "Wild at Heart",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 7,
+   "source": "game-checklists.com",
+   "notes": "Near Blackbough. Geralt uncovers an undercover werewolf near Blackbough during Hanna and Niellen mystery. This quest can appear on a Notice Boards in Mulbrydale , Midcopse , Crow's Perch and Inn at the Crossroads ."
+  },
+  {
+   "id": "a_greedy_god",
+   "name": "A Greedy God",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 7,
+   "source": "game-checklists.com",
+   "notes": "Near Wastrel Manor. South of Wastrel Manor signpost, Geralt enters a ruined building with a peculiar 'god' living inside - a sylvan extorting local villagers."
+  },
+  {
+   "id": "for_the_advancement_of_learning",
+   "name": "For the Advancement of Learning",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 8,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Fyke Isle. Geralt follows Keira to Fyke Isle and halts her plans. He then chooses her fate. We recommend sending her to Kaer Morhen, as she will become an Ally in the Kaer Morhen battle, necessary for an achievement.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "With An Invitation from Keira Metz this decides Keira's fate (see that quest)."
+  },
+  {
+   "id": "bitter_harvest",
+   "name": "Bitter Harvest",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 9,
+   "source": "game-checklists.com",
+   "notes": "Near Border Post. Geralt helps Alvin defend from the ghouls near Pontar Border Post ."
+  },
+  {
+   "id": "last_rites",
+   "name": "Last Rites",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 9,
+   "source": "game-checklists.com",
+   "notes": "Near Blackbough. Geralt helps an old lady haunted by her deceased husband, but finds out he was talking to a ghost. This is a missable quest pickable only during night near Blackbough , after you complete Defender of the Faith quest."
+  },
+  {
+   "id": "return_to_crookback_bog",
+   "name": "Return to Crookback Bog",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 9,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Downwarren. Geralt accompanies Bloody Baron on a war march towards Crookback Bog. You need to progress heavily in Family Matters first.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "death_by_fire",
+   "name": "Death By Fire",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 10,
+   "source": "game-checklists.com",
+   "notes": "Near Codgers' Quarry. Geralt encounters a party of bandits west of Codgers' Quarry burning a hut and intervenes."
+  },
+  {
+   "id": "defender_of_the_faith",
+   "name": "Defender of the Faith",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 10,
+   "source": "game-checklists.com",
+   "notes": "Near Blackbough. In a forest east of Blackbough , Geralt encounters a destroyed statue."
+  },
+  {
+   "id": "witcher_wannabe",
+   "name": "Witcher Wannabe",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 10,
+   "source": "game-checklists.com",
+   "notes": "Near Lindenvale. Geralt encounters a man falsely posing as a witcher near Lindenvale and decides his fate. You need to finish Contract: The Merry Widow first. This quest can appear on Notice Boards in Crow's Perch , Downwarren and Oreton ."
+  },
+  {
+   "id": "loves_cruel_snares",
+   "name": "Love's Cruel Snares",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 10,
+   "source": "game-checklists.com",
+   "notes": "Near Condyle. Geralt helps a crying woman near Abandoned Site north of Condyle village. Unfortunately, he discovers that her husband was attack by a pack of wild dogs. For this quest to appear, clear the Abandoned Site north of Condyle firs..."
+  },
+  {
+   "id": "blood_ties",
+   "name": "Blood Ties",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com",
+   "notes": "Near Nilfgaardian Army Group Center Camp. In a Nilfgaardian camp, Geralt encounters a noblewoman searching for the fate of her son."
+  },
+  {
+   "id": "the_volunteer",
+   "name": "The Volunteer",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 13,
+   "source": "game-checklists.com",
+   "notes": "Near White Eagle Fort. Geralt meets a peculiar troll named Trollolo from the Redanian army. This quest can appear on a Notice Board near Oxenfurt Harbor ."
+  },
+  {
+   "id": "in_the_eternal_fires_shadow",
+   "name": "In The Eternal Fire's Shadow",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com",
+   "notes": "Near Devil's Pit. Geralt meets a young Eternal Fire priest near Devil's Den, then investigates the cave system. This quest needs to be completed before Fencing Lessons ."
+  },
+  {
+   "id": "brothers_in_arms_velen",
+   "name": "Brothers In Arms: Velen",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 22,
+   "source": "game-checklists.com",
+   "notes": "Near Midcopse. Geralt travels to Velen to secure allies for the battle against the Wild Hunt. The key ally here is Keira Metz. Her participation depends on completing her personal quests and convincing her to go to Kaer Morhen after the eve..."
+  },
+  {
+   "id": "master_armorers",
+   "name": "Master Armorers",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 24,
+   "source": "game-checklists.com",
+   "notes": "Near Crow's Perch. Geralt learns of mastercrafted armor and is tasked with retrieving high-quality smithing tools from a distant forge on Undvik. After battling an Ice Troll and gathering the materials, he helps Yoana craft a superior armor..."
+  },
+  {
+   "id": "where_the_cat_and_wolf_play",
+   "name": "Where the Cat and Wolf Play…",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 25,
+   "source": "game-checklists.com",
+   "notes": "Near Claywitch. Geralt investigates a village named Honorton, located east of Claywich . Geralt investigates a massacre committed by a fellow Witcher of the School of the Cat. He helps the surviving girl, Millie, track down Gaetan and must ..."
+  },
+  {
+   "id": "take_what_you_want",
+   "name": "Take What You Want",
+   "region": "Velen",
+   "type": "side",
+   "requires": [],
+   "level": 25,
+   "source": "game-checklists.com",
+   "notes": "Near Midcopse. North of Keira Metz's hut, Geralt retrieves Gaetan's hidden stash after sparing him in Where the Cat and Wolf Play…. Sparing Gaetan in Where the Can and Wolf Play... is necessary."
+  },
+  {
+   "id": "pyres",
+   "name": "Pyres of Novigrad",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "ladies"
+   ],
+   "notes": "Find Triss Merigold's house in Novigrad.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "dreaming",
+   "name": "Novigrad Dreaming",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "pyres"
+   ],
+   "notes": "Starts during Pyres of Novigrad. Two ways to finish; neither affects the main story.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "flowers",
+   "name": "Broken Flowers",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "dreaming"
+   ],
+   "notes": "Find Dandelion.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "junior",
+   "name": "Get Junior",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "flowers"
+   ],
+   "notes": "Meet Dijkstra, explore Junior's place and meet Roche.",
+   "source": "gamepressure.com",
+   "warn": "The Gangs of Novigrad is lost once Get Junior is done.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "ciri_junior",
+   "name": "Ciri's Story: Visiting Junior",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "junior"
+   ],
+   "notes": "Starts during the conversation with Junior.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "reuven",
+   "name": "Count Reuven's Treasure",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "junior"
+   ],
+   "notes": "After meeting Junior, infiltrate Menge's house with Triss.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "play",
+   "name": "The Play's the Thing",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "reuven"
+   ],
+   "notes": "Go to Priscilla.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "poet",
+   "name": "A Poet Under Pressure",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "play"
+   ],
+   "notes": "Find Dandelion with Zoltan.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "ciri_speed",
+   "name": "Ciri's Story: Breakneck Speed",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "poet"
+   ],
+   "notes": "Dandelion tells you what happened to Ciri.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "dest",
+   "name": "Destination: Skellige",
+   "region": "Novigrad",
+   "type": "main",
+   "requires": [
+    "imperial"
+   ],
+   "notes": "Available once you reach Novigrad. Unlocks permanent access to Skellige.",
+   "source": "gamepressure.com",
+   "level": 15
+  },
+  {
+   "id": "gangs",
+   "name": "The Gangs of Novigrad",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "junior",
+   "notes": "After the bathhouse attack, Cleaver offers help. Visit him to start it.",
+   "warn": "Lost once Get Junior is completed.",
+   "source": "game-checklists.com; allthings.how",
+   "level": null
+  },
+  {
+   "id": "g_high_stakes",
+   "name": "Gwent: High Stakes tournament cards",
+   "region": "Novigrad",
+   "type": "gwent",
+   "requires": [],
+   "missable": true,
+   "notes": "You must win High Stakes outright to collect every card it offers.",
+   "warn": "Win outright. Card holders can die or leave before you play them.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "g_chains",
+   "name": "Gwent: Old Pals and Big City Players chains",
+   "region": "Novigrad",
+   "type": "gwent",
+   "requires": [],
+   "missable": true,
+   "notes": "Risky card sources; win and buy cards early.",
+   "warn": "Cards can become uncollectable if a holder dies or leaves.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "a_message_from_an_old_friend",
+   "name": "A Message from an Old Friend",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square. On Hierarch Square , Geralt visits a bookstore and discovers an old friend left him a letter."
+  },
+  {
+   "id": "hey_you_wanna_look_at_my_stuff",
+   "name": "Hey, You Wanna Look at my Stuff?",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square. In Silverton, Geralt bumps into a shady Merchant , who will run away when the Witch Hunters show up."
+  },
+  {
+   "id": "empty_coop",
+   "name": "Empty Coop",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Honeyfill Meadworks. On Novigrad outskirts, Geralt stops in a hut and investigates stolen chickens."
+  },
+  {
+   "id": "the_dwarven_document_dilemma",
+   "name": "The Dwarven Document Dilemma",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 2,
+   "source": "game-checklists.com",
+   "notes": "Near Seven Cats Inn. On a bridge to Novigrad, Geralt is stopped by a dwarf claiming that he just got robbed. This quest needs to be completed before Fencing Lessons ."
+  },
+  {
+   "id": "haunted_house",
+   "name": "Haunted House",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 7,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square. Geralt returns to the haunted house again and meets Sarah and Corinne Tilly. This quest begins right after Novigrad Dreaming, if Geralt allows Sarah to stay in the haunted house."
+  },
+  {
+   "id": "hidden_messages_of_the_nilfgaardian_kind",
+   "name": "Hidden Messages of the Nilfgaardian Kind",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 8,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square. Northeast of Hierarch Square , Geralt encounters two shady men. He follows the spies. The Never Trust Children side quest has to be completed first for this quest to appear."
+  },
+  {
+   "id": "novigrad_hospitality",
+   "name": "Novigrad Hospitality",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 8,
+   "source": "game-checklists.com",
+   "notes": "Near Yantra. West of Yantra , Geralt joins a few drunks camping next to a road. In the morning, he wakes up robbed and can pursue them."
+  },
+  {
+   "id": "gangs_of_novigrad",
+   "name": "Gangs of Novigrad",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 9,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square. After the attack in Djikstra's bathhouse, Cleaver offers Geralt help with finding Whoreson Junior. Geralt and Cleaver's henchmen raid Junior's hideouts. This quest should be completed immediately after obtaining and le..."
+  },
+  {
+   "id": "honor_among_thieves",
+   "name": "Honor Among Thieves",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 9,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square. During Gangs of Novigrad , Geralt is raiding Junior's casino. He finds an imprisoned spy Rico Meiersdorf, working for the King of the Beggars. We suggest letting him go for extra loot from King of the Beggars."
+  },
+  {
+   "id": "of_dairy_and_darkness",
+   "name": "Of Dairy and Darkness",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 9,
+   "source": "game-checklists.com",
+   "notes": "Near Aeramas' Abandoned Manor. Geralt investigates the Aeramas' Abandoned Manor east of Oxenfurt. This is the dungeon with a cheese maze. This quest can also be started with a Shopkeeper in Gildorf."
+  },
+  {
+   "id": "rough_neighborhood",
+   "name": "Rough Neighborhood",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 10,
+   "source": "game-checklists.com",
+   "notes": "Near Western Gate. Geralt helps a woman being harassed by mercenaries in Novigrad southeast of Western Gate . You first need to complete Contract: The Oxenfurt Drunk for this quest to appear."
+  },
+  {
+   "id": "following_the_thread",
+   "name": "Following the Thread",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 11,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Hierarch Square. Geralt is helping Lambert with avenging his friend Aiden. This is a lengthy quest that takes place in Novigrad and Skellige and needs story progression for completion. Starting this quest fails the Flesh for Sale side ...",
+   "missable": true,
+   "expires_before": "ugly",
+   "warn": "Fails once Ugly Baby is reached/completed."
+  },
+  {
+   "id": "a_barnful_of_trouble",
+   "name": "A Barnful of Trouble",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 11,
+   "source": "game-checklists.com",
+   "notes": "Near Carsten. In Carsten , on the outskirts of Novigrad, Geralt helps the villagers with monsters trapped in a barn."
+  },
+  {
+   "id": "novigrad_closed_city",
+   "name": "Novigrad, Closed City",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 11,
+   "source": "game-checklists.com",
+   "notes": "Near St. Gregory's Bridge. This sidequest is a series of small events happening around Novigrad, showcasing the cruelty of Witch Hunters."
+  },
+  {
+   "id": "fencing_lessons",
+   "name": "Fencing Lessons",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Hierarch Square. While searching for Dandelion, Geralt meets Rosa van Attre and poses as a fencing teacher, then searches for her around Novigrad. This quest can start as a part of Broken Flowers main quest .",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "a_walk_on_the_waterfront",
+   "name": "A Walk on the Waterfront",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Novigrad Docks. In Novigrad Docks , Geralt helps to defend a man against bandits. The man is revealed to be a fisstech dealer.",
+   "missable": true,
+   "warn": "Vanishes if you walk past it without reacting. Clear the open world early."
+  },
+  {
+   "id": "an_eye_for_an_eye",
+   "name": "An Eye for An Eye",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Temerian Partisan Hideout. Geralt helps Ves with defending Mulbrydale and resolve conflict between her and Vernon Roche. This is a necessary quest to finish for Reason of State to become available.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "a_dangerous_game",
+   "name": "A Dangerous Game",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Gate of the Hierarch. After Geralt saves Dandelion, Zoltan asks him for help regarding completing his Gwent collection. Geralt then has to steal several cards.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Pick up the green statuette, or you cannot finish The Soldier Statuette later. Also a risky Gwent card source."
+  },
+  {
+   "id": "a_tomb_entombed",
+   "name": "A Tomb Entombed",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square. Deep into Novigrad sewers entered in The Bits, Geralt finds a weak wall with a professor hiding a vampire in a sarcophagus behind."
+  },
+  {
+   "id": "a_matter_of_life_and_death",
+   "name": "A Matter of Life and Death",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Hierarch Square. Geralt visits Triss and learns of Ingrid Vegelbut. They attend the ball in Vegelbud Residence together. There is a Gwent competition with several players on the ball. This quest becomes available after Count Reuven's T...",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Part of the Triss romance path."
+  },
+  {
+   "id": "spooked_mare",
+   "name": "Spooked Mare",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com",
+   "notes": "Near Herbalist's Hut. South of Herbalist 's Hut, Geralt helps a man with a run-away horse, but discovers the horse was stolen."
+  },
+  {
+   "id": "redanias_most_wanted",
+   "name": "Redania's Most Wanted",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Oxenfurt Harbor , Est Tayiar. Radovid demands the capture of sorceress Philippa Eilhart, which Geralt doesn't want to do and can be resolved in many ways. Geralt searches for Philippa in Est Tayiar ruins. This quest becomes available a...",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "One of three prerequisites for Reason of State."
+  },
+  {
+   "id": "warehouse_of_woe",
+   "name": "Warehouse of Woe",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 13,
+   "source": "game-checklists.com",
+   "notes": "Near Novigrad Docks. Southwest of Novigrad Docks , Geralt jumps into an argument between a dwarf and a human. Geralt then takes care of a ghoul in the warehouse and resolves the conflict."
+  },
+  {
+   "id": "black_pearl",
+   "name": "Black Pearl",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 13,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square , Arinbjorn. Geralt meets Nidas in The Golden Sturgeon Inn and he asks for a black pearl from Skellige. Geralt later travels north of Arinbjorn and joins Nidas in search of the pearl. Nidas will get attacked by Drowners..."
+  },
+  {
+   "id": "cabaret",
+   "name": "Cabaret",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Gate of the Hierarch. Dandelion wants to transform The Rosemary and Thyme into a cabaret. Geralt helps him transform it to Chameleon.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "the_nobleman_statuette",
+   "name": "The Nobleman Statuette",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Hierarch Square. Geralt buys the statuette from a Shopkeeper in Gildorf. When Geralt visits Triss during Now or Never side quest or later, she can transform the statue back to a man.",
+   "missable": true,
+   "expires_before": "final_prep",
+   "warn": "Fails once Final Preparations is reached/completed."
+  },
+  {
+   "id": "the_soldier_statuette",
+   "name": "The Soldier Statuette",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Hierarch Square. Geralt finds the statuette in a Caesar Bilzen's house, possibly during A Dangerous Game quest. When Geralt visits Triss during Now or Never side quest or later, she can transform the statue back to a man.",
+   "missable": true,
+   "expires_before": "final_prep",
+   "warn": "Fails once Final Preparations is reached/completed."
+  },
+  {
+   "id": "now_or_never",
+   "name": "Now or Never",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Hierarch Square. Geralt helps Triss and the mages to escape from Novigrad. There is an option to romance Triss at the end. This quest becomes available after A Matter of Life and Death .",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Triss romance: choose the dialogue option asking her to stay. Pursuing Triss AND Yennefer loses both."
+  },
+  {
+   "id": "a_deadly_plot",
+   "name": "A Deadly Plot",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Border Post. Geralt joins Djikstra and Roche in the Passiflora and discusses that Thaler went missing. This is a necessary quest to finish for Reason of State to become available.",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "One of three prerequisites for Reason of State (with An Eye for an Eye and Redania's Most Wanted)."
+  },
+  {
+   "id": "out_on_your_arse",
+   "name": "Out on Your Arse!",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com",
+   "notes": "Near Novigrad Docks. Geralt heads back to Crippled Kate and defends the Inn against a party of attacking Skelligers. This quest is only available after completing Contract: Deadly Delights ."
+  },
+  {
+   "id": "little_red",
+   "name": "Little Red",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com",
+   "notes": "Near Yantra. Geralt resolves a conflict in Yantra village, with bandits and Witch Hunters involved."
+  },
+  {
+   "id": "carnal_sins",
+   "name": "Carnal Sins",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 16,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Hierarch Square. Geralt and Dandelion learn that Priscilla has been attacked. Geralt investigates, but the plot thickens. This is the work of a katakan and multiple other attacks ensue. Geralt finally catches the Katakan after he attac...",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "a_feast_for_crows",
+   "name": "A Feast for Crows",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 20,
+   "source": "game-checklists.com",
+   "notes": "Near Gate of the Hierarch. Using Witcher Senses, Geralt discovers a human corpse flesh scent near Rosemary and Thyme and follows the trail."
+  },
+  {
+   "id": "brothers_in_arms_novigrad",
+   "name": "Brothers In Arms: Novigrad",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 22,
+   "source": "game-checklists.com",
+   "notes": "Near Temerian Partisan Hideout , Gate of the Hierarch , Hierarch Square. Geralt travels to Novigrad to secure allies for the battle against the Wild Hunt. Geralt must recruit key allies for the fight: Triss, Zoltan, and Vernon Roche. Some a..."
+  },
+  {
+   "id": "of_swords_and_dumplings",
+   "name": "Of Swords and Dumplings",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 24,
+   "source": "game-checklists.com",
+   "notes": "Near Novigrad Docks. Geralt negotiates with Hattori in Novigrad Docks regarding blacksmithing and gathers necessary supplies. This unlocks a Master Blacksmith in Novigrad."
+  },
+  {
+   "id": "a_final_kindness",
+   "name": "A Final Kindness",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [],
+   "level": 26,
+   "source": "game-checklists.com",
+   "notes": "Near Hierarch Square. After defeating Imlerith, Geralt and Triss reconvene and retrieve Keira Metz's body. This is a rare quest appearing only if Geralt ignores Keira's quests in Velen or allows her to leave Fyke Isle for Radovid."
+  },
+  {
+   "id": "reason_of_state",
+   "name": "Reason of State",
+   "region": "Novigrad",
+   "type": "side",
+   "requires": [
+    "a_deadly_plot",
+    "an_eye_for_an_eye",
+    "redanias_most_wanted",
+    "blinding"
+   ],
+   "level": 30,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Novigrad Docks. Geralt meets Dijkstra after Blindingly Obvious and agrees to his plan to lure Radovid. He convinces Radovid to mobilize his men to the bridge. Geralt then fights Redanian soldiers and witch hunters alongside Roche and t...",
+   "missable": true,
+   "expires_before": "thin_ice",
+   "warn": "Wraps up the Radovid assassination and affects whether Ciri gets the Empress ending. Needs A Deadly Plot, An Eye for an Eye, Redania's Most Wanted and Blindingly Obvious."
+  },
+  {
+   "id": "king",
+   "name": "The King is Dead - Long Live the King",
+   "region": "Skellige",
+   "type": "main",
+   "requires": [
+    "dest"
+   ],
+   "notes": "Go with Yennefer to the feast for Crach an Craite.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "echoes",
+   "name": "Echoes of the Past",
+   "region": "Skellige",
+   "type": "main",
+   "requires": [
+    "king"
+   ],
+   "notes": "Meet Yennefer and Mousesack in the druid settlement.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "missing_person",
+   "name": "Missing Person",
+   "region": "Skellige",
+   "type": "main",
+   "requires": [
+    "echoes"
+   ],
+   "notes": "Starts automatically. Go to Loften with Yennefer.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "nameless",
+   "name": "Nameless",
+   "region": "Skellige",
+   "type": "main",
+   "requires": [
+    "missing_person"
+   ],
+   "notes": "Search for Ciri's trail in Freya's Garden.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "calm",
+   "name": "The Calm Before the Storm",
+   "region": "Skellige",
+   "type": "main",
+   "requires": [
+    "nameless"
+   ],
+   "notes": "Starts during Nameless.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "worthy_of_trust",
+   "name": "Worthy of Trust",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Kaer Trolde Harbor , Fyresdal , Crossroads (Skellige). Geralt is asked by a stranded Skelliger named Johann Bohner for a loan to return home to Novigrad , promising to repay it later. If Geralt shows patience and mercy despite discover..."
+  },
+  {
+   "id": "the_path_of_warriors",
+   "name": "The Path of Warriors",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Trail to Yngvar's Fang. Geralt takes on the Skellige warriors' trial, climbing Yngvar's Fang to collect the first token. He then dives into an underwater cave to recover a second token. This quest only starts after finishing The Tower ..."
+  },
+  {
+   "id": "brave_fools_die_young",
+   "name": "Brave Fools Die Young",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Fornhala. Across the lake east from Fornhala , Geralt encounters two young Skelligers at the Grymmdjarr Monument. He can choose to help the injured Petter ease his pain or simply leave them to face the consequences of their foolish bra..."
+  },
+  {
+   "id": "brothers_in_arms_skellige",
+   "name": "Brothers In Arms: Skellige",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Gedyneith. Geralt recruits allies for the impending battle against the Wild Hunt. Ermion is the only ally who agrees to help without persuasion. For the rest, Geralt must complete prerequisite quests."
+  },
+  {
+   "id": "flesh_for_sale",
+   "name": "Flesh for Sale",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Trottheim. Geralt heads to Trottheim on Faroe Isle and deals with pirates running a slave operation, either by fighting them or playing along. Geralt frees the captive women from a locked slave cell and ensures their escape to safety. ...",
+   "missable": true,
+   "expires_before": "following_the_thread",
+   "warn": "Fails once following_the_thread is reached/completed."
+  },
+  {
+   "id": "a_hallowed_horn",
+   "name": "A Hallowed Horn",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 12,
+   "source": "game-checklists.com",
+   "notes": "Near Eldberg Lighthouse. South of Eldberg Lighthouse , Geralt tracks down a stolen ancestral horn at a Bandit Camp . He returns the horn to Holger Blackhand's steward in Holmstein, learning the men were disgraced warriors, and completes the..."
+  },
+  {
+   "id": "from_a_land_far_far_away",
+   "name": "From a Land Far, Far Away",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 13,
+   "source": "game-checklists.com",
+   "notes": "Near Redgill. Geralt investigates a mysterious shipwreck on a small island east of Redgill and discovers evidence of travelers from a distant land. He tracks the trail to the mainland, where he becomes entangled in a conflict between a fore..."
+  },
+  {
+   "id": "free_spirit",
+   "name": "Free Spirit",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 13,
+   "source": "game-checklists.com",
+   "notes": "Near Ancient Crypt. On Snidhall Isle, Geralt intervenes in a dispute between two Skelligers, discovering Ivar, a young man in love with a priestess named Irma. Religious restrictions prevent their union, so Ivar asks Geralt to find books on..."
+  },
+  {
+   "id": "stranger_in_a_strange_land",
+   "name": "Stranger in a Strange Land",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com",
+   "notes": "Near Arinbjorn. After finishing the contract : Phantom of Eldberg, Geralt is dragged into a tavern brawl in Arinbjorn Inn that ends with Jorund's death and his own arrest. Geralt is imprisoned at Kaer Muire , forced to escape. If Geralt acc..."
+  },
+  {
+   "id": "the_cave_of_dreams",
+   "name": "The Cave of Dreams",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com",
+   "notes": "Near Kaer Muire. Geralt joins Blueboy Lugos and his crew on a ritual journey into the Cave of Dreams to confront their deepest fears. Under the influence of hallucinogenic herbs, Geralt battles nightmare visions of the crew's pasts and fina..."
+  },
+  {
+   "id": "the_price_of_honor",
+   "name": "The Price of Honor",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com",
+   "notes": "Near Harviken. Geralt helps Timmon search for his brothers, who were fetching his bride Agda. He discovers the tragic deaths of the brothers and Agda, and can recover a dowry chest containing a gold diamond necklace before returning to Timm..."
+  },
+  {
+   "id": "master_of_the_arena",
+   "name": "Master of the Arena",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com",
+   "notes": "Near Hov. Geralt helps lift a curse on the arena near Hov by allowing the wraith Ulle the Unlucky to win fights."
+  },
+  {
+   "id": "the_nithing",
+   "name": "The Nithing",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 14,
+   "source": "game-checklists.com",
+   "notes": "Near Rannvaig. Geralt investigates a deadly curse placed on Lothar's son and tracks it to the Herbalist Jonna. He can choose to spare her, resolving the curse peacefully, or turn the curse back on her, receiving payment but causing her disa..."
+  },
+  {
+   "id": "an_unpaid_debt",
+   "name": "An Unpaid Debt",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com",
+   "notes": "Near New Port Inn. Geralt meets Simun Brambling to repay a favor owed from his escape from Madman Lugos' prison. Simun asks Geralt to kill Volund, forcing him to choose between honoring his debt or defending an innocent man. This quest is a..."
+  },
+  {
+   "id": "in_wolfs_clothing",
+   "name": "In Wolf's Clothing",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com",
+   "notes": "Near Freya's Garden , Larvik. Geralt investigates a curse placed on Morkvarg, a werewolf doomed to suffer endless hunger and rebirth in Freya's sacred garden. By uncovering the truth behind the curse and confronting those responsible, Geral..."
+  },
+  {
+   "id": "the_last_wish",
+   "name": "The Last Wish",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Larvik. Geralt helps Yennefer track down a djinn by searching shipwrecks and the remains of the mage Amos var Ypsis. They confront and bind the djinn, who removes the magical bond between them, forcing Geralt to decide the future of hi...",
+   "missable": true,
+   "expires_before": "ugly",
+   "warn": "Yennefer's romance quest. Pick the affectionate response after the djinn encounter. Pursuing Triss AND Yennefer loses both."
+  },
+  {
+   "id": "the_family_blade",
+   "name": "The Family Blade",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com",
+   "notes": "Near Kaer Trolde Harbor. Geralt tracks down a stolen sword, Kuliu, following a trail of bandits through several locations. He recovers the sword and returns it to Olaf at Kaer Trolde Harbor . This quest appears on the Kaer Trolde Notice Boa..."
+  },
+  {
+   "id": "for_fame_and_glory",
+   "name": "For Fame and Glory",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com",
+   "notes": "Near Larvik. West of Larvik , Geralt helps two warriors clear a cave filled with ghouls, devourers, and an alghoul. He ensures their survival and defeats the necrophages."
+  },
+  {
+   "id": "armed_assault",
+   "name": "Armed Assault",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com",
+   "notes": "Near Rannvaig. Southeast of Rannvaig , Geralt intervenes when Clan Drummond bandits threaten a hut's owner. He defeats the attackers and ensures the owner's safety, earning XP for his efforts."
+  },
+  {
+   "id": "a_bards_beloved",
+   "name": "A Bard's Beloved",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 15,
+   "source": "game-checklists.com",
+   "notes": "Near Palisade. In a cave east-northeast of Palisade Signpost, Geralt helps a troubadour who claims his beloved is in a cave, only to discover a talking water hag. He defeats the hag, ending the threat and completing the quest, though the ba..."
+  },
+  {
+   "id": "possession",
+   "name": "Possession",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 17,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Svorlag. Geralt travels to Spikeroog to help Cerys an Craite investigate Jarl Udalryk's affliction and uncover what is truly haunting him. Geralt discovers a rare creature called a hym feeding on Udalryk's guilt and either tricks it in...",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Backs Cerys's claim to the throne."
+  },
+  {
+   "id": "the_lord_of_undvik",
+   "name": "The Lord of Undvik",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 17,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Marlin Coast. Geralt travels to Undvik to aid Hjalmar an Craite in tracking down and slaying the ice giant who has overrun the island. Geralt explores the ruined island, uncovers the fate of Hjalmar's crew, and can rescue survivors bef...",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Backs Hjalmar's claim to the throne."
+  },
+  {
+   "id": "kings_gambit",
+   "name": "King's Gambit",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 18,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Bridge to Kaer Trolde. Geralt attends a feast at Kaer Trolde that turns into a massacre and chooses whether to aid Cerys or Hjalmar in uncovering what really happened. Geralt investigates the berserker attack, either exposing Birna Bra...",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Decides the outcome of the Skellige throne arc. Coronation follows."
+  },
+  {
+   "id": "coronation",
+   "name": "Coronation",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 18,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Gedyneith. Geralt travels to Gedyneith to witness the gathering of the jarls and the crowning of Skellige's new ruler. Depending on Geralt's past choices, either Cerys or Hjalmar an Craite is proclaimed king or queen of Skellige. This ...",
+   "missable": true,
+   "expires_before": "isle",
+   "warn": "Fails once The Isle of Mists is reached/completed."
+  },
+  {
+   "id": "crime_and_punishment",
+   "name": "Crime and Punishment",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 18,
+   "source": "game-checklists.com",
+   "notes": "Near Ancient Crypt , Rogne. East of Ancient Crypt , Geralt rescues Yorg, a man chained to a rock and attacked by harpies, who claims he was framed for murder. He can choose to free Yorg or leave him; freeing him leads to a follow-up in Rogn..."
+  },
+  {
+   "id": "iron_maiden",
+   "name": "Iron Maiden",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 19,
+   "source": "game-checklists.com",
+   "notes": "Near Harviken. Geralt challenges Jutta east of Harviken , a famed Skellige warrior. To earn the duel, Geralt must first complete a feat such as defeating Gundar or recovering Horned Hoskuld's sword, then face Jutta in a fair fight."
+  },
+  {
+   "id": "hard_times",
+   "name": "Hard Times",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 21,
+   "source": "game-checklists.com",
+   "notes": "Near Blandare. North of Blandare , Geralt investigates a cyclops attack on the road and discovers a second corpse carrying a letter meant for a Blacksmith named Yanne. He brings the letter to Kaer Trolde and must decide whether to tell Yann..."
+  },
+  {
+   "id": "peace_disturbed",
+   "name": "Peace Disturbed",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 22,
+   "source": "game-checklists.com",
+   "notes": "Near Kaer Trolde Harbor. In a cave southeast of Kaer Trolde, Geralt helps two women harvest materials from the dead in a haunted crypt."
+  },
+  {
+   "id": "finders_keepers",
+   "name": "Finders Keepers",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 24,
+   "source": "game-checklists.com",
+   "notes": "Near Giants' Toes. Geralt investigates a shipwrecked cache on a small island north of Giant's Toes, killing pirates and examining crates from a lost Skellige raid. He brings the recovered goods to a Merchant in Svorlag . The Merchant reward..."
+  },
+  {
+   "id": "abandoned_sawmill",
+   "name": "Abandoned Sawmill",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 24,
+   "source": "game-checklists.com",
+   "notes": "Near Abandoned Sawmill. At an abandoned sawmill, Geralt investigates human bones and discovers letters and notes from the lumberjack and owner. A leshen spawns nearby, and defeating it completes the quest."
+  },
+  {
+   "id": "shock_therapy",
+   "name": "Shock Therapy",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 24,
+   "source": "game-checklists.com",
+   "notes": "Near Gedyneith. Geralt helps a druid, Egill, pretending to be mute, to regain his voice using playful scare tactics and clever tricks. Rewards the Iorveth Gwent Card ."
+  },
+  {
+   "id": "practicum_in_advanced_alchemy",
+   "name": "Practicum in Advanced Alchemy",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 24,
+   "source": "game-checklists.com",
+   "notes": "Near Gedyneith , Distillery , Blandare. Geralt becomes Gremist's apprentice, completing tasks to gather a pimpernel, distill a special spirit, and assist Fritjof in a ritual summoning foglets."
+  },
+  {
+   "id": "taken_as_a_lass",
+   "name": "Taken as a Lass",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 25,
+   "source": "game-checklists.com",
+   "notes": "Near Redgill. On the shore far south of Redgill , Geralt helps a Skellige warrior searching for his kidnapped sister Kurisu and follows the trail. of pirates across the isles. He tracks the clues to Freya's temple, where he finds Kurisu and..."
+  },
+  {
+   "id": "the_sad_tale_of_the_grossbart_brothers",
+   "name": "The Sad Tale of the Grossbart Brothers",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 26,
+   "source": "game-checklists.com",
+   "notes": "Near Blandare , Grotto. Geralt teams up with Djenge Frett to take down the murderous Grossbart Brothers in a cave near Blandare . Choices include helping Djenge or finding the brothers already dead much later in the game."
+  },
+  {
+   "id": "the_tower_outta_nowheres",
+   "name": "The Tower Outta Nowheres",
+   "region": "Skellige",
+   "type": "side",
+   "requires": [],
+   "level": 30,
+   "source": "game-checklists.com",
+   "notes": "Near Urialla Harbor. Geralt investigates a mysterious tower on An Skellig, bringing endless rain and trapping men inside. He encounters and helps the mage Sigo Buntz disable the tower's defenses, and restores it to its original location. Th..."
+  },
+  {
+   "id": "ugly",
+   "name": "Ugly Baby",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "ciri_speed",
+    "calm"
+   ],
+   "notes": "Available after all Act I main quests. Take Uma to Kaer Morhen.",
+   "source": "gamepressure.com",
+   "warn": "Closes Following the Thread and The Last Wish (Yennefer's romance quest).",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "no_place",
+   "name": "No Place Like Home",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "ugly"
+   ],
+   "notes": "Wait through the night with the other witchers.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "vafail",
+   "name": "Va Fail, Elaine",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "no_place"
+   ],
+   "notes": "Starts automatically. Remove the curse from Uma.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "isle",
+   "name": "The Isle of Mists",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "vafail"
+   ],
+   "notes": "Starts automatically. You leave Kaer Morhen to find Ciri.",
+   "source": "gamepressure.com",
+   "warn": "BIGGEST POINT OF NO RETURN. Many Velen, Novigrad and Skellige quests fail the moment you sail. Finish your side quests first.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "battle",
+   "name": "The Battle of Kaer Morhen",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "isle"
+   ],
+   "notes": "Starts automatically. Recruit allies, then defend the fortress.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "brothers_nilf",
+   "name": "Brothers in Arms: Nilfgaard",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "isle"
+   ],
+   "notes": "Subquest of the Battle of Kaer Morhen. Visit Emhyr.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "brothers_novi",
+   "name": "Brothers in Arms: Novigrad",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "isle"
+   ],
+   "notes": "Subquest. Recruit allies from Geralt's friends in Novigrad.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "brothers_skel",
+   "name": "Brothers in Arms: Skellige",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "isle"
+   ],
+   "notes": "Subquest. Look for allies on Skellige.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "blood",
+   "name": "Blood on the Battlefield",
+   "region": "Kaer Morhen",
+   "type": "main",
+   "requires": [
+    "battle"
+   ],
+   "notes": "Starts automatically after the battle. Go to the emperor's palace in Vizima.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "brothers_in_arms_vizima",
+   "name": "Brothers In Arms: Vizima",
+   "region": "Kaer Morhen",
+   "type": "side",
+   "requires": [],
+   "level": 1,
+   "source": "game-checklists.com",
+   "notes": "Near Royal Palace in Vizima. Geralt recruits allies for the impending battle against the Wild Hunt. Emhyr agrees to help Geralt."
+  },
+  {
+   "id": "the_bastion",
+   "name": "The Bastion",
+   "region": "Kaer Morhen",
+   "type": "side",
+   "requires": [],
+   "level": 23,
+   "source": "game-checklists.com",
+   "notes": "Near Bastion. In the Bastion , find 5 spots where you can use the Magic Lamp."
+  },
+  {
+   "id": "monster_slayer",
+   "name": "Monster Slayer",
+   "region": "Kaer Morhen",
+   "type": "side",
+   "requires": [],
+   "level": 26,
+   "source": "game-checklists.com",
+   "notes": "Near Lakeside Hut. Geralt investigates drowners being killed near a Lakeside Hut , tracks the threat to a cave, and defeats an ancient rock troll. He recovers a letter detailing a plot against Kaer Morhen."
+  },
+  {
+   "id": "berengars_blade",
+   "name": "Berengar's Blade",
+   "region": "Kaer Morhen",
+   "type": "side",
+   "requires": [],
+   "level": 27,
+   "source": "game-checklists.com; allthings.how",
+   "notes": "Near Kaer Morhen. Geralt helps recover Berengar's lost sword diagram by tracking a chort to its lair near Kaer Morhen.",
+   "missable": true,
+   "expires_before": "battle",
+   "warn": "Fails once the Battle of Kaer Morhen begins. "
+  },
+  {
+   "id": "greenhouse_effect",
+   "name": "Greenhouse Effect",
+   "region": "Kaer Morhen",
+   "type": "side",
+   "requires": [],
+   "level": 27,
+   "source": "game-checklists.com",
+   "notes": "Near Iron Mine. Far east from Iron Mine Signpost in the wilderness, Geralt investigates a magical weather anomaly caused by a decaying greenhouse spell. He uses The Eye of Nehaleni to uncover the mage's notes, restores the microclimate with..."
+  },
+  {
+   "id": "the_witchers_forge",
+   "name": "The Witchers' Forge",
+   "region": "Kaer Morhen",
+   "type": "side",
+   "requires": [],
+   "level": 30,
+   "source": "game-checklists.com",
+   "notes": "Near Iron Mine. Geralt explores the Iron Mine near Kaer Morhen after finding a tome, defeats an Earth Elemental and a Fire Elemental protecting the forge, and uses the Eye of Nehaleni to reveal hidden chests."
+  },
+  {
+   "id": "bald",
+   "name": "Bald Mountain",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "blood"
+   ],
+   "notes": "Starts automatically. Fight Imerlith with Ciri.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "final_prep",
+   "name": "Final Preparations",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "bald"
+   ],
+   "notes": "Group quest with three subquests.",
+   "source": "gamepressure.com",
+   "warn": "Starting it closes The Nobleman Statuette and The Soldier Statuette.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "blinding",
+   "name": "Blindingly Obvious",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "final_prep"
+   ],
+   "notes": "Subquest. Capture Philippa Eilhart with Triss. Unlocks Reason of State.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "through_time",
+   "name": "Through Time and Space",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "final_prep"
+   ],
+   "notes": "Subquest. Go with Avallac'h to Tir na Lia.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "payback",
+   "name": "Payback",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "through_time"
+   ],
+   "notes": "Starts automatically. Follow Ciri around Novigrad.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "great_escape",
+   "name": "The Great Escape",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "final_prep"
+   ],
+   "notes": "Subquest. Help Margarita escape prison with Yennefer.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "battle_prep",
+   "name": "Battle Preparations",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "final_prep"
+   ],
+   "notes": "Group quest on Skellige with three subquests.",
+   "source": "gamepressure.com",
+   "warn": "Settles the Skellige throne. Finish King's Gambit and the other succession quests before starting.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "sunstone",
+   "name": "Sunstone",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "battle_prep"
+   ],
+   "notes": "Subquest. Help Mousesack, then find the sunstone with Philippa.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "child_eb",
+   "name": "Child of the Elder Blood",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "sunstone"
+   ],
+   "notes": "Starts once you learn where the elven ruins are.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "veni",
+   "name": "Veni Vidi Vigo",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "battle_prep"
+   ],
+   "notes": "Subquest. Free Fringilla Vigo from the emperor's ship.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "thin_ice",
+   "name": "On Thin Ice",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "battle_prep"
+   ],
+   "notes": "Play as Ciri and Geralt against Eredin.",
+   "source": "gamepressure.com",
+   "warn": "Final free-roam cutoff. Finish Reason of State and Contract: Devil by the Well first.",
+   "missable": true,
+   "level": null
+  },
+  {
+   "id": "tedd",
+   "name": "Tedd Deireadh, the Final Age",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "thin_ice"
+   ],
+   "notes": "Starts automatically after On Thin Ice.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "ending",
+   "name": "Something Ends, Something Begins",
+   "region": "Finale",
+   "type": "main",
+   "requires": [
+    "tedd"
+   ],
+   "notes": "The epilogue. Depends on your actions throughout the game.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "g_vendors",
+   "name": "Gwent: Velen and Novigrad card vendors",
+   "region": "General",
+   "type": "gwent",
+   "requires": [],
+   "missable": true,
+   "notes": "Several vendors become unreachable as the story advances.",
+   "warn": "Buy them out while you can.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "gear_griffin",
+   "name": "Griffin School gear set",
+   "region": "General",
+   "type": "item",
+   "requires": [],
+   "notes": "Witcher gear set with Basic/Enhanced/Superior/Mastercrafted tiers.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "gear_cat",
+   "name": "Cat School gear set",
+   "region": "General",
+   "type": "item",
+   "requires": [],
+   "notes": "Witcher gear set with Basic/Enhanced/Superior/Mastercrafted tiers.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "gear_bear",
+   "name": "Bear School gear set",
+   "region": "General",
+   "type": "item",
+   "requires": [],
+   "notes": "Witcher gear set with Basic/Enhanced/Superior/Mastercrafted tiers.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "gear_wolf",
+   "name": "Wolf School gear set (DLC)",
+   "region": "General",
+   "type": "item",
+   "requires": [],
+   "notes": "Free DLC set with Basic/Enhanced/Superior/Mastercrafted tiers.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "gear_viper",
+   "name": "Viper School gear set",
+   "region": "General",
+   "type": "item",
+   "requires": [],
+   "notes": "Listed separately in the gear section.",
+   "source": "gamepressure.com",
+   "level": null
+  },
+  {
+   "id": "hos_open_sesame",
+   "name": "Open Sesame!",
+   "region": "Hearts of Stone",
+   "type": "main",
+   "requires": [],
+   "notes": "Auction house heist.",
+   "warn": "Completing the auction heist closes Avid Collector and A Dark Legacy.",
+   "missable": true,
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "hos_dead_mans_party",
+   "name": "Dead Man's Party",
+   "region": "Hearts of Stone",
+   "type": "main",
+   "requires": [],
+   "notes": "Brunwich.",
+   "warn": "Closes A Midnight Clear.",
+   "missable": true,
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "hos_midnight",
+   "name": "A Midnight Clear",
+   "region": "Hearts of Stone",
+   "type": "main",
+   "requires": [],
+   "missable": true,
+   "expires_before": "hos_dead_mans_party",
+   "notes": "Brunwich.",
+   "warn": "Lost after Dead Man's Party.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "hos_avid",
+   "name": "Avid Collector",
+   "region": "Hearts of Stone",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "hos_open_sesame",
+   "notes": "Borsodi Brothers' Auction House.",
+   "warn": "Lost after Open Sesame!.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "hos_dark_legacy",
+   "name": "A Dark Legacy",
+   "region": "Hearts of Stone",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "hos_open_sesame",
+   "notes": "Borsodi Brothers' Auction House.",
+   "warn": "Lost after Open Sesame!.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_wine",
+   "name": "Wine is Sacred",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [],
+   "notes": "Cutoff point for other Blood and Wine quests.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_capture",
+   "name": "Capture the Castle",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [],
+   "notes": "Cutoff point for other Blood and Wine quests.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_what_lies",
+   "name": "What Lies Unseen",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [],
+   "notes": "Cutoff point for other Blood and Wine quests.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_tesham",
+   "name": "Tesham Mutna",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [],
+   "notes": "Cutoff point for other Blood and Wine quests.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_night",
+   "name": "The Night of Long Fangs",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [],
+   "notes": "Cutoff point for other Blood and Wine quests.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_jailbird_c",
+   "name": "Be It Ever So Humble...",
+   "region": "Blood and Wine",
+   "type": "main",
+   "requires": [],
+   "notes": "Cutoff point for other Blood and Wine quests.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_mill",
+   "name": "Amidst the Mill's Grist",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "baw_wine",
+   "notes": "",
+   "warn": "Lost once Wine is Sacred is done.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_warble",
+   "name": "The Warble of a Smitten Knight",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "baw_capture",
+   "notes": "",
+   "warn": "Lost once Capture the Castle is done.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_beyond",
+   "name": "Beyond Hill and Dale...",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "baw_what_lies",
+   "notes": "Path: Followed Damien.",
+   "warn": "Only exists if you followed Damien. Pulls you out of the Land of a Thousand Fables.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_duck",
+   "name": "Duck, Duck, Goosed!",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "baw_tesham",
+   "notes": "Path: Followed Damien.",
+   "warn": "Eat the Golden Egg for a free skill point. The Land of a Thousand Fables is a one-time visit.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_blood_simple",
+   "name": "Blood Simple",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "baw_night",
+   "notes": "Path: Followed Orianna.",
+   "warn": "Only exists if you followed Orianna.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_burlap",
+   "name": "Burlap is the New Stripe",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "baw_tesham",
+   "notes": "Path: Syanna dies.",
+   "warn": "Only if Syanna dies.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_jailbird",
+   "name": "The Perks of Being a Jailbird",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "baw_jailbird_c",
+   "notes": "Path: Syanna dies.",
+   "warn": "Appears only if Geralt is imprisoned after Syanna's death. Clear it before Burlap is the New Stripe wraps.",
+   "source": "allthings.how",
+   "level": null
+  },
+  {
+   "id": "baw_pomp",
+   "name": "Pomp and Strange Circumstance",
+   "region": "Blood and Wine",
+   "type": "side",
+   "requires": [],
+   "missable": true,
+   "expires_before": "baw_tesham",
+   "notes": "Path: Syanna lives.",
+   "warn": "Only if Syanna lives.",
+   "source": "allthings.how",
+   "level": null
+  }
+ ]
 }
