@@ -8,13 +8,18 @@ python -m witcher_guide
 ```
 
 - Run Witcher 3 in **borderless windowed** mode (exclusive fullscreen hides overlays).
-- **F8** shows/hides the overlay, **F9** locks it (click-through, so the mouse goes to the game) or unlocks it, **F10** quits it. The ✕ in the title bar also closes it (unlock with F9 first if it is locked).
+- **Menus and controls.** You don't need to memorize keys: click the **≡** in the title bar, or **right-click anywhere**, for the main menu (quick help, dark background, lock, reset filters, reset window, hide, quit). Hover over a control for a tooltip.
+- **F1** shows a quick guide, **F8** shows/hides the overlay, **F9** locks it (click-through, so the mouse goes to the game; press F9 again to unlock, because a locked overlay can't be clicked), **F10** quits it. The ✕ in the title bar also closes it.
 - **F11** switches between a fully transparent overlay (only the text is visible, and you can click through everything else) and a dark backing panel, which is easier to read over bright or busy scenes. Your choice is remembered in `settings.json` next to `progress.json`. On Windows only; elsewhere the window stays dark.
 - **Clicks on empty space:** in transparent mode a nearly invisible window sits behind the overlay so
   clicks on the see-through parts are absorbed instead of landing on the game (and taking its focus).
   It never takes focus itself. If clicks still fall through to the game on your system, raise its
   opacity by adding `"backing_alpha": 0.05` to `settings.json` (allowed range 0.01 to 0.5) and restart. Global hotkeys are Windows only; elsewhere F8/F9 work while the overlay has focus.
-- Double-click a quest to mark it done. Progress is saved to `%APPDATA%\witcher_guide\progress.json`.
+- Double-click a quest, or select it and press **Space**, to mark it done. Progress is saved to `%APPDATA%\witcher_guide\progress.json`.
+- **Progress:** the title bar shows how many quests are done in this tab (and overall when the window is wide enough). The active tab is bold and underlined, and a tab turns green when every quest in it is done. Hover a tab to see its count.
+- **Show filter:** the **Show** dropdown next to the search box narrows the list to *To do*, *Available now*, *Missable* or *Done*. Your choice is remembered. In the Decisions tab the same spot is **Best for** (everything, rewards, morals or the outcome).
+- **Search:** type in the box (there is a hint inside it and a ✕ to clear it). If nothing matches, the list says so and tells you what to change.
+- **Keyboard:** `/` jumps to the search box, **Esc** clears it, **Down** moves from the search box to the results, **Ctrl+Left/Right** switch tabs, **Space/Enter** tick the selected quest. (Esc no longer quits the overlay; use F10, the ✕ or the menu.)
 - Green `▶` = available now, `○` = blocked (select it to see what to do first), `✖` = missed, `⚠` = missable.
 
 ## Launcher

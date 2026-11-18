@@ -35,6 +35,18 @@ DEFAULT_EXTRA_ROWS, MAX_EXTRA_ROWS = 8, 60  # rows added on top of MIN_ROWS
 DETAIL_LINES = 7  # detail text taller than this collapses behind a clickable 'more'
 DETAIL_LINES_DECISION = 12  # decisions are longer, so show more before collapsing
 DECISIONS = "__decisions__"  # the special tab that lists decisions instead of quests
+EMPTY = "__empty__"  # id of the placeholder row shown when nothing matches
+MENU_BG, MENU_ACTIVE = "#1f1a15", "#3a2f22"
+HELP_TEXT = """Quick guide
+\u2022 Click a tab to switch region. The \u2696 Decisions tab lists the best choices.
+\u2022 Double-click a quest, or press Space, to mark it done. Finished quests are ticked automatically if the in-game mod is installed.
+\u2022 "Show" filters the list (to do, available now, missable, done). In Decisions, "Best for" picks what to favour.
+\u2022 Click a warning to expand it. Click the \u25C9 hint to jump to the decision in the quest you're tracking.
+\u2022 Right-click anywhere, or click \u2261, for the menu.
+\u2022 Drag the title or any blank space to move the window. Drag an edge or \u25E2 to resize.
+Keys: F1 this help \u2022 F8 hide/show \u2022 F9 lock (click-through) \u2022 F10 quit \u2022 F11 dark background
+In the window: / search \u2022 Esc clear search \u2022 Down from search jumps to the list \u2022 Ctrl+Left/Right switch tabs"""
+INTRO_TEXT = "Click a quest for details. Double-click or press Space to mark it done. Press F1 or right-click for help."
 SHORT = {"Hearts of Stone": "Hearts", "Blood and Wine": "Blood&Wine"}  # keep the tab rows from overflowing
 GOLD, RED, GREEN, BLUE = "#e8b85a", "#ff6b62", "#7fd685", "#7ab8f0"
 ICON = {core.DONE: "✔", core.AVAILABLE: "▶", core.BLOCKED: "○", core.MISSED: "✖"}
@@ -89,6 +101,8 @@ class Overlay:
         self._settings_path = self.progress.path.parent / "settings.json"
         st = self._load_settings()
         self.backdrop = st.get("backdrop", False)
+        self.view = st.get("view", "all") if st.get("view") in core.VIEWS else "all"
+        self._tip_win, self._tip_job, self._tab_tips = None, None, {}
         self.width = self._clamp_width(st.get("width", WIDTH))
         self.extra_rows = self._clamp_rows(st.get("extra_rows", DEFAULT_EXTRA_ROWS))
         self.back = None  # the click-catching window, created below
@@ -116,6 +130,8 @@ class Overlay:
             root.bind(ev, fn, add="+")
         self._set_click_through(False)
         self._apply_backdrop()
+        self._build_menus()
+        self._bind_shortcuts()
         start_hotkey_thread(self.events)
         root.after(80, self._poll)
 
@@ -139,15 +155,23 @@ class Overlay:
         self.title_lbl = tk.Label(head, text="⚔ Witcher 3 Guide", bg=BG, fg=GOLD,
                                   font=("Segoe UI", 12, "bold"), anchor="w")
         self.title_lbl.pack(side="left", padx=8, pady=6)
+        self.prog_lbl = tk.Label(head, text="", bg=BG, fg=DIM, font=("Segoe UI", 9))
+        self.prog_lbl.pack(side="left")
         close = tk.Label(head, text="\u2715", bg=BG, fg=DIM, font=("Segoe UI", 12), padx=8, cursor="hand2")
         close.pack(side="right", padx=(0, EDGE))
         close.bind("<Button-1>", lambda e: self.quit())
         close.bind("<Enter>", lambda e: close.config(fg=RED))
         close.bind("<Leave>", lambda e: close.config(fg=DIM))
+        self.menu_btn = tk.Label(head, text="\u2261", bg=BG, fg=GOLD, font=("Segoe UI", 15), padx=6, cursor="hand2")
+        self.menu_btn.pack(side="right")
+        self.menu_btn.bind("<Button-1>", lambda e: self._popup(self.menu, self.menu_btn))
         self.lock_lbl = tk.Label(head, text="", bg=BG, fg=DIM, font=("Segoe UI", 8))
         self.lock_lbl.pack(side="right", padx=4)
-        self._tag("head", head, self.title_lbl, close, self.lock_lbl)
-        for w in (head, self.title_lbl):  # drag to move the window (unless the pointer is on an edge)
+        self._tag("head", head, self.title_lbl, self.prog_lbl, close, self.menu_btn, self.lock_lbl)
+        self._tip(self.menu_btn, "Menu: help, lock, dark background, reset. Right-click anywhere also opens it.")
+        self._tip(close, "Close the overlay (F10)")
+        self._tip(self.prog_lbl, "Quests ticked off in this tab / all quests")
+        for w in (head, self.title_lbl, self.prog_lbl):  # drag to move the window (unless the pointer is on an edge)
             w.bind("<ButtonPress-1>", lambda e: self._press(e, movable=True))
             w.bind("<B1-Motion>", self._drag_motion)
             w.bind("<ButtonRelease-1>", self._release)
@@ -167,6 +191,8 @@ class Overlay:
         self._tag("base", dtab)
         dtab.bind("<Button-1>", lambda e: self.set_region(DECISIONS))
         self.tab_btns[DECISIONS] = dtab
+        for name, b in self.tab_btns.items():
+            self._tip(b, lambda n=name: self._tab_tips.get(n, ""))
         self._layout_tabs()
 
         self.track_lbl = tk.Label(r, text="", bg=BG, fg=BLUE, anchor="w", font=("Segoe UI", 9, "bold"))
@@ -192,21 +218,29 @@ class Overlay:
         bar.pack(fill="x", padx=8, pady=6)
         self._tag("base", bar)
         self.search_var = tk.StringVar()
-        self.search_var.trace_add("write", lambda *_: self.refresh())
-        e = tk.Entry(bar, textvariable=self.search_var, bg=BG, fg=FG, insertbackground=FG,
-                     relief="flat", bd=0, highlightthickness=1, highlightbackground=DIM,
-                     highlightcolor=GOLD, font=("Segoe UI", 10))
+        self.search_var.trace_add("write", lambda *_: self._on_search())
+        e = self.search_entry = tk.Entry(bar, textvariable=self.search_var, bg=BG, fg=FG, insertbackground=FG,
+                                         relief="flat", bd=0, highlightthickness=1, highlightbackground=DIM,
+                                         highlightcolor=GOLD, font=("Segoe UI", 10))
         e.pack(side="left", fill="x", expand=True, ipady=3)
         self._tag("entry", e)
         e.bind("<Button-1>", lambda ev: e.focus_force())
-        self.miss_var = tk.BooleanVar()
-        self.miss_chk = ttk.Checkbutton(bar, text="Missable only", variable=self.miss_var, style="T.TCheckbutton",
-                                        command=self.refresh)
-        self.miss_chk.pack(side="left", padx=(8, 0))
-        # Decisions tab only: click to cycle what to optimise for
-        self.goal_lbl = tk.Label(bar, text="", bg=BG, fg=GOLD, font=("Segoe UI", 9, "bold"), cursor="hand2", padx=6)
-        self.goal_lbl.bind("<Button-1>", lambda e: self._cycle_goal())
-        self._tag("base", self.goal_lbl)
+        # a hint inside the empty box, and a clear button once something is typed
+        self.ph_lbl = tk.Label(e, text="", bg=BG, fg=DIM, font=("Segoe UI", 10, "italic"), cursor="xterm")
+        self.ph_lbl.place(x=6, rely=0.5, anchor="w")
+        self.ph_lbl.bind("<Button-1>", lambda ev: e.focus_force())
+        self.clear_btn = tk.Label(e, text="\u2715", bg=BG, fg=DIM, font=("Segoe UI", 9), cursor="hand2", padx=4)
+        self.clear_btn.bind("<Button-1>", lambda ev: self._clear_search())
+        self._tag("entry", self.ph_lbl, self.clear_btn)
+        self._tip(self.clear_btn, "Clear the search (Esc)")
+        # drop-down buttons: one for quests (Show) and one for the Decisions tab (Best for)
+        self.view_lbl = self._pill(bar, lambda: f"Show: {core.VIEW_LABELS[self.view]} \u25BE",
+                                   lambda: self._popup(self.view_menu, self.view_lbl),
+                                   "Choose which quests the list shows")
+        self.goal_lbl = self._pill(bar, lambda: f"Best for: {core.GOAL_LABELS[self.goal]} \u25BE",
+                                   lambda: self._popup(self.goal_menu, self.goal_lbl),
+                                   "What the recommended choice should favour")
+        self.view_lbl.pack(side="left", padx=(8, 0))
 
         self.alert_lbl = tk.Label(r, text="", bg=BG, fg=RED, justify="left", anchor="w",
                                   wraplength=self.width - 30, font=("Segoe UI", 9, "bold"))
@@ -218,10 +252,12 @@ class Overlay:
         # The list takes whatever height is left. The window height is always a whole number of
         # rows (see _fit), so there is never a half-cut row at the bottom.
         self.tree.pack(fill="both", expand=True, padx=8, pady=6)
-        for tag, col in (("done", DIM), ("available", GREEN), ("blocked", FG), ("missed", RED), ("missable", GOLD), ("tracked", BLUE), ("atrisk", RED)):
+        for tag, col in (("empty", DIM), ("done", DIM), ("available", GREEN), ("blocked", FG), ("missed", RED), ("missable", GOLD), ("tracked", BLUE), ("atrisk", RED)):
             self.tree.tag_configure(tag, foreground=col)
         self.tree.bind("<<TreeviewSelect>>", self._show_detail)
         self.tree.bind("<Double-1>", self._toggle_selected)
+        self.tree.bind("<Return>", self._toggle_selected)
+        self.tree.bind("<space>", self._toggle_selected)
 
         self.detail = tk.Text(r, bg=BG, fg=FG, wrap="word", height=3, relief="flat", bd=0,
                               highlightthickness=0, font=("Segoe UI", 9), cursor="arrow", padx=0, pady=0,
@@ -234,7 +270,7 @@ class Overlay:
         for tag, col in (("rewards", GOLD), ("morals", GREEN), ("outcome", BLUE), ("warnline", RED)):
             self.detail.tag_configure(tag, foreground=col)
         self.detail.tag_configure("title", font=("Segoe UI", 9, "bold"))
-        self._set_detail("Double-click a quest to mark it done.")
+        self._set_detail(INTRO_TEXT)
 
         # drag this corner to resize the window
         self.grip = tk.Label(r, text="\u25E2", bg=BG, fg=DIM, font=("Segoe UI", 11), cursor=self._cursor_for({"r", "b"}))
@@ -253,14 +289,13 @@ class Overlay:
         done, failed = self.progress.all_done(), self.progress.auto_failed
         risks = core.tracked_risks(self.data, done, failed, self.progress.tracked_all)
         risk_ids = {q["id"] for q in risks}
-        for n, b in self.tab_btns.items():
-            b.config(fg=GOLD if n == self.region else DIM)
+        self._update_tabs()
         self.tree.delete(*self.tree.get_children())
         in_decisions = self.region == DECISIONS
         self._set_mode_controls(in_decisions)
         dec_quests = {qid for d in self.decisions for qid in d["quests"]}
-        rows = [] if in_decisions else core.search(self.data, done, self.search_var.get(), self.region,
-                                                   self.miss_var.get(), failed=failed)
+        rows = [] if in_decisions else core.apply_view(
+            core.search(self.data, done, self.search_var.get(), self.region, False, failed=failed), self.view)
         if in_decisions:
             self._fill_decisions()
         # recommended next quests float to the top
@@ -278,6 +313,11 @@ class Overlay:
                 star = " \u203C will be lost"
             mark = "\u25C9" if q["id"] == self.progress.tracked else ICON[q["status"]]
             self.tree.insert("", "end", iid=q["id"], text=f' {mark}  {q["name"]}{star}', tags=tags)
+        if not self.tree.get_children():  # nothing to show: say why, and how to fix it
+            what = "decisions" if in_decisions else "quests"
+            self.tree.insert("", "end", iid=EMPTY, tags=["empty"], text=f"  No {what} match. " + (
+                "Clear the search or change \"Best for\"." if in_decisions else
+                "Clear the search or change \"Show\"."))
         names = {q["id"]: q["name"] for q in self.data["quests"]}
         t = self.progress.tracked
         self.track_lbl.config(text=f"\u25C9 Tracking in game: {names[t]}" if t in names else "")
@@ -291,14 +331,16 @@ class Overlay:
 
     # ---- Decisions tab ------------------------------------------------------
     def _set_mode_controls(self, in_decisions):
-        """The Missable-only box belongs to quests; the goal switch belongs to decisions."""
-        self.goal_lbl.config(text=f"Best for: {self.goal} \u25B8")
+        """The Show filter belongs to quests; the Best-for filter belongs to decisions."""
+        self.view_lbl.config(text=f"Show: {core.VIEW_LABELS[self.view]} \u25BE")
+        self.goal_lbl.config(text=f"Best for: {core.GOAL_LABELS[self.goal]} \u25BE")
+        self.ph_lbl.config(text="Search decisions..." if in_decisions else "Search quests...")
         if in_decisions and not self.goal_lbl.winfo_manager():
-            self.miss_chk.pack_forget()
+            self.view_lbl.pack_forget()
             self.goal_lbl.pack(side="left", padx=(8, 0))
         elif not in_decisions and self.goal_lbl.winfo_manager():
             self.goal_lbl.pack_forget()
-            self.miss_chk.pack(side="left", padx=(8, 0))
+            self.view_lbl.pack(side="left", padx=(8, 0))
 
     def _fill_decisions(self):
         tracked = set(self.progress.tracked_all)
@@ -312,12 +354,24 @@ class Overlay:
             self.tree.insert("", "end", iid="dec:" + d["id"], text=f' \u2696  {d["name"]}{suffix}', tags=tags)
 
     def _cycle_goal(self):
-        self.goal = core.GOALS[(core.GOALS.index(self.goal) + 1) % len(core.GOALS)]
+        self._set_goal(core.GOALS[(core.GOALS.index(self.goal) + 1) % len(core.GOALS)])
+
+    def _set_goal(self, goal):
+        self.goal = goal
+        if hasattr(self, "goal_var"):
+            self.goal_var.set(goal)
         sel = self.tree.selection()
         self.refresh()
         if sel and self.tree.exists(sel[0]):
             self.tree.selection_set(sel[0])
             self._show_detail()
+
+    def _set_view(self, view):
+        self.view = view
+        if hasattr(self, "view_var"):
+            self.view_var.set(view)
+        self._save_settings()
+        self.refresh()
 
     def _goto_decision(self):
         """Jump from the tracked quest's hint to its decision in the Decisions tab."""
@@ -557,6 +611,7 @@ class Overlay:
     def _layout_tabs(self):
         """Flow the tabs like wrapping text: each takes its own width, and a new row starts when the
         next one would not fit. A wide window gets one row, a narrow one several."""
+        self.root.update_idletasks()  # label widths are only known after their text was applied
         order = [self.tab_btns[n] for n in [None] + self.data["regions"]] + [self.tab_btns[DECISIONS]]
         avail, x, y = self.width - 12, 0, 0
         row_h = max(b.winfo_reqheight() for b in order)
@@ -569,18 +624,22 @@ class Overlay:
         self._tabs.config(height=y + row_h)
 
     def _update_hint_text(self):
-        """The header's key hints, shortened when the window is too narrow to show them all."""
+        """The header's key hints, shortened (or dropped) when the window is too narrow."""
         if self.locked:
             text = "LOCKED (F9 to unlock)" if self.width >= 440 else "LOCKED (F9)"
+        elif self.width >= 600:
+            text = "F1 help \u2022 F8 hide \u2022 F9 lock \u2022 F10 quit \u2022 F11 backdrop"
         elif self.width >= 470:
-            text = "F8 hide \u2022 F9 lock \u2022 F10 quit \u2022 F11 backdrop"
+            text = "F1 help \u2022 F8 hide \u2022 F9 lock"
         else:
-            text = "F8 hide \u2022 F9 lock \u2022 F10 quit"
+            text = "F1 help"
         self.lock_lbl.config(text=text)
+        if hasattr(self, "lock_var"):
+            self.lock_var.set(self.locked)
 
     def _reflow(self):
         """The width changed: move everything to suit it (tabs, header hint, wrapping, detail lines)."""
-        self._layout_tabs()
+        self._update_tabs()
         self._update_hint_text()
         for lbl in (self.alert_lbl, self.risk_lbl, self.dec_lbl, self.legend_lbl):
             lbl.config(wraplength=self.width - 30)
@@ -595,6 +654,8 @@ class Overlay:
 
     def _show_detail(self, _e=None):
         sel = self.tree.selection()
+        if sel and sel[0] == EMPTY:
+            return
         if sel and sel[0].startswith("dec:"):
             d = next((x for x in self.decisions if "dec:" + x["id"] == sel[0]), None)
             if d:
@@ -622,11 +683,199 @@ class Overlay:
 
     def _toggle_selected(self, _e=None):
         sel = self.tree.selection()
-        if sel and not sel[0].startswith("dec:"):  # decisions are advice, not something to tick off
+        if sel and sel[0] != EMPTY and not sel[0].startswith("dec:"):  # decisions are advice, not something to tick off
             self.progress.toggle(sel[0])
             self.refresh()
             if self.tree.exists(sel[0]):
                 self.tree.selection_set(sel[0])
+
+
+    # ---- Menus, tooltips and shortcuts ---------------------------------------------------
+    def _pill(self, parent, text_fn, command, tip):
+        """A small bordered button that looks clickable (used for the drop-down filters)."""
+        b = tk.Label(parent, text=text_fn(), bg=BG, fg=GOLD, font=("Segoe UI", 9, "bold"), cursor="hand2",
+                     padx=8, pady=2, highlightthickness=1, highlightbackground=DIM, highlightcolor=GOLD)
+        b.bind("<Button-1>", lambda e: command())
+        self._tag("base", b)
+        self._tip(b, tip)
+        return b
+
+    def _build_menus(self):
+        kw = dict(tearoff=0, bg=MENU_BG, fg=FG, activebackground=MENU_ACTIVE, activeforeground=GOLD,
+                  bd=1, relief="flat", font=("Segoe UI", 10), selectcolor=GOLD)
+        self.lock_var = tk.BooleanVar(value=self.locked)
+        self.backdrop_var = tk.BooleanVar(value=self.backdrop)
+        self.view_var = tk.StringVar(value=self.view)
+        self.goal_var = tk.StringVar(value=self.goal)
+        m = self.menu = tk.Menu(self.root, **kw)
+        m.add_command(label="Quick help      F1", command=self._show_help)
+        m.add_separator()
+        m.add_checkbutton(label="Dark background      F11", variable=self.backdrop_var,
+                          command=lambda: self.set_backdrop(self.backdrop_var.get()))
+        m.add_checkbutton(label="Lock (click-through)      F9 to unlock", variable=self.lock_var,
+                          command=lambda: self._set_click_through(self.lock_var.get()))
+        m.add_command(label="Reset search and filters", command=self._clear_filters)
+        m.add_command(label="Reset window size and position", command=self._reset_window)
+        m.add_separator()
+        m.add_command(label="Hide overlay      F8 to show again", command=lambda: self.set_visible(False))
+        m.add_command(label="Quit      F10", command=self.quit)
+        vm = self.view_menu = tk.Menu(self.root, **kw)
+        for v in core.VIEWS:
+            vm.add_radiobutton(label=core.VIEW_LABELS[v], variable=self.view_var, value=v,
+                               command=lambda: self._set_view(self.view_var.get()))
+        gm = self.goal_menu = tk.Menu(self.root, **kw)
+        for g in core.GOALS:
+            gm.add_radiobutton(label=core.GOAL_LABELS[g], variable=self.goal_var, value=g,
+                               command=lambda: self._set_goal(self.goal_var.get()))
+
+    def _popup(self, menu, widget):
+        """Open a menu just under a widget."""
+        self._hide_tip()
+        try:
+            menu.tk_popup(widget.winfo_rootx(), widget.winfo_rooty() + widget.winfo_height())
+        finally:
+            menu.grab_release()
+
+    def _show_menu(self, e):
+        """Right-click anywhere on the overlay opens the main menu at the pointer."""
+        self._hide_tip()
+        try:
+            self.menu.tk_popup(e.x_root, e.y_root)
+        finally:
+            self.menu.grab_release()
+
+    def _tip(self, widget, text):
+        """Hover tooltip. `text` may be a string or a function returning one."""
+        def show():
+            t = text() if callable(text) else text
+            if not t or not widget.winfo_exists():
+                return
+            self._hide_tip()
+            tw = tk.Toplevel(self.root)
+            tw.overrideredirect(True)
+            try:
+                tw.attributes("-topmost", True)
+            except tk.TclError:
+                pass
+            tk.Label(tw, text=t, bg="#2b2620", fg=FG, padx=6, pady=3, justify="left", wraplength=280,
+                     font=("Segoe UI", 9), highlightthickness=1, highlightbackground=DIM).pack()
+            tw.geometry(f"+{widget.winfo_rootx()}+{widget.winfo_rooty() + widget.winfo_height() + 4}")
+            self._tip_win = tw
+
+        def enter(_e):
+            self._hide_tip()
+            self._tip_job = self.root.after(550, show)
+
+        widget.bind("<Enter>", enter, add="+")
+        widget.bind("<Leave>", lambda e: self._hide_tip(), add="+")
+        widget.bind("<ButtonPress>", lambda e: self._hide_tip(), add="+")
+
+    def _hide_tip(self):
+        if self._tip_job:
+            try:
+                self.root.after_cancel(self._tip_job)
+            except tk.TclError:
+                pass
+            self._tip_job = None
+        if self._tip_win:
+            try:
+                self._tip_win.destroy()
+            except tk.TclError:
+                pass
+            self._tip_win = None
+
+    def _update_tabs(self):
+        """Tab styling (the active one is bold and underlined, finished ones turn green), tooltips with
+        counts, and the progress text in the header. Then re-flow the tabs, as their widths changed."""
+        prog = core.region_progress(self.data, self.progress.all_done())
+        for name, b in self.tab_btns.items():
+            active = name == self.region
+            if name == DECISIONS:
+                self._tab_tips[name] = f"{len(self.decisions)} decisions: the best choice for rewards, morals and the outcome"
+                fg, font = (GOLD if active else DIM), ("Segoe UI", 9, "bold underline" if active else "bold")
+            else:
+                d, t = prog.get(name, (0, 0))
+                self._tab_tips[name] = f"{name or 'All regions'}: {d} of {t} done"
+                fg = GOLD if active else (GREEN if t and d == t else DIM)
+                font = ("Segoe UI", 9, "bold underline" if active else "normal")
+            b.config(fg=fg, font=font)
+        D, T = prog[None]
+        if self.region == DECISIONS:
+            text = f"{len(self.decisions)} decisions"
+        elif self.region is None:
+            text = f"{D}/{T} done"
+        else:
+            d, t = prog.get(self.region, (0, 0))
+            text = f"{d}/{t} here" if self.width < 520 else f"{self.region} {d}/{t}  \u2022  all {D}/{T}"
+        self.prog_lbl.config(text=text)
+        self._layout_tabs()
+
+    def _on_search(self):
+        if self.search_var.get():
+            self.ph_lbl.place_forget()
+            self.clear_btn.place(relx=1.0, x=-4, rely=0.5, anchor="e")
+        else:
+            self.clear_btn.place_forget()
+            self.ph_lbl.place(x=6, rely=0.5, anchor="w")
+        self.refresh()
+
+    def _clear_search(self):
+        self.search_var.set("")
+        self.search_entry.focus_force()
+
+    def _clear_filters(self):
+        self.search_var.set("")
+        self.goal = "all"
+        self.goal_var.set("all")
+        self._set_view("all")
+
+    def _reset_window(self):
+        self.width, self.extra_rows = WIDTH, DEFAULT_EXTRA_ROWS
+        self.root.geometry("+30+60")
+        self._fit()
+        self._reflow()
+        self._save_settings()
+
+    def _show_help(self, _e=None):
+        self._open.discard("detail")
+        self.tree.selection_remove(*self.tree.selection())
+        self._set_detail(HELP_TEXT, 24)
+
+    def _bind_shortcuts(self):
+        r = self.root
+        r.bind("<F1>", self._show_help)
+        r.bind("<Button-3>", self._show_menu, add="+")
+        r.bind("<slash>", self._focus_search)
+        r.bind("<Escape>", self._escape)
+        r.bind("<Control-Right>", lambda e: self._cycle_tab(1))
+        r.bind("<Control-Left>", lambda e: self._cycle_tab(-1))
+        self.search_entry.bind("<Down>", self._search_down)
+        self.search_entry.bind("<Return>", self._search_down)
+
+    def _focus_search(self, e):
+        if isinstance(e.widget, tk.Entry):
+            return None  # typing a slash into the search box
+        self.search_entry.focus_force()
+        return "break"
+
+    def _escape(self, _e=None):
+        if self.search_var.get():
+            self.search_var.set("")
+        self.tree.focus_set()
+
+    def _search_down(self, _e=None):
+        kids = [k for k in self.tree.get_children() if k != EMPTY]
+        if kids:
+            self.tree.focus_set()
+            self.tree.selection_set(kids[0])
+            self.tree.focus(kids[0])
+            self.tree.see(kids[0])
+        return "break"
+
+    def _cycle_tab(self, step):
+        order = [None] + list(self.data["regions"]) + [DECISIONS]
+        self.set_region(order[(order.index(self.region) + step) % len(order)])
+        return "break"
 
     # ---- Overlay behaviour ---------------------------------------------
     @staticmethod
@@ -653,7 +902,8 @@ class Overlay:
         except (tk.TclError, TypeError, ValueError):
             pass
         for ev, fn in (("<ButtonPress-1>", self._press), ("<B1-Motion>", self._drag_motion),
-                       ("<ButtonRelease-1>", self._release), ("<Motion>", self._hover), ("<Leave>", self._hover_end)):
+                       ("<ButtonRelease-1>", self._release), ("<Motion>", self._hover), ("<Leave>", self._hover_end),
+                       ("<Button-3>", self._show_menu)):
             b.bind(ev, fn)
         self.root.bind("<Configure>", self._on_configure, add="+")
         self._sync_back()
@@ -704,7 +954,7 @@ class Overlay:
             if not self.tree.exists(qid):  # hidden by a filter: clear filters so it shows
                 self.region = None
                 self.search_var.set("")
-                self.miss_var.set(False)
+                self.view = "all"
             self.refresh()
             if self.tree.exists(qid):
                 self.tree.selection_set(qid)
@@ -725,13 +975,16 @@ class Overlay:
     def _save_settings(self):
         try:
             self._settings_path.parent.mkdir(parents=True, exist_ok=True)
-            data = dict(self._load_settings(), backdrop=self.backdrop, width=self.width, extra_rows=self.extra_rows)
+            data = dict(self._load_settings(), backdrop=self.backdrop, width=self.width, extra_rows=self.extra_rows,
+                        view=self.view)
             self._settings_path.write_text(json.dumps(data), encoding="utf-8")
         except OSError:
             pass
 
     def set_backdrop(self, on):
         self.backdrop = on
+        if hasattr(self, "backdrop_var"):
+            self.backdrop_var.set(on)
         self._apply_backdrop()
         self._save_settings()
 
@@ -758,6 +1011,7 @@ class Overlay:
             self.transparent = False
 
     def quit(self):
+        self._hide_tip()
         self.root.destroy()
 
     def set_visible(self, visible):
@@ -800,7 +1054,6 @@ def run(on_ready=None, start_hidden=False, track_game=True):
         root.bind("<F9>", lambda e: ov.events.put("lock"))
         root.bind("<F10>", lambda e: ov.events.put("quit"))
         root.bind("<F11>", lambda e: ov.events.put("backdrop"))
-    root.bind("<Escape>", lambda e: root.destroy())
     if track_game:
         tracker.start_tracking(ov.events)
     if on_ready:

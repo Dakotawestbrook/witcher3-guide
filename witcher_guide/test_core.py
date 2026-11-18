@@ -289,6 +289,44 @@ class TestCore(unittest.TestCase):
         self.assertIn("my judgement", j)
         self.assertIn("nothing in my sources", core.format_decision(d, "outcome"))
 
+    # ---- Views (the Show filter) and progress counts ----
+    def test_views_filter_quests_by_status(self):
+        done = {"lilac", "beast"}
+        rows = core.annotate(self.data, done)
+        v = {name: {q["id"] for q in core.apply_view(rows, name)} for name in core.VIEWS}
+        self.assertEqual(len(v["all"]), len(self.data["quests"]))
+        self.assertEqual(v["done"], done)
+        self.assertTrue(v["done"].isdisjoint(v["todo"]))
+        self.assertTrue(v["available"] <= v["todo"])                       # available quests are to-do
+        self.assertIn("incident", v["available"])                           # its prerequisites are done
+        self.assertNotIn("imperial", v["available"])                        # still blocked
+        self.assertIn("imperial", v["todo"])                                # blocked quests are still to do
+        self.assertTrue(all(self.by_id[i].get("missable") for i in v["missable"]))
+        self.assertTrue(v["missable"].isdisjoint(done))
+        self.assertEqual(core.apply_view(rows, "bogus"), rows)              # unknown view shows everything
+
+    def test_lost_quests_are_not_to_do(self):
+        rows = core.annotate(self.data, {"imperial"})                       # starting Imperial Audience closes Missing in Action
+        self.assertEqual({q["id"]: q["status"] for q in rows}["missing_in_action"], core.MISSED)
+        self.assertNotIn("missing_in_action", {q["id"] for q in core.apply_view(rows, "todo")})
+
+    def test_every_view_and_goal_has_a_label(self):
+        self.assertEqual(set(core.VIEWS), set(core.VIEW_LABELS))
+        self.assertEqual(set(core.GOALS), set(core.GOAL_LABELS))
+        self.assertTrue(all(core.VIEW_LABELS.values()) and all(core.GOAL_LABELS.values()))
+
+    def test_region_progress_counts_done_quests_per_region_and_overall(self):
+        p = core.region_progress(self.data, set())
+        self.assertEqual(p[None], (0, len(self.data["quests"])))
+        self.assertEqual(sum(t for r, (d, t) in p.items() if r is not None), len(self.data["quests"]))
+        p = core.region_progress(self.data, {"lilac", "beast", "funeral_pyres", "not_a_quest"})
+        self.assertEqual(p["White Orchard"][0], 2)
+        self.assertEqual(p["Velen"][0], 1)
+        self.assertEqual(p[None][0], 3)                                     # unknown ids are ignored
+        self.assertTrue(all(0 <= d <= t for d, t in p.values()))
+        wo = [q["id"] for q in self.data["quests"] if q["region"] == "White Orchard"]
+        self.assertEqual(core.region_progress(self.data, set(wo))["White Orchard"], (len(wo), len(wo)))
+
     def test_no_noise_at_game_start(self):
         self.assertEqual(core.alerts(self.data, set()), [])
 

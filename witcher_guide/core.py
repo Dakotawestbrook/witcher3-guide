@@ -8,6 +8,10 @@ DONE, MISSED, AVAILABLE, BLOCKED = "done", "missed", "available", "blocked"
 DATA_FILE = Path(__file__).parent / "data" / "quests.json"
 DECISIONS_FILE = Path(__file__).parent / "data" / "decisions.json"
 GOALS = ("all", "rewards", "morals", "outcome")  # what the player is optimising for
+GOAL_LABELS = {"all": "Everything", "rewards": "Rewards", "morals": "Morals", "outcome": "The outcome"}
+VIEWS = ("all", "todo", "available", "missable", "done")  # which quests the list shows
+VIEW_LABELS = {"all": "All quests", "todo": "To do", "available": "Available now",
+               "missable": "Missable", "done": "Done"}
 
 
 def default_progress_path():
@@ -206,3 +210,29 @@ def format_decision(d, goal="all"):
         lines.append("Note: " + d["note"])
     lines.append("Source: " + d["source"])
     return "\n".join(lines)
+
+
+# ---- Views (filters) and progress ---------------------------------------------------------
+def apply_view(rows, view):
+    """Filter annotated quest rows. `todo` is everything not done and not already lost."""
+    if view == "todo":
+        return [q for q in rows if q["status"] in (AVAILABLE, BLOCKED)]
+    if view == "available":
+        return [q for q in rows if q["status"] == AVAILABLE]
+    if view == "missable":
+        return [q for q in rows if q.get("missable") and q["status"] != DONE]
+    if view == "done":
+        return [q for q in rows if q["status"] == DONE]
+    return list(rows)
+
+
+def region_progress(data, done):
+    """{region: (done, total)}, with the key None for everything together."""
+    counts = {}
+    for q in data["quests"]:
+        d = counts.setdefault(q["region"], [0, 0])
+        d[1] += 1
+        d[0] += q["id"] in done
+    out = {r: (d[0], d[1]) for r, d in counts.items()}
+    out[None] = (sum(d[0] for d in counts.values()), sum(d[1] for d in counts.values()))
+    return out
