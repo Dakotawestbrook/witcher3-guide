@@ -131,12 +131,12 @@ class TestCore(unittest.TestCase):
     # ---- Decisions ----
     def test_decisions_data_integrity(self):
         decs = core.load_decisions()
-        self.assertGreaterEqual(len(decs), 40)
+        self.assertGreaterEqual(len(decs), 60)
         self.assertEqual(len({d["id"] for d in decs}), len(decs), "duplicate decision ids")
         for d in decs:
             self.assertTrue(d["source"], d["id"])
             self.assertGreaterEqual(len(d["options"]), 2, d["id"])
-            self.assertTrue(d["quests"], d["id"])
+            self.assertIn("quests", d)  # may be empty for contracts, which are not in quests.json
             for qid in d["quests"]:
                 self.assertIn(qid, self.by_id, f'{d["id"]} links to a missing quest {qid}')
             for o in d["options"]:
@@ -170,6 +170,28 @@ class TestCore(unittest.TestCase):
         self.assertTrue(core.has_conflict(decs["baron_pellar"]))    # rewards: Axii, morals: offer to heal
         self.assertEqual(decs["baron_barn"]["best_rewards"]["basis"], "stated")
         self.assertIn("50 crowns", decs["baron_tamara"]["best_rewards"]["why"])
+
+    def test_more_decisions_with_stated_rewards(self):
+        decs = {d["id"]: d for d in core.load_decisions()}
+        self.assertEqual(sum(1 for d in decs.values() if d["kind"] == "contract"), 7)
+        # reward comparisons that the guides state outright
+        self.assertIn("60 crowns", decs["nithing"]["best_rewards"]["why"])
+        self.assertEqual(decs["novi_thief"]["best_rewards"]["pick"], "Free him")
+        self.assertIn("500 crowns", decs["baw_paperchase"]["best_rewards"]["why"])
+        self.assertIn("Josta", decs["wolfs_clothing"]["best_rewards"]["why"])
+        self.assertIn("twice", decs["velen_swamp_thing"]["best_rewards"]["why"])
+        self.assertEqual(decs["velen_pyres"]["best_rewards"]["basis"], "stated")
+        # where reward and morals disagree, both are shown and the row is flagged
+        for did in ("velen_missing_brother", "wh_margrit", "novi_woodland", "hos_taxman", "nithing"):
+            self.assertTrue(core.has_conflict(decs[did]), did)
+        # no recommendation where the sources give none
+        self.assertIsNone(decs["velen_wannabe"]["best_rewards"])
+        self.assertIsNone(decs["skel_leshen"]["best_moral"])
+        # a stated pick must be one a source can back: stated picks all carry the source on the decision
+        for d in decs.values():
+            for f in ("best_rewards", "best_moral", "best_outcome"):
+                if d.get(f) and d[f]["basis"] == "stated":
+                    self.assertTrue(d["source"], d["id"])
 
     def test_decisions_cover_the_dlcs_and_endings(self):
         kinds = {d["kind"] for d in core.load_decisions()}

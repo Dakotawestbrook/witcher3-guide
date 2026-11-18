@@ -616,22 +616,22 @@
    "quests": [
     "the_nithing"
    ],
-   "situation": "A deadly curse was placed on Lothar's son and traces back to the herbalist Jonna.",
+   "situation": "A deadly curse was placed on Lothar's son and traces back to the herbalist Jonna. You are asked to redirect it onto her.",
    "options": [
-    {
-     "label": "Spare Jonna",
-     "type": "action",
-     "result": "The curse is resolved peacefully."
-    },
     {
      "label": "Turn the curse back on her",
      "type": "action",
-     "result": "You receive payment, but she disappears."
+     "result": "You receive 60 crowns, but she disappears and you can no longer trade with her."
+    },
+    {
+     "label": "Spare Jonna",
+     "type": "action",
+     "result": "The curse is resolved peacefully, but you get no reward."
     }
    ],
    "best_rewards": {
     "pick": "Turn the curse back on her",
-    "why": "You get paid.",
+    "why": "You get paid (60 crowns).",
     "basis": "stated"
    },
    "best_moral": {
@@ -642,7 +642,7 @@
    "best_outcome": null,
    "note": "",
    "affects_ending": false,
-   "source": "game-checklists.com"
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
   },
   {
    "id": "cat_wolf",
@@ -713,25 +713,38 @@
    "quests": [
     "in_wolfs_clothing"
    ],
-   "situation": "Morkvarg the werewolf is cursed to endless hunger and rebirth.",
+   "situation": "Morkvarg the werewolf is cursed to endless hunger and rebirth. Einar, who caused the curse, holds the amulet that undoes it.",
    "options": [
+    {
+     "label": "Lift the curse, then leave Morkvarg alive",
+     "type": "action",
+     "result": "He sends you to Novigrad: the moneylender Josta pays 85 gold and gives you a sword and a diagram."
+    },
+    {
+     "label": "Lift the curse, then kill Morkvarg",
+     "type": "action",
+     "result": "You get 85 gold from the quest giver and nothing more."
+    },
     {
      "label": "Trick Morkvarg into ending his own torment",
      "type": "dialogue",
      "result": "He ends his suffering."
-    },
-    {
-     "label": "Truly lift the curse and decide his fate",
-     "type": "action",
-     "result": "You lift the curse and choose what happens to him."
     }
    ],
-   "best_rewards": null,
-   "best_moral": null,
+   "best_rewards": {
+    "pick": "Lift the curse and leave him alive",
+    "why": "Josta pays 85 gold and gives you a sword and a diagram.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Lift the curse and leave him alive",
+    "why": "He is freed from the curse and spared.",
+    "basis": "judgement"
+   },
    "best_outcome": null,
-   "note": "No reward difference is stated in the sources I could read.",
+   "note": "To get the amulet you can talk to Einar or fight him and his three level 14 men.",
    "affects_ending": false,
-   "source": "game-checklists.com"
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
   },
   {
    "id": "hard_times",
@@ -825,17 +838,17 @@
    "quests": [
     "possession"
    ],
-   "situation": "Jarl Udalryk is haunted by a hym feeding on his guilt.",
+   "situation": "Jarl Udalryk is haunted by a hym feeding on his guilt. Cerys has a plan.",
    "options": [
     {
-     "label": "Trick the hym into leaving",
+     "label": "Go along with Cerys's deception",
      "type": "dialogue",
-     "result": "It leaves."
+     "result": "A short battle with Uldryk's men (you don't have to kill them). When the baby is put in your hands you must decide quickly and throw it into the oven."
     },
     {
-     "label": "Confront it in the Haunted House",
+     "label": "Deal with it the witcher way",
      "type": "action",
-     "result": "You face it directly."
+     "result": "You fight the hym. If Uldryk panics, use Axii on him. It retreats to the basement at about three quarters health."
     }
    ],
    "best_rewards": null,
@@ -843,7 +856,7 @@
    "best_outcome": null,
    "note": "Part of the Coronation quests that fail when you start The Isle of Mists.",
    "affects_ending": false,
-   "source": "game-checklists.com"
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
   },
   {
    "id": "flesh",
@@ -852,25 +865,29 @@
    "quests": [
     "flesh_for_sale"
    ],
-   "situation": "Pirates run a slave operation in Trottheim.",
+   "situation": "Pirates run a slave operation in Trottheim on Faroe Isle.",
    "options": [
     {
-     "label": "Fight the pirates",
+     "label": "Refuse to follow the guard",
      "type": "action",
-     "result": "You free the captive women by force."
+     "result": "You fight about 15 pirates (level 11-12), take the keys from their leader, free the slaves and search the leader's house, where there are many valuable items."
     },
     {
-     "label": "Play along",
+     "label": "Play along and keep saying you're from Nilfgaard",
      "type": "dialogue",
-     "result": "You free the captive women by deception."
+     "result": "You pay 500 crowns for the \"merchandise\" or use level 3 Delusion. The leader gives you the key and you free the slaves for a diagram and a runestone."
     }
    ],
-   "best_rewards": null,
+   "best_rewards": {
+    "pick": "Refuse and fight",
+    "why": "You keep your 500 crowns and can loot the leader's house.",
+    "basis": "judgement"
+   },
    "best_moral": null,
    "best_outcome": null,
    "note": "Becomes unavailable once Following the Thread progresses.",
    "affects_ending": false,
-   "source": "game-checklists.com"
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
   },
   {
    "id": "hos_safecracker",
@@ -1279,6 +1296,745 @@
     "why": "Spares the creature.",
     "basis": "judgement"
    },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "wo_firestarter",
+   "name": "Twisted Firestarter: Napp",
+   "kind": "side",
+   "quests": [
+    "twisted_firestarter"
+   ],
+   "situation": "You find the firestarter hiding in a building.",
+   "options": [
+    {
+     "label": "Release Napp",
+     "type": "action",
+     "result": "Tell Willis you did not find the firestarter."
+    },
+    {
+     "label": "Capture Napp (fist fight, or Axii to make him come along)",
+     "type": "action",
+     "result": "He is given to the Nilfgaardians. Willis lowers the prices of his goods and services."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Capture Napp, using Axii",
+    "why": "75 experience, plus 25 more for Axii, 20 crowns, and Willis lowers his prices.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "You get 20 crowns either way (from Napp or from Willis).",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "wo_rhosyn",
+   "name": "Missing in Action: the deserter",
+   "kind": "side",
+   "quests": [
+    "missing_in_action"
+   ],
+   "situation": "You find Dune's brother Bastien with a wounded Nilfgaardian deserter, Rhosyn.",
+   "options": [
+    {
+     "label": "Suggest leaving Rhosyn there",
+     "type": "dialogue",
+     "result": "You leave him in the cabin."
+    },
+    {
+     "label": "Escort Rhosyn to Bastien's home",
+     "type": "dialogue",
+     "result": "A thank-you for saving Bastien's life."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Both give the same 25 experience. This quest is lost once Imperial Audience starts.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "wo_cargo",
+   "name": "Precious Cargo: the merchant",
+   "kind": "side",
+   "quests": [
+    "precious_cargo"
+   ],
+   "situation": "The merchant who wants his lost cargo is the one who ordered the attack on the transport.",
+   "options": [
+    {
+     "label": "Ignore the attack trails and give him the cargo",
+     "type": "dialogue",
+     "result": "25 experience and 20 crowns."
+    },
+    {
+     "label": "Accuse him of lying and chase him, then hand him to the Nilfgaardians",
+     "type": "action",
+     "result": "10 experience and 30 crowns."
+    },
+    {
+     "label": "Accuse him, then release him",
+     "type": "action",
+     "result": "10 experience and 50 crowns."
+    },
+    {
+     "label": "Accuse him, then let him go for his herbals",
+     "type": "action",
+     "result": "10 experience, 50 crowns and 5 celandines."
+    },
+    {
+     "label": "Kill him during the chase",
+     "type": "action",
+     "result": "Experience, and celandines if you search the body."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "It trades experience for crowns: giving him the cargo is the most experience, letting him go the most crowns.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "wo_devil_well",
+   "name": "Contract: Devil by the Well: Odolan's payment",
+   "kind": "contract",
+   "quests": [],
+   "situation": "After you lift the haunting, the villager Odolan offers to pay. You can bargain for about 25 crowns more beforehand.",
+   "options": [
+    {
+     "label": "Take the bargained payment",
+     "type": "dialogue",
+     "result": "You receive the agreed crowns."
+    },
+    {
+     "label": "Let him keep his gold",
+     "type": "dialogue",
+     "result": "You receive an amethyst instead."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Let him keep his gold",
+    "why": "He keeps his money and thanks you with an amethyst.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "This is the one contract that can fail: finish it before On Thin Ice.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "velen_pyres",
+   "name": "Funeral Pyres: the priest's bribe",
+   "kind": "side",
+   "quests": [
+    "funeral_pyres"
+   ],
+   "situation": "After you burn the bodies, the Priest of the Eternal Fire, who is behind the dead, tries to pay you.",
+   "options": [
+    {
+     "label": "Accept the payment",
+     "type": "dialogue",
+     "result": "60 crowns and 45 experience."
+    },
+    {
+     "label": "Decline the bribe",
+     "type": "dialogue",
+     "result": "A fight with the priest and a few guards. 45 experience, and 200 crowns on his body."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Decline the bribe",
+    "why": "You still get the experience and can loot 200 crowns from the priest.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Decline the bribe",
+    "why": "You don't take money from the man responsible.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "velen_missing_brother",
+   "name": "Contract: Missing Brother: Brun's payment",
+   "kind": "contract",
+   "quests": [],
+   "situation": "You tell Brun the bad news about his brother, and he refuses to pay what was agreed.",
+   "options": [
+    {
+     "label": "Take half the payment",
+     "type": "dialogue",
+     "result": "You accept half of the agreed sum."
+    },
+    {
+     "label": "Use the upgraded Axii sign (needs a fully developed Delusion skill)",
+     "type": "action",
+     "result": "He gives you the full payment."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use the upgraded Axii",
+    "why": "You get the full payment.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Take half the payment",
+    "why": "He has just lost his brother.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "wh_margrit",
+   "name": "Wild at Heart: Margrit's offer",
+   "kind": "side",
+   "quests": [
+    "wild_at_heart"
+   ],
+   "situation": "Margrit, sister of the missing Hanna, tries to convince you to stop the search.",
+   "options": [
+    {
+     "label": "Accept her proposition",
+     "type": "dialogue",
+     "result": "72 experience and 55 crowns. You then tell Niellen you couldn't find his wife; he may pay you 10 crowns, and you get 45 experience."
+    },
+    {
+     "label": "Refuse and keep searching",
+     "type": "action",
+     "result": "You find Hanna's mutilated body and follow the werewolf's tracks to the real culprit."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Accept her proposition",
+    "why": "72 experience and 55 crowns up front.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Refuse and keep searching",
+    "why": "You uncover the truth instead of leaving a husband in the dark.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "wh_final",
+   "name": "Wild at Heart: Margrit's life",
+   "kind": "side",
+   "quests": [
+    "wild_at_heart"
+   ],
+   "situation": "In the fight with the werewolf you learn that it is Niellen. You must decide quickly.",
+   "options": [
+    {
+     "label": "Save Margrit",
+     "type": "action",
+     "result": "The duel goes on and you kill the werewolf."
+    },
+    {
+     "label": "Let Niellen kill Margrit",
+     "type": "action",
+     "result": "Then he asks you to finish him."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Save Margrit",
+    "why": "She lives.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "You get 45 experience and can take Niellen's Key either way.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "velen_greedy_god",
+   "name": "A Greedy God: the sylvan",
+   "kind": "side",
+   "quests": [
+    "a_greedy_god"
+   ],
+   "situation": "A sylvan extorts gifts from the local villagers.",
+   "options": [
+    {
+     "label": "Tell the peasants to bring better gifts (you can also tell them about the crypt)",
+     "type": "dialogue",
+     "result": "The sylvan keeps being fed."
+    },
+    {
+     "label": "Kill the sylvan",
+     "type": "action",
+     "result": "You take precious alchemy ingredients from his body and search the cave. The peasants are unhappy."
+    },
+    {
+     "label": "Threaten him with death",
+     "type": "dialogue",
+     "result": "He agrees to take lesser gifts and the peasants are very happy. You can still tell them about the crypt."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Kill the sylvan",
+    "why": "Precious alchemy ingredients and the cave's loot.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Threaten him",
+    "why": "The source says the peasants are very happy.",
+    "basis": "stated"
+   },
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "velen_lynch",
+   "name": "Lynch Mob: the prisoner",
+   "kind": "side",
+   "quests": [
+    "lynch_mob"
+   ],
+   "situation": "Peasants have captured a Nilfgaardian soldier and want to hang him.",
+   "options": [
+    {
+     "label": "Stop them",
+     "type": "action",
+     "result": "A fight against four level 7 enemies. The prisoner then gives you some gold."
+    },
+    {
+     "label": "Let them finish",
+     "type": "action",
+     "result": "He is hanged."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Stop them",
+    "why": "You get some gold from the prisoner.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The guide says the right choice here is mostly a matter of your own morality.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "velen_hazard",
+   "name": "Hazardous Goods: the plagued bodies",
+   "kind": "side",
+   "quests": [
+    "hazardous_goods"
+   ],
+   "situation": "A man is transporting plague corpses for money.",
+   "options": [
+    {
+     "label": "Burn the corpses with Igni",
+     "type": "action",
+     "result": "20 experience."
+    },
+    {
+     "label": "Leave him alone",
+     "type": "action",
+     "result": "No reward."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Burn the corpses",
+    "why": "20 experience, and nothing if you walk away.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Burn the corpses",
+    "why": "Stops the plague from spreading.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "velen_wannabe",
+   "name": "Witcher Wannabe: the impostor",
+   "kind": "side",
+   "quests": [
+    "witcher_wannabe"
+   ],
+   "situation": "You find a man falsely posing as a witcher, and the peasants arrive.",
+   "options": [
+    {
+     "label": "Tell the peasants immediately",
+     "type": "dialogue",
+     "result": "They deal with him."
+    },
+    {
+     "label": "Make him work in the village",
+     "type": "dialogue",
+     "result": "He stays and works."
+    },
+    {
+     "label": "Have him exiled",
+     "type": "dialogue",
+     "result": "He is sent away."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "85 experience whichever you choose.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "velen_blood_ties",
+   "name": "Blood Ties: the soldier's mother",
+   "kind": "side",
+   "quests": [
+    "blood_ties"
+   ],
+   "situation": "A Nilfgaardian noblewoman searches for her son, who deserted and was hanged.",
+   "options": [
+    {
+     "label": "Tell her he died in combat",
+     "type": "dialogue",
+     "result": "A kinder lie."
+    },
+    {
+     "label": "Admit that he deserted",
+     "type": "dialogue",
+     "result": "The truth."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "50 gold either way. What you told Quartermaster Eggebracht in the contract Patrol Gone Missing also affects this quest.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "velen_swamp_thing",
+   "name": "Contract: Swamp Thing: Leslaw's payment",
+   "kind": "contract",
+   "quests": [],
+   "situation": "Leslaw does not have the money you agreed on.",
+   "options": [
+    {
+     "label": "Make him pay now",
+     "type": "dialogue",
+     "result": "Slightly less than promised."
+    },
+    {
+     "label": "Come back in a week",
+     "type": "dialogue",
+     "result": "Twice the bargained sum, up to 560 crowns. Meditating speeds up the wait."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Come back in a week",
+    "why": "You get twice the money.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "novi_thief",
+   "name": "Contract: An Elusive Thief: the doppler",
+   "kind": "contract",
+   "quests": [],
+   "situation": "After you take down two thirds of the doppler's health he surrenders, and you decide his fate.",
+   "options": [
+    {
+     "label": "Make him fight",
+     "type": "action",
+     "result": "His health refills and you must defeat him. You get the doppler trophy (+5% gold found), good shoes and the money reward (up to 300 crowns)."
+    },
+    {
+     "label": "Free him",
+     "type": "action",
+     "result": "You get 215 crowns, half of the bargained reward and a diagram for a unique goblin sword."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Free him",
+    "why": "The guide calls it the better decision: 215 crowns, half the reward and the goblin sword diagram.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Free him",
+    "why": "He is spared.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "novi_succubus",
+   "name": "Contract: Deadly Delights: the succubus",
+   "kind": "contract",
+   "quests": [],
+   "situation": "You face the succubus Salma and can spare her or fight her.",
+   "options": [
+    {
+     "label": "Fight her",
+     "type": "action",
+     "result": "You get a succubus mutagen, a trophy (+5% gold found) and 186 crowns."
+    },
+    {
+     "label": "Spare her",
+     "type": "action",
+     "result": "You get the trophy (a gift), 186 crowns and the valuable sword Maugrim, but not the mutagen."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Spare her",
+    "why": "She is spared.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "The two options trade a mutagen for a sword. The sources do not say which is worth more.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "novi_woodland",
+   "name": "Contract: Woodland Beast: the Scoia'tael",
+   "kind": "contract",
+   "quests": [],
+   "situation": "The attacks on the convoys come from a Scoia'tael commando. An elf aims at you and offers to talk.",
+   "options": [
+    {
+     "label": "Promise to stay silent and tell the captain about the elves",
+     "type": "dialogue",
+     "result": "You get random crafting materials from the elves, then a travel pass but no money from the captain."
+    },
+    {
+     "label": "Promise to stay silent and tell the captain nothing",
+     "type": "dialogue",
+     "result": "The quest ends successfully, with no reward."
+    },
+    {
+     "label": "Fight and kill the elves",
+     "type": "action",
+     "result": "Four elves (level 5) and the leader (level 9). Bring their tails as proof for 30 crowns and a travel pass."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Kill the elves",
+    "why": "The only option that pays crowns as well as the pass.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Promise silence and tell the captain nothing",
+    "why": "You spare the elves and keep your word, but there is no reward.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "The travel pass is used in Thou Shalt Not Pass.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "oxen_griffin",
+   "name": "The Creature from the Oxenfurt Forest: the letter",
+   "kind": "contract",
+   "quests": [],
+   "situation": "At the griffin's nest you find a letter showing the mercenaries took the same contract earlier for a bigger reward.",
+   "options": [
+    {
+     "label": "Tell Hans about the letter",
+     "type": "dialogue",
+     "result": "You get a bigger price, around 500 crowns."
+    },
+    {
+     "label": "Say nothing",
+     "type": "dialogue",
+     "result": "You get the original price."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Tell Hans about the letter",
+    "why": "A bigger price, around 500 crowns.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "skel_grossbart",
+   "name": "The Sad Tale of the Grossbart Brothers",
+   "kind": "side",
+   "quests": [
+    "the_sad_tale_of_the_grossbart_brothers"
+   ],
+   "situation": "You find the three Grossbart brothers' cave with the man who asked for your help.",
+   "options": [
+    {
+     "label": "Help him fight",
+     "type": "action",
+     "result": "Three level 26 brothers. He gives you 50 crowns, and the chests hold diagrams for enhanced vampire oil and a bear gear enhancement."
+    },
+    {
+     "label": "Resign from the quest",
+     "type": "action",
+     "result": "He goes in alone and dies."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Help him fight",
+    "why": "50 crowns and two diagrams.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Help him fight",
+    "why": "Otherwise he dies alone.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "skel_tower",
+   "name": "The Tower Outta Nowheres: the brother",
+   "kind": "side",
+   "quests": [
+    "the_tower_outta_nowheres"
+   ],
+   "situation": "After the tower, a villager asks if you found his brother.",
+   "options": [
+    {
+     "label": "Tell him his brother died",
+     "type": "dialogue",
+     "result": "The truth."
+    },
+    {
+     "label": "Lie that you haven't seen him",
+     "type": "dialogue",
+     "result": "He keeps hoping."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "You can also refuse the questgiver's 64 crowns. No reward difference is stated.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "skel_leshen",
+   "name": "In the Heart of the Wood: the Leshen (Kaer Muire)",
+   "kind": "side",
+   "quests": [],
+   "situation": "A Leshen is attacking a village. Whom you tell about it is an important decision that shapes the rest of the quest.",
+   "options": [
+    {
+     "label": "Tell Harald: perform the ancient ritual",
+     "type": "action",
+     "result": "Take 5 hearts from white wolves and sacrifice at the altar. Villagers then come to take Harald: interrupt them (fight four level 20 warriors, no reputation loss) or let him be killed. 60 gold either way."
+    },
+    {
+     "label": "Tell Sven: kill the Leshen",
+     "type": "action",
+     "result": "Find the girl Hilde marked by the Leshen, then convince the villagers to kill her or only exile her (no effect on the quest). Destroy three totems and kill the Leshen. The villagers kill Harald afterwards; you can avenge him or walk away. 60 gold."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The sources do not rate either path. Reward is 60 gold either way.",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "hos_taxman",
+   "name": "The Taxman Cometh: the tax inspector's questions",
+   "kind": "dlc",
+   "quests": [
+    "hos_the_taxman_cometh"
+   ],
+   "situation": "With more than 35,000 crowns, in Oxenfurt, an inspector asks three questions about how you got your money.",
+   "options": [
+    {
+     "label": "Answer mostly No",
+     "type": "dialogue",
+     "result": "You get a diploma and the quest ends."
+    },
+    {
+     "label": "Answer mostly Yes",
+     "type": "dialogue",
+     "result": "You must pay 1000 crowns of tax at Vivaldi's Bank to finish."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Answer mostly No",
+    "why": "You keep your 1000 crowns.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Answer mostly Yes",
+    "why": "It is the honest answer.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; gamepressure.com: side quest and contract walkthroughs"
+  },
+  {
+   "id": "baw_paperchase",
+   "name": "Paperchase: the bank guards",
+   "kind": "dlc",
+   "quests": [
+    "baw_paperchase"
+   ],
+   "situation": "After the bureaucracy you find the Cianfanelli Bank is broke.",
+   "options": [
+    {
+     "label": "Fight the guards",
+     "type": "action",
+     "result": "An immediate 200 crowns."
+    },
+    {
+     "label": "Wait one week",
+     "type": "action",
+     "result": "500 crowns and the silver sword The Reckoner."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Wait one week",
+    "why": "500 crowns and a silver sword instead of 200 crowns.",
+    "basis": "stated"
+   },
+   "best_moral": null,
    "best_outcome": null,
    "note": "",
    "affects_ending": false,
