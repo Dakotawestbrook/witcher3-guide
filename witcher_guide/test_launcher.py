@@ -1,8 +1,6 @@
 import queue
-import tempfile
 import threading
 import unittest
-from pathlib import Path
 
 from witcher_guide import launcher
 
@@ -23,22 +21,6 @@ class TestLauncher(unittest.TestCase):
         self.assertIsNone(launcher.step(True, True))
         self.assertEqual(launcher.step(True, False), "hide")
         self.assertEqual(launcher.step(False, True), "show")
-
-    def test_run_command(self):
-        with tempfile.TemporaryDirectory() as d:
-            py = Path(d) / "python.exe"; py.write_text("")
-            (Path(d) / "pythonw.exe").write_text("")
-            cmd = launcher.run_command(py, watch=True)
-            self.assertIn("pythonw.exe", cmd)
-            self.assertTrue(cmd.endswith("--watch"))
-            self.assertIn("witcher_guide.pyw", cmd)
-            self.assertNotIn("--watch", launcher.run_command(py, watch=False))
-            self.assertIn("--process foo.exe", launcher.run_command(py, game_exe="foo.exe"))
-
-    def test_pythonw_falls_back_to_python(self):
-        with tempfile.TemporaryDirectory() as d:
-            py = Path(d) / "python.exe"; py.write_text("")
-            self.assertEqual(launcher.pythonw_for(py), py)
 
     def test_launcher_script_exists(self):
         self.assertTrue(launcher.LAUNCHER.exists())

@@ -1,13 +1,10 @@
 """Launcher for the Witcher 3 guide overlay.
 
-    python witcher_guide.pyw                   run the overlay now (no console window)
-    python witcher_guide.pyw --watch           stay resident; show only while the game runs
-    python witcher_guide.pyw --install         start with Windows, in --watch mode
-    python witcher_guide.pyw --install --always   start with Windows, always visible
-    python witcher_guide.pyw --uninstall       remove the autostart entry
-    python witcher_guide.pyw --status          show whether autostart is installed
+    python witcher_guide.pyw             run the overlay now (no console window)
+    python witcher_guide.pyw --watch     stay hidden until the game is running, hide when it exits
+    python witcher_guide.pyw --uninstall remove a startup entry from an earlier version (cleanup only)
 
-Autostart uses the per-user registry Run key (no admin rights needed).
+Nothing here registers itself to start with Windows.
 """
 import argparse
 import subprocess
@@ -39,23 +36,6 @@ def step(previous, running):
     if running == previous:
         return None
     return "show" if running else "hide"
-
-
-def pythonw_for(python_exe):
-    """Prefer pythonw.exe (no console window) next to the given interpreter."""
-    exe = Path(python_exe)
-    cand = exe.with_name("pythonw.exe")
-    return cand if cand.exists() else exe
-
-
-def run_command(python_exe=None, watch=True, game_exe=GAME_EXE, launcher=LAUNCHER):
-    py = pythonw_for(python_exe or sys.executable)
-    cmd = f'"{py}" "{launcher}"'
-    if watch:
-        cmd += " --watch"
-        if game_exe != GAME_EXE:
-            cmd += f" --process {game_exe}"
-    return cmd
 
 
 # ---- Windows-only pieces ----------------------------------------------------
@@ -100,17 +80,9 @@ def acquire_single_instance():
 
 def _winreg():
     if sys.platform != "win32":
-        raise SystemExit("Autostart is only supported on Windows.")
+        raise SystemExit("This command is only supported on Windows.")
     import winreg
     return winreg
-
-
-def install(watch=True, game_exe=GAME_EXE):
-    winreg = _winreg()
-    cmd = run_command(watch=watch, game_exe=game_exe)
-    with winreg.OpenKey(winreg.HKEY_CURRENT_USER, RUN_KEY, 0, winreg.KEY_SET_VALUE) as k:
-        winreg.SetValueEx(k, RUN_NAME, 0, winreg.REG_SZ, cmd)
-    return cmd
 
 
 def uninstall():
@@ -123,35 +95,16 @@ def uninstall():
         return False
 
 
-def installed_command():
-    winreg = _winreg()
-    try:
-        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, RUN_KEY) as k:
-            return winreg.QueryValueEx(k, RUN_NAME)[0]
-    except FileNotFoundError:
-        return None
-
-
 # ---- entry point -------------------------------------------------------------
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Witcher 3 guide overlay launcher")
     ap.add_argument("--watch", action="store_true", help="show only while the game is running")
     ap.add_argument("--process", default=GAME_EXE, help=f"game process name (default {GAME_EXE})")
-    ap.add_argument("--install", action="store_true", help="start with Windows")
-    ap.add_argument("--always", action="store_true", help="with --install: always show, don't wait for the game")
-    ap.add_argument("--uninstall", action="store_true", help="remove the autostart entry")
-    ap.add_argument("--status", action="store_true", help="show autostart state")
+    ap.add_argument("--uninstall", action="store_true", help="remove a startup entry left by an earlier version")
     a = ap.parse_args(argv)
 
-    if a.install:
-        print("Installed. It will start with Windows:\n ", install(watch=not a.always, game_exe=a.process))
-        return
     if a.uninstall:
-        print("Autostart removed." if uninstall() else "Autostart was not installed.")
-        return
-    if a.status:
-        cmd = installed_command()
-        print(f"Autostart: {cmd}" if cmd else "Autostart is not installed.")
+        print("Startup entry removed." if uninstall() else "No startup entry was installed.")
         return
 
     if not acquire_single_instance():
