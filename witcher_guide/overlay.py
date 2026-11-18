@@ -34,7 +34,10 @@ ICON = {core.DONE: "✔", core.AVAILABLE: "▶", core.BLOCKED: "○", core.MISSE
 # Win32 constants
 MOD_NOREPEAT, VK_F8, VK_F9, VK_F10, VK_F11 = 0x4000, 0x77, 0x78, 0x79, 0x7A
 WM_HOTKEY = 0x0312
-GWL_EXSTYLE, WS_EX_LAYERED, WS_EX_TRANSPARENT, WS_EX_TOOLWINDOW = -20, 0x80000, 0x20, 0x80
+GWL_EXSTYLE, WS_EX_LAYERED, WS_EX_TRANSPARENT, WS_EX_TOOLWINDOW, WS_EX_NOACTIVATE = -20, 0x80000, 0x20, 0x80, 0x08000000
+# Almost-invisible window behind the overlay. Clicks on the see-through parts land on it instead of
+# falling through to the game, so they don't change which window has focus.
+BACKING_ALPHA = 0.02
 
 
 def start_hotkey_thread(events):
@@ -59,7 +62,7 @@ def start_hotkey_thread(events):
 
 
 class Overlay:
-    def __init__(self, root, data=None, progress=None):
+    def __init__(self, root, data=None, progress=None, backing=None):
         self.root = root
         self.data = data or core.load_data()
         self.progress = progress or core.Progress()
@@ -73,6 +76,8 @@ class Overlay:
         self.transparent = False
         self._settings_path = self.progress.path.parent / "settings.json"
         self.backdrop = self._load_settings().get("backdrop", False)
+        self.back = None  # the click-catching window, created below
+        self._want_backing = IS_WINDOWS if backing is None else backing
 
         root.title("Witcher 3 Guide")
         root.overrideredirect(True)
@@ -84,6 +89,8 @@ class Overlay:
         self.refresh()
         root.update_idletasks()
         root.geometry(f"{WIDTH}x{root.winfo_reqheight()}+30+60")
+        if self._want_backing:
+            self._make_backing()
         self._set_click_through(False)
         self._apply_backdrop()
         start_hotkey_thread(self.events)
@@ -238,21 +245,64 @@ class Overlay:
                 self.tree.selection_set(sel[0])
 
     # ---- Overlay behaviour ---------------------------------------------
-    def _hwnd(self):
+    @staticmethod
+    def _hwnd(widget):
         import ctypes
-        return ctypes.windll.user32.GetParent(self.root.winfo_id()) or self.root.winfo_id()
+        return ctypes.windll.user32.GetParent(widget.winfo_id()) or widget.winfo_id()
+
+    @staticmethod
+    def _exstyle(hwnd, add=0, remove=0):
+        import ctypes
+        u = ctypes.windll.user32
+        style = (u.GetWindowLongW(hwnd, GWL_EXSTYLE) | add) & ~remove
+        u.SetWindowLongW(hwnd, GWL_EXSTYLE, style)
+
+    def _make_backing(self):
+        """A near-transparent window exactly behind the overlay that swallows clicks."""
+        b = self.back = tk.Toplevel(self.root)
+        b.overrideredirect(True)
+        b.attributes("-topmost", True)
+        b.configure(bg="black")
+        try:  # tunable in settings.json ("backing_alpha") if clicks fall through on your system
+            alpha = float(self._load_settings().get("backing_alpha", BACKING_ALPHA))
+            b.attributes("-alpha", min(max(alpha, 0.01), 0.5))
+        except (tk.TclError, TypeError, ValueError):
+            pass
+        self.root.bind("<Configure>", self._on_configure, add="+")
+        self._sync_back()
+
+    def _on_configure(self, event):
+        if event.widget is self.root:  # ignore the children's Configure events
+            self._sync_back()
+
+    def _sync_back(self):
+        """Keep the backing window under the overlay and show it only when it is needed."""
+        if not self.back:
+            return
+        want = self.visible and not self.backdrop  # the dark panel mode is opaque already
+        if want:
+            self.back.geometry(self.root.geometry())
+            if self.back.state() != "normal":
+                self.back.deiconify()
+                if IS_WINDOWS:  # re-assert the window styles after the window was re-shown
+                    self._set_click_through(self.locked)
+            self.root.lift()  # text window stays above the backing
+        elif self.back.state() != "withdrawn":
+            self.back.withdraw()
 
     def _set_click_through(self, on):
         self.locked = on
-        self.lock_lbl.config(text="LOCKED (F9 to unlock)" if on else "F8 hide • F9 lock • F10 quit • F11 backdrop")
+        self.lock_lbl.config(text="LOCKED (F9 to unlock)" if on else "F8 hide \u2022 F9 lock \u2022 F10 quit \u2022 F11 backdrop")
         if not IS_WINDOWS:
             return
-        import ctypes
-        u = ctypes.windll.user32
-        h = self._hwnd()
-        style = u.GetWindowLongW(h, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TOOLWINDOW
-        style = style | WS_EX_TRANSPARENT if on else style & ~WS_EX_TRANSPARENT
-        u.SetWindowLongW(h, GWL_EXSTYLE, style)
+        self.root.update_idletasks()
+        windows = [(self.root, 0)] + ([(self.back, WS_EX_NOACTIVATE)] if self.back else [])
+        for w, extra in windows:  # the backing never takes focus; both let clicks through when locked
+            h = self._hwnd(w)
+            self._exstyle(h, add=WS_EX_LAYERED | WS_EX_TOOLWINDOW | extra,
+                          remove=0 if on else WS_EX_TRANSPARENT)
+            if on:
+                self._exstyle(h, add=WS_EX_TRANSPARENT)
 
     def apply_log_lines(self, lines):
         """Feed game log lines to the tracker and refresh; jump to a newly tracked quest."""
@@ -285,7 +335,7 @@ class Overlay:
     def _save_settings(self):
         try:
             self._settings_path.parent.mkdir(parents=True, exist_ok=True)
-            self._settings_path.write_text(json.dumps({"backdrop": self.backdrop}), encoding="utf-8")
+            self._settings_path.write_text(json.dumps(dict(self._load_settings(), backdrop=self.backdrop)), encoding="utf-8")
         except OSError:
             pass
 
@@ -298,6 +348,7 @@ class Overlay:
         """Transparent: every background is KEY (see-through on Windows), only text shows.
         Backdrop: a dark semi-opaque panel behind everything, for bright or busy scenes."""
         on = self.backdrop
+        self._sync_back()
         for role, widgets in self._roles.items():
             colour = PANEL[role] if on else KEY
             for w in widgets:
@@ -321,6 +372,7 @@ class Overlay:
     def set_visible(self, visible):
         self.visible = visible
         (self.root.deiconify if visible else self.root.withdraw)()
+        self._sync_back()
 
     def _poll(self):
         try:
