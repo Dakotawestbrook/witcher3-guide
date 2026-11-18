@@ -41,6 +41,27 @@ the game's vanilla scripts, but **not yet run in the game**. Setup is in
 the game with `-debugscripts`). Until the mod is installed, everything works as before with
 manual ticking.
 
+## Decisions tab
+
+The **⚖ Decisions: best choices** tab lists quests with several dialogue or action options (33 so far:
+the endings, the romances, base-game side quests and both DLCs). Select one to see the options, what
+each does, and the recommended pick for each goal:
+
+- **Best for rewards**, **Best for morals** and **Best for the outcome**, each marked *(source says so)*
+  when a guide states it, or *(my judgement)* when I inferred it from the outcomes the guide describes.
+- **⇄** marks decisions where the best choice for rewards and for morals differ.
+- Click **Best for: …** (next to the search box) to switch the goal and show only decisions that have an
+  answer for it. Search also looks inside the options.
+- Quests that contain a decision are marked **⚖** in the normal lists, and when the quest you are tracking
+  in the game has one, a gold hint appears; click it to open that decision.
+
+Data lives in `witcher_guide/data/decisions.json`. Sources: gamepressure.com (Ciri's fate, fate of the
+world, Keira Metz, Triss and Yennefer), game-checklists.com (quest descriptions, including the DLCs) and
+allthings.how. **Gaps:** reward comparisons are only included where a guide states them (8 so far), the
+Bloody Baron decisions are left out because the pages I could read don't spell out their outcomes and
+guides disagree, and the most detailed decision lists (Game8, the Witcher wiki) block automated access.
+Add entries by copying an existing one: `quests` links a decision to quest ids in `quests.json`.
+
 ## Resizing
 
 Drag **any edge or corner** of the window (a 6 px band around the border), or the **◢** grip in the

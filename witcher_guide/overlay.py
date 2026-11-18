@@ -33,6 +33,8 @@ ROW_H = 24  # list row height in px (matches the Treeview style)
 MIN_ROWS = 3  # list rows at the smallest size
 DEFAULT_EXTRA_ROWS, MAX_EXTRA_ROWS = 8, 60  # rows added on top of MIN_ROWS
 DETAIL_LINES = 7  # detail text taller than this collapses behind a clickable 'more'
+DETAIL_LINES_DECISION = 12  # decisions are longer, so show more before collapsing
+DECISIONS = "__decisions__"  # the special tab that lists decisions instead of quests
 SHORT = {"Hearts of Stone": "Hearts", "Blood and Wine": "Blood&Wine"}  # keep the tab rows from overflowing
 GOLD, RED, GREEN, BLUE = "#e8b85a", "#ff6b62", "#7fd685", "#7ab8f0"
 ICON = {core.DONE: "✔", core.AVAILABLE: "▶", core.BLOCKED: "○", core.MISSED: "✖"}
@@ -68,9 +70,13 @@ def start_hotkey_thread(events):
 
 
 class Overlay:
-    def __init__(self, root, data=None, progress=None, backing=None):
+    def __init__(self, root, data=None, progress=None, backing=None, decisions=None):
         self.root = root
         self.data = data or core.load_data()
+        self.decisions = core.load_decisions() if decisions is None else decisions
+        self.goal = "all"  # what the Decisions tab is optimising for: all / rewards / morals / outcome
+        self._detail_limit = DETAIL_LINES
+        self._hint_vis = {"risk": False, "dec": False, "legend": False}
         self.progress = progress or core.Progress()
         self.tracker = tracker.Tracker(self.progress, self.data)
         self.region = None  # None = all regions
@@ -160,17 +166,32 @@ class Overlay:
             b.grid(row=n // 5, column=n % 5, sticky="w")
             b.bind("<Button-1>", lambda e, n=name: self.set_region(n))
             self.tab_btns[name] = b
+        dtab = tk.Label(tabs, text="\u2696 Decisions: best choices", bg=BG, fg=DIM, font=("Segoe UI", 9, "bold"), padx=5, cursor="hand2")
+        self._tag("base", dtab)
+        dtab.grid(row=2, column=0, columnspan=5, sticky="w")
+        dtab.bind("<Button-1>", lambda e: self.set_region(DECISIONS))
+        self.tab_btns[DECISIONS] = dtab
 
         self.track_lbl = tk.Label(r, text="", bg=BG, fg=BLUE, anchor="w", font=("Segoe UI", 9, "bold"))
         self.track_lbl.pack(fill="x", padx=8)
         self._tag("base", self.track_lbl)
+        self.hints = tk.Frame(r, bg=BG)  # holds the warnings/hints; it is only packed while it has content
+        self._tag("base", self.hints)
         # shown only while the tracked quest would close a missable quest you haven't finished
-        self.risk_lbl = tk.Label(r, text="", bg=BG, fg=RED, justify="left", anchor="w",
+        self.risk_lbl = tk.Label(self.hints, text="", bg=BG, fg=RED, justify="left", anchor="w",
                                  wraplength=self.width - 30, font=("Segoe UI", 10, "bold"))
         self.risk_lbl.bind("<Button-1>", lambda e: self._toggle("risk"))
         self._tag("alert", self.risk_lbl)
+        # shown while the tracked quest contains a decision; click to see the best choices
+        self.dec_lbl = tk.Label(self.hints, text="", bg=BG, fg=GOLD, justify="left", anchor="w", cursor="hand2",
+                                wraplength=self.width - 30, font=("Segoe UI", 9, "bold"))
+        self.dec_lbl.bind("<Button-1>", lambda e: self._goto_decision())
+        self._tag("base", self.dec_lbl)
+        self.legend_lbl = tk.Label(self.hints, text="\u21C4 = best for rewards and best for morals differ. Click \"Best for\" to filter.",
+                                   bg=BG, fg=DIM, justify="left", anchor="w", wraplength=self.width - 30, font=("Segoe UI", 8))
+        self._tag("base", self.legend_lbl)
 
-        bar = tk.Frame(r, bg=BG)
+        bar = self.bar = tk.Frame(r, bg=BG)
         bar.pack(fill="x", padx=8, pady=6)
         self._tag("base", bar)
         self.search_var = tk.StringVar()
@@ -182,8 +203,13 @@ class Overlay:
         self._tag("entry", e)
         e.bind("<Button-1>", lambda ev: e.focus_force())
         self.miss_var = tk.BooleanVar()
-        ttk.Checkbutton(bar, text="Missable only", variable=self.miss_var, style="T.TCheckbutton",
-                        command=self.refresh).pack(side="left", padx=(8, 0))
+        self.miss_chk = ttk.Checkbutton(bar, text="Missable only", variable=self.miss_var, style="T.TCheckbutton",
+                                        command=self.refresh)
+        self.miss_chk.pack(side="left", padx=(8, 0))
+        # Decisions tab only: click to cycle what to optimise for
+        self.goal_lbl = tk.Label(bar, text="", bg=BG, fg=GOLD, font=("Segoe UI", 9, "bold"), cursor="hand2", padx=6)
+        self.goal_lbl.bind("<Button-1>", lambda e: self._cycle_goal())
+        self._tag("base", self.goal_lbl)
 
         self.alert_lbl = tk.Label(r, text="", bg=BG, fg=RED, justify="left", anchor="w",
                                   wraplength=self.width - 30, font=("Segoe UI", 9, "bold"))
@@ -208,6 +234,9 @@ class Overlay:
         self.more_lbl.bind("<Button-1>", lambda e: self._toggle("detail"))
         self.more_lbl.pack(fill="x", padx=8, pady=(0, 8))
         self._tag("detail", self.detail, self.more_lbl)
+        for tag, col in (("rewards", GOLD), ("morals", GREEN), ("outcome", BLUE), ("warnline", RED)):
+            self.detail.tag_configure(tag, foreground=col)
+        self.detail.tag_configure("title", font=("Segoe UI", 9, "bold"))
         self._set_detail("Double-click a quest to mark it done.")
 
         # drag this corner to resize the window
@@ -230,7 +259,13 @@ class Overlay:
         for n, b in self.tab_btns.items():
             b.config(fg=GOLD if n == self.region else DIM)
         self.tree.delete(*self.tree.get_children())
-        rows = core.search(self.data, done, self.search_var.get(), self.region, self.miss_var.get(), failed=failed)
+        in_decisions = self.region == DECISIONS
+        self._set_mode_controls(in_decisions)
+        dec_quests = {qid for d in self.decisions for qid in d["quests"]}
+        rows = [] if in_decisions else core.search(self.data, done, self.search_var.get(), self.region,
+                                                   self.miss_var.get(), failed=failed)
+        if in_decisions:
+            self._fill_decisions()
         # recommended next quests float to the top
         rows.sort(key=lambda q: 0 if q["status"] == core.AVAILABLE else 1)
         for q in rows:
@@ -240,6 +275,8 @@ class Overlay:
             if q["id"] in risk_ids:
                 tags.append("atrisk")
             star = " ⚠" if q.get("missable") else ""
+            if q["id"] in dec_quests:
+                star += " \u2696"  # this quest contains a decision
             if q["id"] in risk_ids:
                 star = " \u203C will be lost"
             mark = "\u25C9" if q["id"] == self.progress.tracked else ICON[q["status"]]
@@ -247,7 +284,72 @@ class Overlay:
         names = {q["id"]: q["name"] for q in self.data["quests"]}
         t = self.progress.tracked
         self.track_lbl.config(text=f"\u25C9 Tracking in game: {names[t]}" if t in names else "")
+        decs = core.decisions_for(self.decisions, self.progress.tracked_all)
+        if decs:
+            self.dec_lbl.config(text="\u2696 Decision in this quest: " + ", ".join(d["name"] for d in decs)
+                                     + ". Click for the best choices.")
+        self._hint_vis["dec"] = bool(decs)
+        self._hint_vis["legend"] = in_decisions
         self._render_banners(core.alerts(self.data, done, failed), risks)
+
+    # ---- Decisions tab ------------------------------------------------------
+    def _set_mode_controls(self, in_decisions):
+        """The Missable-only box belongs to quests; the goal switch belongs to decisions."""
+        self.goal_lbl.config(text=f"Best for: {self.goal} \u25B8")
+        if in_decisions and not self.goal_lbl.winfo_manager():
+            self.miss_chk.pack_forget()
+            self.goal_lbl.pack(side="left", padx=(8, 0))
+        elif not in_decisions and self.goal_lbl.winfo_manager():
+            self.goal_lbl.pack_forget()
+            self.miss_chk.pack(side="left", padx=(8, 0))
+
+    def _fill_decisions(self):
+        tracked = set(self.progress.tracked_all)
+        rows = core.filter_decisions(self.decisions, self.search_var.get(), self.goal)
+        rows.sort(key=lambda d: 0 if set(d["quests"]) & tracked else 1)  # the tracked quest's decisions first
+        for d in rows:
+            conflict = core.has_conflict(d)
+            tags = (["missable"] if conflict else []) + (["tracked"] if set(d["quests"]) & tracked else [])
+            suffix = "  \u21C4" if conflict else ("  \u2022 ending" if d.get("affects_ending") else "")
+            self.tree.insert("", "end", iid="dec:" + d["id"], text=f' \u2696  {d["name"]}{suffix}', tags=tags)
+
+    def _cycle_goal(self):
+        self.goal = core.GOALS[(core.GOALS.index(self.goal) + 1) % len(core.GOALS)]
+        sel = self.tree.selection()
+        self.refresh()
+        if sel and self.tree.exists(sel[0]):
+            self.tree.selection_set(sel[0])
+            self._show_detail()
+
+    def _goto_decision(self):
+        """Jump from the tracked quest's hint to its decision in the Decisions tab."""
+        decs = core.decisions_for(self.decisions, self.progress.tracked_all)
+        if not decs:
+            return
+        self.region = DECISIONS
+        self.search_var.set("")
+        self.refresh()
+        iid = "dec:" + decs[0]["id"]
+        if self.tree.exists(iid):
+            self.tree.selection_set(iid)
+            self.tree.see(iid)
+            self._show_detail()
+
+    def _layout_hints(self):
+        for w in (self.risk_lbl, self.dec_lbl, self.legend_lbl):
+            w.pack_forget()
+        vis = self._hint_vis
+        if not any(vis.values()):
+            self.hints.pack_forget()
+            return
+        if not self.hints.winfo_manager():
+            self.hints.pack(fill="x", before=self.bar)
+        if vis["risk"]:
+            self.risk_lbl.pack(fill="x", padx=8, pady=(2, 0))
+        if vis["dec"]:
+            self.dec_lbl.pack(fill="x", padx=8, pady=(2, 0))
+        if vis["legend"]:
+            self.legend_lbl.pack(fill="x", padx=8, pady=(2, 0))
 
     # ---- Warnings, and text that can be expanded when it doesn't fit ---------
     def _clip(self, key, names, limit):
@@ -288,34 +390,40 @@ class Overlay:
             tracked = by_id.get(self.progress.tracked, "this quest")
             self.risk_lbl.config(text=f"\u26A0 You are tracking {tracked}. Starting it will make you miss: "
                                       f"{text}. Finish those first.", cursor="hand2" if c else "arrow")
-            self.risk_lbl.pack(fill="x", padx=8, pady=(2, 0), after=self.track_lbl)
-        else:
-            self.risk_lbl.pack_forget()
+        self._hint_vis["risk"] = bool(risks)
+        self._layout_hints()
         self._fit()
 
     def _toggle(self, key):
         self._open ^= {key}
         if key == "detail":
-            self._set_detail(self._detail_text)
+            self._set_detail(self._detail_text, self._detail_limit)
         else:
             self._render_banners(*self._last_banners)
 
-    def _set_detail(self, text):
+    def _set_detail(self, text, limit=DETAIL_LINES):
         """Show text in full if it fits; otherwise collapse it with a clickable 'more'."""
-        self._detail_text = text
+        self._detail_text, self._detail_limit = text, limit
         d = self.detail
         d.config(state="normal")
         d.delete("1.0", "end")
         d.insert("1.0", text)
+        for i, line in enumerate(text.split("\n"), 1):  # colour the recommendation lines
+            tag = ("title" if i == 1 else "rewards" if line.startswith("Best for rewards") else
+                   "morals" if line.startswith("Best for morals") else
+                   "outcome" if line.startswith("Best for the outcome") else
+                   "warnline" if line.startswith("\u26A0") else None)
+            if tag:
+                d.tag_add(tag, f"{i}.0", f"{i}.end")
         d.config(state="disabled")
         self.root.update_idletasks()
         count = d.count("1.0", "end", "displaylines")
         n = max(1, count[0] if count else 1)
-        over, open_ = n > DETAIL_LINES, "detail" in self._open
-        d.config(height=n if (open_ or not over) else DETAIL_LINES)
+        over, open_ = n > limit, "detail" in self._open
+        d.config(height=n if (open_ or not over) else limit)
         if over:
             self.more_lbl.config(text="\u25B2 show less" if open_ else
-                                 f"\u25BC {n - DETAIL_LINES} more line{'s' if n - DETAIL_LINES > 1 else ''} (click to expand)", cursor="hand2")
+                                 f"\u25BC {n - limit} more line{'s' if n - limit > 1 else ''} (click to expand)", cursor="hand2")
         else:
             self.more_lbl.config(text="", cursor="arrow")
         self._fit()
@@ -450,10 +558,10 @@ class Overlay:
 
     def _reflow(self):
         """The width changed: re-wrap the warnings and recount the detail text's lines."""
-        for lbl in (self.alert_lbl, self.risk_lbl):
+        for lbl in (self.alert_lbl, self.risk_lbl, self.dec_lbl, self.legend_lbl):
             lbl.config(wraplength=self.width - 30)
         self._render_banners(*self._last_banners)
-        self._set_detail(self._detail_text)
+        self._set_detail(self._detail_text, self._detail_limit)
 
     def _save_size(self):
         self._save_settings()
@@ -463,10 +571,19 @@ class Overlay:
 
     def _show_detail(self, _e=None):
         sel = self.tree.selection()
+        if sel and sel[0].startswith("dec:"):
+            d = next((x for x in self.decisions if "dec:" + x["id"] == sel[0]), None)
+            if d:
+                self._open.discard("detail")
+                self._set_detail(core.format_decision(d, self.goal), DETAIL_LINES_DECISION)
+            return
         q = self._quest(sel[0]) if sel else None
         if not q:
             return
         lines = [f'{q["name"]}  [{q["region"]} • {q["type"]} • {q["status"]}]']
+        decs = core.decisions_for(self.decisions, [q["id"]])
+        if decs:
+            lines.append("\u2696 Decision here: " + ", ".join(d["name"] for d in decs) + " (see the Decisions tab)")
         miss = core.missing_prereqs(q, self.data, self.progress.all_done())
         if miss and q["status"] == core.BLOCKED:
             lines.append("Do first: " + ", ".join(miss))
@@ -481,7 +598,7 @@ class Overlay:
 
     def _toggle_selected(self, _e=None):
         sel = self.tree.selection()
-        if sel:
+        if sel and not sel[0].startswith("dec:"):  # decisions are advice, not something to tick off
             self.progress.toggle(sel[0])
             self.refresh()
             if self.tree.exists(sel[0]):

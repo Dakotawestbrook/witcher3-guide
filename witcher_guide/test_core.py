@@ -128,6 +128,73 @@ class TestCore(unittest.TestCase):
         for cutoff in {q["expires_before"] for q in self.data["quests"] if q.get("expires_before")}:
             self.assertTrue(core.tracked_risks(self.data, set(), frozenset(), {cutoff}), cutoff)
 
+    # ---- Decisions ----
+    def test_decisions_data_integrity(self):
+        decs = core.load_decisions()
+        self.assertGreaterEqual(len(decs), 30)
+        self.assertEqual(len({d["id"] for d in decs}), len(decs), "duplicate decision ids")
+        for d in decs:
+            self.assertTrue(d["source"], d["id"])
+            self.assertGreaterEqual(len(d["options"]), 2, d["id"])
+            self.assertTrue(d["quests"], d["id"])
+            for qid in d["quests"]:
+                self.assertIn(qid, self.by_id, f'{d["id"]} links to a missing quest {qid}')
+            for o in d["options"]:
+                self.assertIn(o["type"], ("dialogue", "action"), d["id"])
+                self.assertTrue(o["label"] and o["result"], d["id"])
+            for field in ("best_rewards", "best_moral", "best_outcome"):
+                pk = d.get(field)
+                if pk:
+                    self.assertTrue(pk["pick"] and pk["why"], (d["id"], field))
+                    self.assertIn(pk["basis"], ("stated", "judgement"), (d["id"], field))
+
+    def test_decisions_cover_the_dlcs_and_endings(self):
+        kinds = {d["kind"] for d in core.load_decisions()}
+        self.assertTrue({"ending", "romance", "side", "dlc"} <= kinds)
+
+    def test_rewards_vs_morals_conflicts_are_found(self):
+        decs = {d["id"]: d for d in core.load_decisions()}
+        self.assertTrue(core.has_conflict(decs["hos_ending"]))      # rewards: bad ending, morals: good ending
+        self.assertTrue(core.has_conflict(decs["nithing"]))
+        self.assertTrue(core.has_conflict(decs["baw_basilisk"]))
+        self.assertFalse(core.has_conflict(decs["romance"]))        # only an outcome pick
+
+    def test_goal_filter_only_lists_decisions_with_that_pick(self):
+        decs = core.load_decisions()
+        for goal, field in (("rewards", "best_rewards"), ("morals", "best_moral"), ("outcome", "best_outcome")):
+            rows = core.filter_decisions(decs, goal=goal)
+            self.assertTrue(rows, goal)
+            self.assertTrue(all(d[field] for d in rows), goal)
+        self.assertEqual(len(core.filter_decisions(decs, goal="all")), len(decs))
+
+    def test_decision_search_covers_options_and_notes(self):
+        decs = core.load_decisions()
+        names = {d["id"] for d in core.filter_decisions(decs, "aerondight")}
+        self.assertIn("baw_virtues", names)
+        self.assertIn("skellige", {d["id"] for d in core.filter_decisions(decs, "Hjalmar")})
+        self.assertEqual(core.filter_decisions(decs, "zzzz-nothing"), [])
+
+    def test_decisions_for_a_tracked_quest(self):
+        decs = core.load_decisions()
+        self.assertEqual({d["id"] for d in core.decisions_for(decs, {"the_nithing"})}, {"nithing"})
+        self.assertIn("ciri_skjall", {d["id"] for d in core.decisions_for(decs, ["child_eb"])})
+        self.assertEqual(core.decisions_for(decs, set()), [])
+        self.assertEqual(core.decisions_for(decs, None), [])
+
+    def test_format_puts_the_chosen_goal_first(self):
+        d = {x["id"]: x for x in core.load_decisions()}["hos_ending"]
+        lines = core.format_decision(d, "morals").split("\n")
+        self.assertTrue(lines[1].startswith("Best for morals"))
+        lines = core.format_decision(d, "rewards").split("\n")
+        self.assertTrue(lines[1].startswith("Best for rewards"))
+        text = core.format_decision(d, "all")
+        self.assertIn("Rewards and morals point different ways", text)
+        self.assertIn("(source says so)", text)
+        self.assertIn("(action)", text)
+        j = core.format_decision({x["id"]: x for x in core.load_decisions()}["nithing"], "all")
+        self.assertIn("my judgement", j)
+        self.assertIn("nothing in my sources", core.format_decision(d, "outcome"))
+
     def test_no_noise_at_game_start(self):
         self.assertEqual(core.alerts(self.data, set()), [])
 

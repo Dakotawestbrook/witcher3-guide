@@ -6,6 +6,8 @@ from pathlib import Path
 DONE, MISSED, AVAILABLE, BLOCKED = "done", "missed", "available", "blocked"
 
 DATA_FILE = Path(__file__).parent / "data" / "quests.json"
+DECISIONS_FILE = Path(__file__).parent / "data" / "decisions.json"
+GOALS = ("all", "rewards", "morals", "outcome")  # what the player is optimising for
 
 
 def default_progress_path():
@@ -143,3 +145,64 @@ def search(data, done, text="", region=None, missable_only=False, failed=frozens
             continue
         rows.append(q)
     return rows
+
+
+# ---- Decisions: the best choice in quests with several dialogue/action options ------------
+def load_decisions(path=DECISIONS_FILE):
+    return load_data(path)["decisions"]
+
+
+def decisions_for(decisions, quest_ids):
+    """Decisions that happen in any of the given quests (e.g. the one tracked in the game)."""
+    ids = set(quest_ids or ())
+    return [d for d in decisions if ids & set(d["quests"])]
+
+
+def has_conflict(d):
+    """True when the best choice for rewards and the best choice for morals differ."""
+    r, m = d.get("best_rewards"), d.get("best_moral")
+    return bool(r and m and r["pick"] != m["pick"])
+
+
+_GOAL_FIELD = {"rewards": "best_rewards", "morals": "best_moral", "outcome": "best_outcome"}
+
+
+def filter_decisions(decisions, text="", goal="all"):
+    text = text.lower().strip()
+    out = []
+    for d in decisions:
+        if goal in _GOAL_FIELD and not d.get(_GOAL_FIELD[goal]):
+            continue
+        hay = " ".join([d["name"], d["situation"], d.get("note", "")] +
+                       [o["label"] + " " + o["result"] for o in d["options"]]).lower()
+        if text and text not in hay:
+            continue
+        out.append(d)
+    return out
+
+
+_PICK_TITLES = (("rewards", "best_rewards", "Best for rewards"), ("morals", "best_moral", "Best for morals"),
+                ("outcome", "best_outcome", "Best for the outcome"))
+
+
+def format_decision(d, goal="all"):
+    """Plain text for the detail panel: the recommendations first (the goal you chose on top),
+    then the situation and every option."""
+    lines = [f'{d["name"]}  [{d["kind"]}{" \u2022 affects the ending" if d.get("affects_ending") else ""}]']
+    order = sorted(_PICK_TITLES, key=lambda t: t[0] != goal)  # the chosen goal first
+    for key, field, title in order:
+        pk = d.get(field)
+        if pk:
+            basis = "source says so" if pk["basis"] == "stated" else "my judgement"
+            lines.append(f'{title}: {pk["pick"]} - {pk["why"]} ({basis})')
+        elif goal == key:
+            lines.append(f"{title}: nothing in my sources")
+    if has_conflict(d):
+        lines.append("\u26A0 Rewards and morals point different ways here.")
+    lines.append("Situation: " + d["situation"])
+    for i, o in enumerate(d["options"], 1):
+        lines.append(f'  {i}. {o["label"]} ({"dialogue" if o["type"] == "dialogue" else "action"}): {o["result"]}')
+    if d.get("note"):
+        lines.append("Note: " + d["note"])
+    lines.append("Source: " + d["source"])
+    return "\n".join(lines)

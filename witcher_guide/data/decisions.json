@@ -1,0 +1,1054 @@
+{
+ "_note": "Best choices compiled from gamepressure.com, game-checklists.com and allthings.how. basis=stated means a source says it; basis=judgement is my inference from the outcomes the source describes. Edit freely.",
+ "decisions": [
+  {
+   "id": "ciri_overview",
+   "name": "Ciri's ending: the five decisions",
+   "kind": "ending",
+   "quests": [
+    "blood",
+    "final_prep",
+    "child_eb"
+   ],
+   "situation": "Ciri's fate comes from five dialogue/action choices in Blood on the Battlefield, Final Preparations and The Child of the Elder Blood, not from one big moment. The next five entries list each one.",
+   "options": [
+    {
+     "label": "Ciri dies",
+     "type": "dialogue",
+     "result": "Make 3 of the 5 negative choices."
+    },
+    {
+     "label": "Ciri becomes a witcher",
+     "type": "dialogue",
+     "result": "Mandatory: in Blood on the Battlefield do not go to the emperor with Ciri (go to Velen). Plus 2 more positive choices."
+    },
+    {
+     "label": "Ciri becomes empress",
+     "type": "dialogue",
+     "result": "3 of the 5 positive choices (including refusing the emperor's reward), plus the side quests An Eye for an Eye, A Deadly Plot and Redania's Most Wanted, telling Dijkstra about Ciri in Blindingly Obvious, and allying with Vernon Roche in Reason of State so Nilfgaard wins the war."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Either the witcher or the empress ending",
+    "why": "Both keep Ciri alive. Only the negative choices lead to her death.",
+    "basis": "stated"
+   },
+   "note": "Guides differ on the exact thresholds; this follows gamepressure.com. Do the positive answers below and Ciri lives.",
+   "affects_ending": true,
+   "source": "gamepressure.com: Ciri's Fate"
+  },
+  {
+   "id": "ciri_mood",
+   "name": "Blood on the Battlefield: Ciri is unhappy",
+   "kind": "ending",
+   "quests": [
+    "blood"
+   ],
+   "situation": "When Ciri is upset, the way you answer counts as one of her five decisions.",
+   "options": [
+    {
+     "label": "Tell her you understand the burden she carries",
+     "type": "dialogue",
+     "result": "Positive choice (used by the witcher and empress endings)."
+    },
+    {
+     "label": "Tell her she doesn't have to be good at everything",
+     "type": "dialogue",
+     "result": "Negative choice (counts toward Ciri's death)."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Say you understand the burden she carries",
+    "why": "It is the positive answer for both surviving endings.",
+    "basis": "stated"
+   },
+   "note": "",
+   "affects_ending": true,
+   "source": "gamepressure.com: Ciri's Fate"
+  },
+  {
+   "id": "ciri_emperor",
+   "name": "Blood on the Battlefield: the emperor",
+   "kind": "ending",
+   "quests": [
+    "blood"
+   ],
+   "situation": "Later in the same quest you decide whether to take Ciri to the emperor.",
+   "options": [
+    {
+     "label": "Don't go to the emperor; go to Velen instead",
+     "type": "action",
+     "result": "Required for the witcher ending."
+    },
+    {
+     "label": "Go to the emperor and refuse his reward",
+     "type": "action",
+     "result": "Used for the empress ending."
+    },
+    {
+     "label": "Go to the emperor and take the money",
+     "type": "action",
+     "result": "Negative choice (counts toward Ciri's death)."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Velen (witcher ending) or refuse the reward (empress ending)",
+    "why": "Only taking the money counts against Ciri.",
+    "basis": "stated"
+   },
+   "note": "This is the one mandatory choice for the witcher ending.",
+   "affects_ending": true,
+   "source": "gamepressure.com: Ciri's Fate"
+  },
+  {
+   "id": "ciri_lodge",
+   "name": "Final Preparations: the Lodge of Sorceresses",
+   "kind": "ending",
+   "quests": [
+    "final_prep"
+   ],
+   "situation": "Ciri has to meet the Lodge of Sorceresses.",
+   "options": [
+    {
+     "label": "Convince Ciri to go alone",
+     "type": "dialogue",
+     "result": "Positive choice."
+    },
+    {
+     "label": "Go with Ciri",
+     "type": "dialogue",
+     "result": "Negative choice (counts toward Ciri's death)."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Convince her to go alone",
+    "why": "Positive choice for both surviving endings.",
+    "basis": "stated"
+   },
+   "note": "",
+   "affects_ending": true,
+   "source": "gamepressure.com: Ciri's Fate"
+  },
+  {
+   "id": "ciri_anger",
+   "name": "The Child of the Elder Blood: Ciri's anger",
+   "kind": "ending",
+   "quests": [
+    "child_eb"
+   ],
+   "situation": "Ciri starts to get angry.",
+   "options": [
+    {
+     "label": "Let her unload her aggression",
+     "type": "dialogue",
+     "result": "Positive choice."
+    },
+    {
+     "label": "Tell her to calm down",
+     "type": "dialogue",
+     "result": "Negative choice (counts toward Ciri's death)."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Let her unload her aggression",
+    "why": "Positive choice for both surviving endings.",
+    "basis": "stated"
+   },
+   "note": "",
+   "affects_ending": true,
+   "source": "gamepressure.com: Ciri's Fate"
+  },
+  {
+   "id": "ciri_skjall",
+   "name": "The Child of the Elder Blood: Skjall's grave",
+   "kind": "ending",
+   "quests": [
+    "child_eb"
+   ],
+   "situation": "You are asked to visit Skjall's grave with Ciri. Missable: only offered during this quest.",
+   "options": [
+    {
+     "label": "Agree to visit Skjall's grave with Ciri",
+     "type": "dialogue",
+     "result": "Positive choice."
+    },
+    {
+     "label": "Say time is of the essence",
+     "type": "dialogue",
+     "result": "Negative choice (counts toward Ciri's death)."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Go to Skjall's grave with Ciri",
+    "why": "Positive choice for both surviving endings.",
+    "basis": "stated"
+   },
+   "note": "",
+   "affects_ending": true,
+   "source": "gamepressure.com: Ciri's Fate; game-checklists.com"
+  },
+  {
+   "id": "radovid",
+   "name": "Radovid, Dijkstra and the North",
+   "kind": "ending",
+   "quests": [
+    "blinding",
+    "reason_of_state"
+   ],
+   "situation": "Redania's Most Wanted starts a storyline about killing King Radovid that ends in Reason of State.",
+   "options": [
+    {
+     "label": "Ignore Radovid's storyline",
+     "type": "action",
+     "result": "Radovid stays king."
+    },
+    {
+     "label": "Kill Radovid, then stay neutral and let Dijkstra kill Roche",
+     "type": "action",
+     "result": "Dijkstra becomes the ruler."
+    },
+    {
+     "label": "Kill Radovid, then ally with Vernon Roche against Dijkstra",
+     "type": "action",
+     "result": "Nilfgaard rules the North and the truce with Nilfgaard is secured. Needed for Ciri's empress ending."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The game does not mark these as good or bad. Allying with Roche is the one that helps Ciri's empress ending.",
+   "affects_ending": true,
+   "source": "gamepressure.com: Fate of the World; game-checklists.com"
+  },
+  {
+   "id": "skellige",
+   "name": "King's Gambit: who rules Skellige",
+   "kind": "ending",
+   "quests": [
+    "kings_gambit",
+    "possession",
+    "the_lord_of_undvik"
+   ],
+   "situation": "Do Possession and The Lord of Undvik first, then choose whom to help. These quests fail when you start The Isle of Mists.",
+   "options": [
+    {
+     "label": "Help Cerys",
+     "type": "action",
+     "result": "Skellige stays neutral. You expose Birna Bran's conspiracy."
+    },
+    {
+     "label": "Help Hjalmar",
+     "type": "action",
+     "result": "The islands join forces against Nilfgaard. You hunt down the Vildkaarls."
+    },
+    {
+     "label": "Ignore King's Gambit (Bran)",
+     "type": "action",
+     "result": "The rules change and a civil war starts."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Help Cerys",
+    "why": "Keeps the islands neutral and out of the war. Ignoring the quest leads to civil war.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "No reward difference is stated in the sources I could read.",
+   "affects_ending": true,
+   "source": "gamepressure.com: Fate of the World; game-checklists.com"
+  },
+  {
+   "id": "romance",
+   "name": "Triss or Yennefer",
+   "kind": "romance",
+   "quests": [
+    "now_or_never",
+    "the_last_wish",
+    "a_matter_of_life_and_death"
+   ],
+   "situation": "Geralt can romance one of them. Both give a positive ending.",
+   "options": [
+    {
+     "label": "Romance Triss",
+     "type": "dialogue",
+     "result": "In Now or Never, pick the dialogue option asking her to stay. Lost if you start it after The Isle of Mists."
+    },
+    {
+     "label": "Romance Yennefer",
+     "type": "dialogue",
+     "result": "In The Last Wish, pick the affectionate response after the djinn encounter. The quest fails when you start Ugly Baby."
+    },
+    {
+     "label": "Try to romance both",
+     "type": "dialogue",
+     "result": "Geralt ends up alone. The 'It Takes Three to Tango' scene is a humiliating revenge."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Pick one of them",
+    "why": "Both are positive endings. Romancing both is the only bad result.",
+    "basis": "stated"
+   },
+   "note": "",
+   "affects_ending": true,
+   "source": "gamepressure.com: Triss and Yennefer; gamepressure.com: Fate of the World; allthings.how"
+  },
+  {
+   "id": "keira_dinner",
+   "name": "A Favor for a Friend: dinner with Keira",
+   "kind": "side",
+   "quests": [
+    "a_favor_for_a_friend"
+   ],
+   "situation": "After the quest you can agree to a dinner with Keira and sleep with her.",
+   "options": [
+    {
+     "label": "Sleep with Keira",
+     "type": "action",
+     "result": "Your relations with Triss and Yennefer get worse."
+    },
+    {
+     "label": "Decline",
+     "type": "dialogue",
+     "result": "No effect on Triss or Yennefer."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": {
+    "pick": "Decline if you want Triss or Yennefer",
+    "why": "Sleeping with Keira worsens relations with both.",
+    "basis": "judgement"
+   },
+   "note": "",
+   "affects_ending": false,
+   "source": "gamepressure.com: Keira Metz"
+  },
+  {
+   "id": "keira_fate",
+   "name": "For the Advancement of Learning: Keira's fate",
+   "kind": "side",
+   "quests": [
+    "for_the_advancement_of_learning",
+    "an_invitation_from_keira_metz"
+   ],
+   "situation": "On Fyke Isle you decide what happens to Keira.",
+   "options": [
+    {
+     "label": "Send her to Kaer Morhen",
+     "type": "dialogue",
+     "result": "She survives and becomes an ally in the Battle of Kaer Morhen (needed for an achievement)."
+    },
+    {
+     "label": "Let her die or skip her arc",
+     "type": "action",
+     "result": "Later unlocks the often-missed quest A Final Kindness."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Send her to Kaer Morhen",
+    "why": "Keeps her alive.",
+    "basis": "judgement"
+   },
+   "best_outcome": {
+    "pick": "Send her to Kaer Morhen",
+    "why": "Recommended: she fights with you in the battle and the arc ends on friendly terms.",
+    "basis": "stated"
+   },
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com; allthings.how"
+  },
+  {
+   "id": "nithing",
+   "name": "The Nithing",
+   "kind": "side",
+   "quests": [
+    "the_nithing"
+   ],
+   "situation": "A deadly curse was placed on Lothar's son and traces back to the herbalist Jonna.",
+   "options": [
+    {
+     "label": "Spare Jonna",
+     "type": "action",
+     "result": "The curse is resolved peacefully."
+    },
+    {
+     "label": "Turn the curse back on her",
+     "type": "action",
+     "result": "You receive payment, but she disappears."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Turn the curse back on her",
+    "why": "You get paid.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Spare Jonna",
+    "why": "Resolves the curse without harming her.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "cat_wolf",
+   "name": "Where the Cat and Wolf Play...",
+   "kind": "side",
+   "quests": [
+    "where_the_cat_and_wolf_play"
+   ],
+   "situation": "A fellow witcher of the School of the Cat massacred a village. You help the survivor Millie track him down.",
+   "options": [
+    {
+     "label": "Spare Gaetan",
+     "type": "action",
+     "result": "Enables the Take What You Want quest."
+    },
+    {
+     "label": "End him",
+     "type": "action",
+     "result": "No follow-up quest."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Spare Gaetan",
+    "why": "Unlocks the extra quest Take What You Want.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "unpaid_debt",
+   "name": "An Unpaid Debt",
+   "kind": "side",
+   "quests": [
+    "an_unpaid_debt"
+   ],
+   "situation": "Simun asks you to kill Volund to repay a debt.",
+   "options": [
+    {
+     "label": "Kill Volund",
+     "type": "action",
+     "result": "You honour your debt."
+    },
+    {
+     "label": "Defend the innocent man",
+     "type": "action",
+     "result": "You refuse to kill him."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Defend Volund",
+    "why": "He is innocent.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "This is part of the Madman Lugos questline, which fails if not finished before King's Gambit.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "wolfs_clothing",
+   "name": "In Wolf's Clothing",
+   "kind": "side",
+   "quests": [
+    "in_wolfs_clothing"
+   ],
+   "situation": "Morkvarg the werewolf is cursed to endless hunger and rebirth.",
+   "options": [
+    {
+     "label": "Trick Morkvarg into ending his own torment",
+     "type": "dialogue",
+     "result": "He ends his suffering."
+    },
+    {
+     "label": "Truly lift the curse and decide his fate",
+     "type": "action",
+     "result": "You lift the curse and choose what happens to him."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "No reward difference is stated in the sources I could read.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hard_times",
+   "name": "Hard Times",
+   "kind": "side",
+   "quests": [
+    "hard_times"
+   ],
+   "situation": "You carry a letter meant for the blacksmith Yanne about his family.",
+   "options": [
+    {
+     "label": "Tell Yanne the truth",
+     "type": "dialogue",
+     "result": "He learns what happened to his family."
+    },
+    {
+     "label": "Hide it",
+     "type": "dialogue",
+     "result": "He is spared the news."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "No reward difference is stated, and neither choice is clearly better.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "brave_fools",
+   "name": "Brave Fools Die Young",
+   "kind": "side",
+   "quests": [
+    "brave_fools_die_young"
+   ],
+   "situation": "Two young Skelligers are in trouble at the Grymmdjarr Monument.",
+   "options": [
+    {
+     "label": "Help Petter ease his pain",
+     "type": "action",
+     "result": "You help the injured Petter."
+    },
+    {
+     "label": "Leave them",
+     "type": "action",
+     "result": "They face the consequences of their bravery."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Help Petter",
+    "why": "He is injured and in pain.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "crime_punishment",
+   "name": "Crime and Punishment",
+   "kind": "side",
+   "quests": [
+    "crime_and_punishment"
+   ],
+   "situation": "Yorg is chained to a rock and claims he was framed for murder.",
+   "options": [
+    {
+     "label": "Free Yorg",
+     "type": "action",
+     "result": "Leads to a follow-up in Rogne where his sister confesses she lied, revealing what really happened."
+    },
+    {
+     "label": "Leave him",
+     "type": "action",
+     "result": "He stays chained."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "No reward difference is stated in the sources I could read.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "possession",
+   "name": "Possession",
+   "kind": "side",
+   "quests": [
+    "possession"
+   ],
+   "situation": "Jarl Udalryk is haunted by a hym feeding on his guilt.",
+   "options": [
+    {
+     "label": "Trick the hym into leaving",
+     "type": "dialogue",
+     "result": "It leaves."
+    },
+    {
+     "label": "Confront it in the Haunted House",
+     "type": "action",
+     "result": "You face it directly."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Part of the Coronation quests that fail when you start The Isle of Mists.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "flesh",
+   "name": "Flesh for Sale",
+   "kind": "side",
+   "quests": [
+    "flesh_for_sale"
+   ],
+   "situation": "Pirates run a slave operation in Trottheim.",
+   "options": [
+    {
+     "label": "Fight the pirates",
+     "type": "action",
+     "result": "You free the captive women by force."
+    },
+    {
+     "label": "Play along",
+     "type": "dialogue",
+     "result": "You free the captive women by deception."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Becomes unavailable once Following the Thread progresses.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_safecracker",
+   "name": "Open Sesame: The Safecracker",
+   "kind": "dlc",
+   "quests": [
+    "hos_open_sesame_the_safecracker"
+   ],
+   "situation": "You need somebody to open a safe.",
+   "options": [
+    {
+     "label": "Recruit Casimir in Alness",
+     "type": "action",
+     "result": "The safe door is blown up."
+    },
+    {
+     "label": "Recruit Quinto near Oxenfurt",
+     "type": "action",
+     "result": "The quiet option."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "To use Casimir safely, go after him right away: he becomes unavailable soon.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_marriage",
+   "name": "Scenes From a Marriage: the rose",
+   "kind": "dlc",
+   "quests": [
+    "hos_scenes_from_a_marriage"
+   ],
+   "situation": "After helping Iris close her painful memories you must decide about the rose.",
+   "options": [
+    {
+     "label": "Take the rose she offers",
+     "type": "action",
+     "result": "She dies and the magic animals are freed."
+    },
+    {
+     "label": "Let her keep it",
+     "type": "action",
+     "result": "She stays suffering, and the cat and dog stay stuck."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Take the rose",
+    "why": "It frees the trapped animals, while leaving it keeps everyone stuck.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_ending",
+   "name": "Whatsoever a Man Soweth...: O'Dimm",
+   "kind": "dlc",
+   "quests": [
+    "hos_whatsoever_a_man_soweth"
+   ],
+   "situation": "At the Temple of Lilvani you choose between the two endings.",
+   "options": [
+    {
+     "label": "Challenge Gaunter O'Dimm (good ending)",
+     "type": "action",
+     "result": "Needs you to have met Professor Shakeslock in Oxenfurt (follow Shani) first. You solve a riddle in a magical world; the Viper Venomous Silver Sword is the one good pickup there."
+    },
+    {
+     "label": "Let O'Dimm take Olgierd's soul (bad ending)",
+     "type": "action",
+     "result": "You can choose from many rewards, like 5000 Groschen or the Bottomless Carafe, an endless Alcohest replacement."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Let O'Dimm take the soul",
+    "why": "You choose from many rewards, like 5000 Groschen or the Bottomless Carafe.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Challenge O'Dimm",
+    "why": "The page calls it the good ending.",
+    "basis": "stated"
+   },
+   "best_outcome": null,
+   "note": "The good ending needs the Shakeslock detour before the temple. The riddle is solved by destroying a mirror with Aard.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_without_trace",
+   "name": "Without a Trace",
+   "kind": "dlc",
+   "quests": [
+    "hos_without_a_trace"
+   ],
+   "situation": "In Erde you find an elderly couple who were probably involved in the disappearances.",
+   "options": [
+    {
+     "label": "Spare the couple",
+     "type": "action",
+     "result": "They live."
+    },
+    {
+     "label": "Kill them",
+     "type": "action",
+     "result": "They die."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "No reward difference is stated in the sources I could read.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "hos_shani",
+   "name": "A Midnight Clear: Shani",
+   "kind": "dlc",
+   "quests": [
+    "hos_a_midnight_clear"
+   ],
+   "situation": "After the wedding you can stay in the area and romance Shani. Missable: only during Dead Man's Party.",
+   "options": [
+    {
+     "label": "Stay and romance Shani",
+     "type": "dialogue",
+     "result": "Starts the Shani romance."
+    },
+    {
+     "label": "Leave",
+     "type": "dialogue",
+     "result": "No romance, and the quest is lost."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_syanna",
+   "name": "The Night of Long Fangs: Syanna or Orianna",
+   "kind": "dlc",
+   "quests": [
+    "baw_the_night_of_long_fangs"
+   ],
+   "situation": "Dettlaff attacks Beauclair. You choose which trail to follow. The paths are mutually exclusive.",
+   "options": [
+    {
+     "label": "Hunt Syanna",
+     "type": "action",
+     "result": "Syanna's path."
+    },
+    {
+     "label": "Pursue Orianna",
+     "type": "action",
+     "result": "Offers an extra main quest, Blood Simple. After it you can still return to Syanna's path."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "The path you pick decides which later quests exist.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_virtues",
+   "name": "Aerondight: the five virtues",
+   "kind": "dlc",
+   "quests": [
+    "baw_there_can_only_be_one",
+    "baw_the_beast_of_toussaint",
+    "baw_the_warble_of_a_smitten_knight"
+   ],
+   "situation": "There Can Only Be One unlocks the Aerondight sword once you have shown all five virtues. Several come from choices.",
+   "options": [
+    {
+     "label": "Compassion: spare the shaelmaar in The Beast of Toussaint",
+     "type": "action",
+     "result": "Counts as Compassion."
+    },
+    {
+     "label": "Wisdom: answer \"Greenhouse\" at the end of The Beast of Toussaint",
+     "type": "dialogue",
+     "result": "Counts as Wisdom."
+    },
+    {
+     "label": "Generosity: tip the boy five crowns when you get the letter after Blood Run",
+     "type": "action",
+     "result": "Counts as Generosity."
+    },
+    {
+     "label": "Honor: keep Vivienne's secret in The Warble of a Smitten Knight",
+     "type": "dialogue",
+     "result": "Counts as Honor."
+    },
+    {
+     "label": "Valor: win the tourney in The Warble of a Smitten Knight",
+     "type": "action",
+     "result": "Counts as Valor."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Make all five choices",
+    "why": "Unlocks the Aerondight sword in the lake.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_warble",
+   "name": "The Warble of a Smitten Knight: Vivienne's curse",
+   "kind": "dlc",
+   "quests": [
+    "baw_the_warble_of_a_smitten_knight"
+   ],
+   "situation": "Missable: only before Capture the Castle. You discover Vivienne's curse.",
+   "options": [
+    {
+     "label": "Transfer the curse to Guillaume",
+     "type": "action",
+     "result": "Reveals her secret."
+    },
+    {
+     "label": "Use an oriole egg",
+     "type": "action",
+     "result": "Keeps her secret. It cures her but limits her remaining life to seven years."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Use the oriole egg",
+    "why": "Keeping her secret is the Honor virtue needed for the Aerondight sword.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "Neither option is clearly the moral one: the egg shortens her life, the transfer exposes her.",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_till_death",
+   "name": "Till Death Do You Part",
+   "kind": "dlc",
+   "quests": [
+    "baw_till_death_do_you_part"
+   ],
+   "situation": "A ghostly married couple argue at the Temple Cemetery. To stop it you must move one of their urns.",
+   "options": [
+    {
+     "label": "Side with the wife",
+     "type": "action",
+     "result": "Rewards you with Gwent cards."
+    },
+    {
+     "label": "Side with the husband",
+     "type": "action",
+     "result": "Earns you the sword Forged in Fire."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Side with the husband",
+    "why": "A sword is usually worth more than cards.",
+    "basis": "judgement"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_stones",
+   "name": "Goodness, Gracious, Great Balls of Granite!",
+   "kind": "dlc",
+   "quests": [
+    "baw_goodness_gracious_great_balls_of_granite"
+   ],
+   "situation": "An old man is using the stolen \"crown jewels\" to improve his bedroom performance.",
+   "options": [
+    {
+     "label": "Return the stones",
+     "type": "action",
+     "result": "You get a Reginald figurine."
+    },
+    {
+     "label": "Let the man keep them",
+     "type": "action",
+     "result": "No figurine."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Return the stones",
+    "why": "You get a Reginald figurine.",
+    "basis": "stated"
+   },
+   "best_moral": null,
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_brothers",
+   "name": "Father Knows Worst",
+   "kind": "dlc",
+   "quests": [
+    "baw_father_knows_worst"
+   ],
+   "situation": "Hugo says his brothers want him dead to control the family business.",
+   "options": [
+    {
+     "label": "Reconcile the brothers",
+     "type": "dialogue",
+     "result": "Peaceful ending."
+    },
+    {
+     "label": "Fight",
+     "type": "action",
+     "result": "Violent ending."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Reconcile the brothers",
+    "why": "Avoids a fight.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_francois",
+   "name": "Feet as Cold as Ice",
+   "kind": "dlc",
+   "quests": [
+    "baw_feet_as_cold_as_ice"
+   ],
+   "situation": "Jacquette's fiance François is trying to slay a monster in a cave.",
+   "options": [
+    {
+     "label": "Help him fight",
+     "type": "action",
+     "result": "He survives."
+    },
+    {
+     "label": "Let him go alone",
+     "type": "action",
+     "result": "He dies."
+    }
+   ],
+   "best_rewards": null,
+   "best_moral": {
+    "pick": "Help him fight",
+    "why": "Letting him go alone leads to his death.",
+    "basis": "stated"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  },
+  {
+   "id": "baw_basilisk",
+   "name": "Mutual of Beauclair's Wild Kingdom: the basilisk",
+   "kind": "dlc",
+   "quests": [
+    "baw_mutual_of_beauclairs_wild_kingdom"
+   ],
+   "situation": "You find the silver basilisk and choose to spare or kill it.",
+   "options": [
+    {
+     "label": "Spare it",
+     "type": "action",
+     "result": "350 crowns, but hateful posters appear in the city."
+    },
+    {
+     "label": "Kill it",
+     "type": "action",
+     "result": "The Guild is happy and pays more."
+    }
+   ],
+   "best_rewards": {
+    "pick": "Kill it",
+    "why": "The Guild pays more.",
+    "basis": "stated"
+   },
+   "best_moral": {
+    "pick": "Spare it",
+    "why": "Spares the creature.",
+    "basis": "judgement"
+   },
+   "best_outcome": null,
+   "note": "",
+   "affects_ending": false,
+   "source": "game-checklists.com"
+  }
+ ]
+}
