@@ -103,6 +103,7 @@ class Overlay:
         self.backdrop = st.get("backdrop", False)
         self.view = st.get("view", "all") if st.get("view") in core.VIEWS else "all"
         self._tip_win, self._tip_job, self._tab_tips = None, None, {}
+        self._hover_row = None
         self.width = self._clamp_width(st.get("width", WIDTH))
         self.extra_rows = self._clamp_rows(st.get("extra_rows", DEFAULT_EXTRA_ROWS))
         self.back = None  # the click-catching window, created below
@@ -254,6 +255,9 @@ class Overlay:
         self.tree.pack(fill="both", expand=True, padx=8, pady=6)
         for tag, col in (("empty", DIM), ("done", DIM), ("available", GREEN), ("blocked", FG), ("missed", RED), ("missable", GOLD), ("tracked", BLUE), ("atrisk", RED)):
             self.tree.tag_configure(tag, foreground=col)
+        self.tree.tag_configure("hover", foreground="#ffffff")  # last, so it wins over the status colours
+        self.tree.bind("<Motion>", lambda e: self._set_hover_row(self.tree.identify_row(e.y) or None))
+        self.tree.bind("<Leave>", lambda e: self._set_hover_row(None))
         self.tree.bind("<<TreeviewSelect>>", self._show_detail)
         self.tree.bind("<Double-1>", self._toggle_selected)
         self.tree.bind("<Return>", self._toggle_selected)
@@ -290,6 +294,7 @@ class Overlay:
         risks = core.tracked_risks(self.data, done, failed, self.progress.tracked_all)
         risk_ids = {q["id"] for q in risks}
         self._update_tabs()
+        self._hover_row = None
         self.tree.delete(*self.tree.get_children())
         in_decisions = self.region == DECISIONS
         self._set_mode_controls(in_decisions)
@@ -537,12 +542,21 @@ class Overlay:
 
     def _hover(self, e):
         if e.widget is self.root or e.widget is self.back or str(e.widget) == str(self.title_lbl.master):
+            edges = self._edges_at(e.x_root, e.y_root)
+            cursor = self._cursor_for(edges)
+            if e.widget is self.back:
+                target = None if edges else self._interactive_at(e.x_root, e.y_root)
+                if target is not None and not cursor:
+                    cursor = str(target.cget("cursor"))  # e.g. the hand over tabs and buttons
+                self._set_hover_row(self._row_at(e.x_root, e.y_root) if target is self.tree else None)
             try:
-                e.widget.config(cursor=self._cursor_for(self._edges_at(e.x_root, e.y_root)))
+                e.widget.config(cursor=cursor)
             except tk.TclError:
                 pass
 
     def _hover_end(self, e):
+        if e.widget is self.back:
+            self._set_hover_row(None)
         if self._own_event(e) or str(e.widget) == str(self.title_lbl.master):
             try:
                 e.widget.config(cursor="")  # children inherit a parent's cursor, so always reset
@@ -553,12 +567,83 @@ class Overlay:
         if not movable and not self._own_event(e):
             return
         edges = self._edges_at(e.x_root, e.y_root)
+        target = None if (edges or e.widget is not self.back) else self._interactive_at(e.x_root, e.y_root)
         if edges:
             self._begin_resize(e, edges)
+        elif target is not None:
+            self._forward_click(target, e)
         else:
             # The window's own blank areas (the see-through gaps, handled by the backing window in
             # transparent mode) move it, so you can grab it anywhere that isn't a control.
             self._action = ("move", (e.x_root - self.root.winfo_x(), e.y_root - self.root.winfo_y()))
+
+    # ---- Clicks on the see-through parts of controls ---------------------------------------------
+    # In transparent mode only the letters are opaque, so a click between two letters (or on the empty
+    # end of a row) lands on the invisible window behind the overlay. That window finds the control
+    # whose rectangle contains the pointer and hands it the click, so every row, tab and button is
+    # clickable across its whole area.
+    @staticmethod
+    def _clickable(w):
+        if isinstance(w, (ttk.Treeview, tk.Entry)):
+            return True
+        return bool(w.bind("<Button-1>") or w.bind("<ButtonPress-1>"))
+
+    def _interactive_at(self, x, y):
+        """The innermost clickable widget whose rectangle contains the screen point (x, y), or None."""
+        best = None
+
+        def walk(parent):
+            nonlocal best
+            for c in parent.winfo_children():
+                if isinstance(c, tk.Toplevel) or not c.winfo_ismapped():
+                    continue
+                cx, cy = c.winfo_rootx(), c.winfo_rooty()
+                if cx <= x < cx + c.winfo_width() and cy <= y < cy + c.winfo_height():
+                    if self._clickable(c):
+                        best = c
+                    walk(c)
+
+        walk(self.root)
+        return best
+
+    def _forward_click(self, target, e):
+        lx, ly = e.x_root - target.winfo_rootx(), e.y_root - target.winfo_rooty()
+        self._action = None
+        target.event_generate("<ButtonPress-1>", x=lx, y=ly, rootx=e.x_root, rooty=e.y_root)
+        if self._action is None:  # a plain click: finish it. (A drag that the control started must continue.)
+            target.event_generate("<ButtonRelease-1>", x=lx, y=ly, rootx=e.x_root, rooty=e.y_root)
+        if isinstance(target, (ttk.Treeview, tk.Entry)):
+            target.focus_force()  # so Space/Enter/typing work, as after clicking a visible row
+
+    def _double_click(self, e):
+        """A double-click on the backing window: on a list row it ticks the quest, like the list's own."""
+        if self._edges_at(e.x_root, e.y_root):
+            return self._press(e)
+        target = self._interactive_at(e.x_root, e.y_root)
+        if target is self.tree:
+            self._forward_click(target, e)
+            self._toggle_selected()
+        else:
+            self._press(e)
+
+    def _set_hover_row(self, iid):
+        """Brighten the row under the pointer, so you can see what a click will hit."""
+        old = self._hover_row
+        if iid == old:
+            return
+        for row, add in ((old, False), (iid, True)):
+            if row and row != EMPTY and self.tree.exists(row):
+                tags = [t for t in self.tree.item(row, "tags") if t != "hover"]
+                self.tree.item(row, tags=tags + (["hover"] if add else []))
+        self._hover_row = iid
+
+    def _row_at(self, x, y):
+        """The list row under a screen point, or None."""
+        t = self.tree
+        if not (t.winfo_rootx() <= x < t.winfo_rootx() + t.winfo_width()
+                and t.winfo_rooty() <= y < t.winfo_rooty() + t.winfo_height()):
+            return None
+        return t.identify_row(y - t.winfo_rooty()) or None
 
     def _begin_resize(self, e, edges):
         self._action = ("resize", dict(
@@ -939,7 +1024,7 @@ class Overlay:
             pass
         for ev, fn in (("<ButtonPress-1>", self._press), ("<B1-Motion>", self._drag_motion),
                        ("<ButtonRelease-1>", self._release), ("<Motion>", self._hover), ("<Leave>", self._hover_end),
-                       ("<Button-3>", self._show_menu)):
+                       ("<Button-3>", self._show_menu), ("<Double-Button-1>", self._double_click)):
             b.bind(ev, fn)
         self.root.bind("<Configure>", self._on_configure, add="+")
         self._sync_back()
