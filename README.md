@@ -75,6 +75,11 @@ with F9 first if the overlay is locked.
 - The window can't get smaller than its content needs (at least 400 px wide).
 - In transparent mode the edges are caught by the near-invisible window behind the overlay (see
   `backing_alpha` below), so the thin gap around the content is what you grab.
+- The layout adapts to the width: the region tabs flow like wrapping text (one row when the window is wide,
+  several when it is narrow), the header's key hints shorten when there is no room, and the warnings and
+  detail text re-wrap.
+- **Moving the window:** drag the title, or any blank space in the window (in transparent mode that is the
+  see-through area, caught by the window behind it). Controls like the list and the tabs don't start a drag.
 - The size is remembered in `settings.json`.
 
 ## Warnings

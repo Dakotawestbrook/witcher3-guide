@@ -154,23 +154,20 @@ class Overlay:
         head.bind("<Motion>", self._hover)
         head.bind("<Leave>", self._hover_end)
 
-        tabs = tk.Frame(r, bg=BG)
+        tabs = self._tabs = tk.Frame(r, bg=BG)
         tabs.pack(fill="x", padx=6, pady=(6, 0))
         self._tag("base", tabs)
-        for c in range(5):
-            tabs.grid_columnconfigure(c, weight=1, uniform="tab")
         self.tab_btns = {}
-        for n, name in enumerate([None] + self.data["regions"]):
+        for name in [None] + self.data["regions"]:
             b = tk.Label(tabs, text=SHORT.get(name, name or "All"), bg=BG, fg=DIM, font=("Segoe UI", 9), padx=5, cursor="hand2")
             self._tag("base", b)
-            b.grid(row=n // 5, column=n % 5, sticky="w")
             b.bind("<Button-1>", lambda e, n=name: self.set_region(n))
             self.tab_btns[name] = b
         dtab = tk.Label(tabs, text="\u2696 Decisions: best choices", bg=BG, fg=DIM, font=("Segoe UI", 9, "bold"), padx=5, cursor="hand2")
         self._tag("base", dtab)
-        dtab.grid(row=2, column=0, columnspan=5, sticky="w")
         dtab.bind("<Button-1>", lambda e: self.set_region(DECISIONS))
         self.tab_btns[DECISIONS] = dtab
+        self._layout_tabs()
 
         self.track_lbl = tk.Label(r, text="", bg=BG, fg=BLUE, anchor="w", font=("Segoe UI", 9, "bold"))
         self.track_lbl.pack(fill="x", padx=8)
@@ -503,10 +500,10 @@ class Overlay:
         edges = self._edges_at(e.x_root, e.y_root)
         if edges:
             self._begin_resize(e, edges)
-        elif movable:
-            self._action = ("move", (e.x_root - self.root.winfo_x(), e.y_root - self.root.winfo_y()))
         else:
-            self._action = None
+            # The window's own blank areas (the see-through gaps, handled by the backing window in
+            # transparent mode) move it, so you can grab it anywhere that isn't a control.
+            self._action = ("move", (e.x_root - self.root.winfo_x(), e.y_root - self.root.winfo_y()))
 
     def _begin_resize(self, e, edges):
         self._action = ("resize", dict(
@@ -556,8 +553,34 @@ class Overlay:
         if widened:
             self._reflow()
 
+    def _layout_tabs(self):
+        """Flow the tabs like wrapping text: each takes its own width, and a new row starts when the
+        next one would not fit. A wide window gets one row, a narrow one several."""
+        order = [self.tab_btns[n] for n in [None] + self.data["regions"]] + [self.tab_btns[DECISIONS]]
+        avail, x, y = self.width - 12, 0, 0
+        row_h = max(b.winfo_reqheight() for b in order)
+        for b in order:
+            w = b.winfo_reqwidth()
+            if x and x + w > avail:
+                x, y = 0, y + row_h
+            b.place(x=x, y=y)
+            x += w
+        self._tabs.config(height=y + row_h)
+
+    def _update_hint_text(self):
+        """The header's key hints, shortened when the window is too narrow to show them all."""
+        if self.locked:
+            text = "LOCKED (F9 to unlock)" if self.width >= 440 else "LOCKED (F9)"
+        elif self.width >= 470:
+            text = "F8 hide \u2022 F9 lock \u2022 F10 quit \u2022 F11 backdrop"
+        else:
+            text = "F8 hide \u2022 F9 lock \u2022 F10 quit"
+        self.lock_lbl.config(text=text)
+
     def _reflow(self):
-        """The width changed: re-wrap the warnings and recount the detail text's lines."""
+        """The width changed: move everything to suit it (tabs, header hint, wrapping, detail lines)."""
+        self._layout_tabs()
+        self._update_hint_text()
         for lbl in (self.alert_lbl, self.risk_lbl, self.dec_lbl, self.legend_lbl):
             lbl.config(wraplength=self.width - 30)
         self._render_banners(*self._last_banners)
@@ -655,7 +678,7 @@ class Overlay:
 
     def _set_click_through(self, on):
         self.locked = on
-        self.lock_lbl.config(text="LOCKED (F9 to unlock)" if on else "F8 hide \u2022 F9 lock \u2022 F10 quit \u2022 F11 backdrop")
+        self._update_hint_text()
         if not IS_WINDOWS:
             return
         self.root.update_idletasks()
