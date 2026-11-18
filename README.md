@@ -16,12 +16,13 @@ python -m witcher_guide
   It never takes focus itself. If clicks still fall through to the game on your system, raise its
   opacity by adding `"backing_alpha": 0.05` to `settings.json` (allowed range 0.01 to 0.5) and restart. Global hotkeys are Windows only; elsewhere F8/F9 work while the overlay has focus.
 - Double-click a quest, or select it and press **Space**, to mark it done. Progress is saved to `%APPDATA%\witcher_guide\progress.json`.
-- **Progress:** the title bar shows how many quests are done in this tab (and overall when the window is wide enough). The active tab is bold and underlined, and a tab turns green when every quest in it is done. Hover a tab to see its count.
+- **Progress:** the title bar shows how many quests are done in this tab (and overall when the window is wide enough). Regions live in one row: a **Region ▾** button (shows the name and done/total; green when finished) with **◀ ▶** arrows to step through them, plus a **⚖ Decisions** button that you click again to return to where you were. The Region menu lists every region with its count and a ✓ when finished.
+- **Remembers where you were:** region, Show filter, Best-for goal, the selected row and the scroll position are saved and restored on the next start. If the game reports a tracked quest in another region, the overlay switches to it.
 - **Show filter:** the **Show** dropdown next to the search box narrows the list to *To do*, *Available now*, *Missable* or *Done*. Your choice is remembered. In the Decisions tab the same spot is **Best for** (everything, rewards, morals or the outcome).
 - **Scrolling:** the mouse wheel scrolls the list from anywhere over the overlay, including the see-through gaps between lines (in transparent mode those belong to the invisible window behind it, which now forwards the wheel). Over the detail text at the bottom it scrolls that text instead, so you can read a long entry without expanding it.
 - **Clicking:** in transparent mode every row, tab, button and the search box is clickable across its whole rectangle, not just on the letters. Clicks on the see-through part are forwarded to the control underneath; double-click a row to tick it; the row under the pointer lights up so you can see what a click will hit. Empty space still drags the window.
 - **Search:** type in the box (there is a hint inside it and a ✕ to clear it). If nothing matches, the list says so and tells you what to change.
-- **Keyboard:** `/` jumps to the search box, **Esc** clears it, **Down** moves from the search box to the results, **Ctrl+Left/Right** switch tabs, **Space/Enter** tick the selected quest. (Esc no longer quits the overlay; use F10, the ✕ or the menu.)
+- **Keyboard:** `/` jumps to the search box, **Esc** clears it, **Down** moves from the search box to the results, **Ctrl+Left/Right** step through regions, **Space/Enter** tick the selected quest. (Esc no longer quits the overlay; use F10, the ✕ or the menu.)
 - Green `▶` = available now, `○` = blocked (select it to see what to do first), `✖` = missed, `⚠` = missable.
 
 ## Launcher
@@ -83,12 +84,12 @@ with F9 first if the overlay is locked.
 - The window can't get smaller than its content needs (at least 400 px wide).
 - In transparent mode the edges are caught by the near-invisible window behind the overlay (see
   `backing_alpha` below), so the thin gap around the content is what you grab.
-- The layout adapts to the width: the region tabs flow like wrapping text (one row when the window is wide,
-  several when it is narrow), the header's key hints shorten when there is no room, and the warnings and
+- The layout adapts to the width: the region bar stays one row at any width (
+  the Region button just gets narrower), the header's key hints shorten when there is no room, and the warnings and
   detail text re-wrap.
 - **Moving the window:** drag the title, or any blank space in the window (in transparent mode that is the
-  see-through area, caught by the window behind it). Controls like the list and the tabs don't start a drag.
-- The size is remembered in `settings.json`.
+  see-through area, caught by the window behind it). Controls like the list and the buttons don't start a drag.
+- The size, region, filters and selection are remembered in `settings.json`.
 
 ## Warnings
 

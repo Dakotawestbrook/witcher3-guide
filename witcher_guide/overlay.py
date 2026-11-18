@@ -38,7 +38,7 @@ DECISIONS = "__decisions__"  # the special tab that lists decisions instead of q
 EMPTY = "__empty__"  # id of the placeholder row shown when nothing matches
 MENU_BG, MENU_ACTIVE = "#1f1a15", "#3a2f22"
 HELP_TEXT = """Quick guide
-\u2022 Click a tab to switch region. The \u2696 Decisions tab lists the best choices.
+\u2022 Pick a region from the Region button (or step with the arrows). \u2696 Decisions lists the best choices.
 \u2022 Double-click a quest, or press Space, to mark it done. Finished quests are ticked automatically if the in-game mod is installed.
 \u2022 "Show" filters the list (to do, available now, missable, done). In Decisions, "Best for" picks what to favour.
 \u2022 Click a warning to expand it. Click the \u25C9 hint to jump to the decision in the quest you're tracking.
@@ -92,6 +92,7 @@ class Overlay:
         self.progress = progress or core.Progress()
         self.tracker = tracker.Tracker(self.progress, self.data)
         self.region = None  # None = all regions
+        self._back_region = None
         self.locked = False
         self.visible = True
         self.events = queue.Queue()
@@ -132,6 +133,8 @@ class Overlay:
         self._set_click_through(False)
         self._apply_backdrop()
         self._build_menus()
+        self._update_tabs()
+        self._restore_session()
         self._bind_shortcuts()
         start_hotkey_thread(self.events)
         root.after(80, self._poll)
@@ -182,19 +185,26 @@ class Overlay:
         tabs = self._tabs = tk.Frame(r, bg=BG)
         tabs.pack(fill="x", padx=6, pady=(6, 0))
         self._tag("base", tabs)
-        self.tab_btns = {}
-        for name in [None] + self.data["regions"]:
-            b = tk.Label(tabs, text=SHORT.get(name, name or "All"), bg=BG, fg=DIM, font=("Segoe UI", 9), padx=5, cursor="hand2")
-            self._tag("base", b)
-            b.bind("<Button-1>", lambda e, n=name: self.set_region(n))
-            self.tab_btns[name] = b
-        dtab = tk.Label(tabs, text="\u2696 Decisions: best choices", bg=BG, fg=DIM, font=("Segoe UI", 9, "bold"), padx=5, cursor="hand2")
-        self._tag("base", dtab)
-        dtab.bind("<Button-1>", lambda e: self.set_region(DECISIONS))
-        self.tab_btns[DECISIONS] = dtab
-        for name, b in self.tab_btns.items():
-            self._tip(b, lambda n=name: self._tab_tips.get(n, ""))
-        self._layout_tabs()
+        tabs.columnconfigure(1, weight=1)
+        # one fixed-height row: step back / a Region menu / step forward / the Decisions button
+        self.prev_btn = tk.Label(tabs, text="\u25C0", bg=BG, fg=GOLD, font=("Segoe UI", 10), padx=6, cursor="hand2")
+        self.prev_btn.bind("<Button-1>", lambda e: self._cycle_tab(-1))
+        self.region_btn = tk.Label(tabs, text="", bg=BG, fg=GOLD, font=("Segoe UI", 9, "bold"), cursor="hand2",
+                                   padx=8, pady=2, highlightthickness=1, highlightbackground=DIM, highlightcolor=GOLD)
+        self.region_btn.bind("<Button-1>", lambda e: self._popup(self.region_menu, self.region_btn))
+        self.next_btn = tk.Label(tabs, text="\u25B6", bg=BG, fg=GOLD, font=("Segoe UI", 10), padx=6, cursor="hand2")
+        self.next_btn.bind("<Button-1>", lambda e: self._cycle_tab(1))
+        self.dec_btn = tk.Label(tabs, text="\u2696 Decisions", bg=BG, fg=DIM, font=("Segoe UI", 9, "bold"), cursor="hand2",
+                                padx=8, pady=2, highlightthickness=1, highlightbackground=DIM, highlightcolor=GOLD)
+        self.dec_btn.bind("<Button-1>", lambda e: self._toggle_decisions())
+        for col, w in enumerate((self.prev_btn, self.region_btn, self.next_btn, self.dec_btn)):
+            w.grid(row=0, column=col, sticky="ew", padx=(0, 4) if col != 1 else (0, 0))
+            self._tag("base", w)
+        self._tip(self.prev_btn, "Previous region (Ctrl+Left)")
+        self._tip(self.next_btn, "Next region (Ctrl+Right)")
+        self._tip(self.region_btn, lambda: self._region_tip)
+        self._tip(self.dec_btn, lambda: f"{len(self.decisions)} decisions: the best choice for rewards, morals and the outcome. Click again to go back.")
+        self._region_tip = ""
 
         self.track_lbl = tk.Label(r, text="", bg=BG, fg=BLUE, anchor="w", font=("Segoe UI", 9, "bold"))
         self.track_lbl.pack(fill="x", padx=8)
@@ -286,8 +296,15 @@ class Overlay:
 
     # ---- State ----------------------------------------------------------
     def set_region(self, name):
+        if self.region != DECISIONS:
+            self._back_region = self.region  # what the Decisions button returns to
         self.region = name
         self.refresh()
+        self._save_settings()
+
+    def _toggle_decisions(self):
+        """The Decisions button: open the list, or go back to the region you came from."""
+        self.set_region(self._back_region if self.region == DECISIONS else DECISIONS)
 
     def refresh(self):
         done, failed = self.progress.all_done(), self.progress.auto_failed
@@ -365,6 +382,7 @@ class Overlay:
         self.goal = goal
         if hasattr(self, "goal_var"):
             self.goal_var.set(goal)
+        self._save_settings()
         sel = self.tree.selection()
         self.refresh()
         if sel and self.tree.exists(sel[0]):
@@ -693,21 +711,6 @@ class Overlay:
         if widened:
             self._reflow()
 
-    def _layout_tabs(self):
-        """Flow the tabs like wrapping text: each takes its own width, and a new row starts when the
-        next one would not fit. A wide window gets one row, a narrow one several."""
-        self.root.update_idletasks()  # label widths are only known after their text was applied
-        order = [self.tab_btns[n] for n in [None] + self.data["regions"]] + [self.tab_btns[DECISIONS]]
-        avail, x, y = self.width - 12, 0, 0
-        row_h = max(b.winfo_reqheight() for b in order)
-        for b in order:
-            w = b.winfo_reqwidth()
-            if x and x + w > avail:
-                x, y = 0, y + row_h
-            b.place(x=x, y=y)
-            x += w
-        self._tabs.config(height=y + row_h)
-
     def _update_hint_text(self):
         """The header's key hints, shortened (or dropped) when the window is too narrow."""
         if self.locked:
@@ -808,6 +811,11 @@ class Overlay:
         for v in core.VIEWS:
             vm.add_radiobutton(label=core.VIEW_LABELS[v], variable=self.view_var, value=v,
                                command=lambda: self._set_view(self.view_var.get()))
+        self.region_var = tk.StringVar(value="__all__")
+        rm = self.region_menu = tk.Menu(self.root, **kw)
+        for name in [None] + list(self.data["regions"]):
+            rm.add_radiobutton(label=name or "All regions", variable=self.region_var,
+                               value=name or "__all__", command=lambda n=name: self.set_region(n))
         gm = self.goal_menu = tk.Menu(self.root, **kw)
         for g in core.GOALS:
             gm.add_radiobutton(label=core.GOAL_LABELS[g], variable=self.goal_var, value=g,
@@ -870,30 +878,32 @@ class Overlay:
             self._tip_win = None
 
     def _update_tabs(self):
-        """Tab styling (the active one is bold and underlined, finished ones turn green), tooltips with
-        counts, and the progress text in the header. Then re-flow the tabs, as their widths changed."""
+        """The Region button (name and count; green when the region is finished), the Decisions button's
+        state, the Region menu's counts, and the progress text in the header."""
         prog = core.region_progress(self.data, self.progress.all_done())
-        for name, b in self.tab_btns.items():
-            active = name == self.region
-            if name == DECISIONS:
-                self._tab_tips[name] = f"{len(self.decisions)} decisions: the best choice for rewards, morals and the outcome"
-                fg, font = (GOLD if active else DIM), ("Segoe UI", 9, "bold underline" if active else "bold")
-            else:
-                d, t = prog.get(name, (0, 0))
-                self._tab_tips[name] = f"{name or 'All regions'}: {d} of {t} done"
-                fg = GOLD if active else (GREEN if t and d == t else DIM)
-                font = ("Segoe UI", 9, "bold underline" if active else "normal")
-            b.config(fg=fg, font=font)
         D, T = prog[None]
+        if self.region == DECISIONS:
+            label, d, t = "Region \u25BE", D, T
+        else:
+            d, t = prog.get(self.region, (0, 0))
+            label = f"{SHORT.get(self.region, self.region or 'All regions')}  {d}/{t} \u25BE"
+        self.region_btn.config(text=label, fg=(GREEN if self.region != DECISIONS and t and d == t else GOLD))
+        self._region_tip = (f"{self.region or 'All regions'}: {d} of {t} done. " if self.region != DECISIONS else "") + \
+            "Click to choose a region; the arrows (Ctrl+Left/Right) step through them."
+        active = self.region == DECISIONS
+        self.dec_btn.config(fg=GOLD if active else DIM, highlightbackground=GOLD if active else DIM)
+        self.region_var.set("__all__" if self.region is None else self.region) if hasattr(self, "region_var") else None
+        if hasattr(self, "region_menu"):
+            for k, name in enumerate([None] + list(self.data["regions"])):
+                dd, tt = prog.get(name, (0, 0))
+                self.region_menu.entryconfigure(k, label=f"{name or 'All regions'}    {dd}/{tt}" + ("  \u2713" if tt and dd == tt else ""))
         if self.region == DECISIONS:
             text = f"{len(self.decisions)} decisions"
         elif self.region is None:
             text = f"{D}/{T} done"
         else:
-            d, t = prog.get(self.region, (0, 0))
             text = f"{d}/{t} here" if self.width < 520 else f"{self.region} {d}/{t}  \u2022  all {D}/{T}"
         self.prog_lbl.config(text=text)
-        self._layout_tabs()
 
     def _on_search(self):
         if self.search_var.get():
@@ -1072,8 +1082,12 @@ class Overlay:
             self.set_visible(True)  # an important warning must not stay hidden behind F8
         if "tracked" in changes and self.progress.tracked:
             qid = self.progress.tracked
-            if not self.tree.exists(qid):  # hidden by a filter: clear filters so it shows
-                self.region = None
+            if not self.tree.exists(qid):  # hidden by a filter or another region: show it
+                q = next((q for q in self.data["quests"] if q["id"] == qid), None)
+                if self.region == DECISIONS or (self.region is not None and q and q.get("region") in self.data["regions"]):
+                    self.region = q["region"] if q else None
+                else:
+                    self.region = None
                 self.search_var.set("")
                 self.view = "all"
             self.refresh()
@@ -1097,10 +1111,49 @@ class Overlay:
         try:
             self._settings_path.parent.mkdir(parents=True, exist_ok=True)
             data = dict(self._load_settings(), backdrop=self.backdrop, width=self.width, extra_rows=self.extra_rows,
-                        view=self.view)
+                        view=self.view, goal=self.goal, region=self.region, back_region=self._back_region,
+                        **self._session_state())
             self._settings_path.write_text(json.dumps(data), encoding="utf-8")
         except OSError:
             pass
+
+    def _session_state(self):
+        """Where you were in the list (selected row and the first visible one), so a restart lands there."""
+        try:
+            sel = self.tree.selection()
+            kids = self.tree.get_children()
+            top = next((k for k in kids if self.tree.bbox(k)), None)
+            return {"sel": sel[0] if sel else None, "top": top if top != EMPTY else None}
+        except tk.TclError:
+            return {}
+
+    def _restore_session(self):
+        """Open where you left off, or on the region of the quest tracked in the game."""
+        st = self._load_settings()
+        regions = set(self.data["regions"])
+        saved = st.get("region")
+        region = saved if saved in regions or saved == DECISIONS else None
+        back = st.get("back_region")
+        self._back_region = back if back in regions else None
+        goal = st.get("goal")
+        if goal in core.GOALS:
+            self.goal = goal
+            self.goal_var.set(goal)
+        sel, top = st.get("sel"), st.get("top")
+        tracked = self.progress.tracked
+        q = next((q for q in self.data["quests"] if q["id"] == tracked), None) if tracked else None
+        if q and q.get("region") in regions:
+            region, sel, top = q["region"], q["id"], None  # the game's tracked quest wins
+        self.region = region
+        self.refresh()
+        self.root.update_idletasks()
+        for iid in (top, sel):  # scroll to the first visible row, then make sure the selected one shows
+            if iid and self.tree.exists(iid):
+                self.tree.see(iid)
+        if sel and self.tree.exists(sel):
+            self.tree.selection_set(sel)
+            self.tree.see(sel)
+            self._show_detail()
 
     def set_backdrop(self, on):
         self.backdrop = on
@@ -1133,6 +1186,7 @@ class Overlay:
 
     def quit(self):
         self._hide_tip()
+        self._save_settings()
         self.root.destroy()
 
     def set_visible(self, visible):
