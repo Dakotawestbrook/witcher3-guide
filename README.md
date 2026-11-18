@@ -8,7 +8,7 @@ python -m witcher_guide
 ```
 
 - Run Witcher 3 in **borderless windowed** mode (exclusive fullscreen hides overlays).
-- **F8** shows/hides the overlay, **F9** locks it (click-through, so the mouse goes to the game) or unlocks it. Global hotkeys are Windows only; elsewhere F8/F9 work while the overlay has focus.
+- **F8** shows/hides the overlay, **F9** locks it (click-through, so the mouse goes to the game) or unlocks it, **F10** quits it. The ✕ in the title bar also closes it (unlock with F9 first if it is locked). Global hotkeys are Windows only; elsewhere F8/F9 work while the overlay has focus.
 - Double-click a quest to mark it done. Progress is saved to `%APPDATA%\witcher_guide\progress.json`.
 - Green `▶` = available now, `○` = blocked (select it to see what to do first), `✖` = missed, `⚠` = missable.
 
@@ -35,6 +35,16 @@ the game's vanilla scripts, but **not yet run in the game**. Setup is in
 [`mod/README.md`](mod/README.md) (build the mod with `python mod/install_mod.py`, then launch
 the game with `-debugscripts`). Until the mod is installed, everything works as before with
 manual ticking.
+
+## Closing a stuck or old copy
+
+Only one copy can run at a time; launching a second shows a message instead of starting. To close
+a copy that is still running (for example one started before an update), press **F10**, or in
+PowerShell:
+
+```bash
+Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*witcher_guide*' -and $_.ProcessId -ne $PID } | ForEach-Object { Stop-Process -Id $_.ProcessId }
+```
 
 ## Troubleshooting automatic tracking
 

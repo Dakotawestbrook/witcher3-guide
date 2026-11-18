@@ -4,6 +4,8 @@ Run the game in *borderless windowed* mode (exclusive fullscreen hides overlays)
 Hotkeys (work while the game has focus, Windows only):
     F8  show / hide the overlay
     F9  lock (click-through, game gets the mouse) / unlock (interact with overlay)
+    F10 quit the overlay
+The \u2715 button in the title bar also closes it (unlock with F9 first if it is locked).
 """
 import queue
 import sys
@@ -20,7 +22,7 @@ GOLD, RED, GREEN, BLUE = "#d4a64a", "#e5534b", "#6fbf73", "#6aa5d8"
 ICON = {core.DONE: "✔", core.AVAILABLE: "▶", core.BLOCKED: "○", core.MISSED: "✖"}
 
 # Win32 constants
-MOD_NOREPEAT, VK_F8, VK_F9 = 0x4000, 0x77, 0x78
+MOD_NOREPEAT, VK_F8, VK_F9, VK_F10 = 0x4000, 0x77, 0x78, 0x79
 WM_HOTKEY = 0x0312
 GWL_EXSTYLE, WS_EX_LAYERED, WS_EX_TRANSPARENT, WS_EX_TOOLWINDOW = -20, 0x80000, 0x20, 0x80
 
@@ -36,10 +38,11 @@ def start_hotkey_thread(events):
         user32 = ctypes.windll.user32
         user32.RegisterHotKey(None, 1, MOD_NOREPEAT, VK_F8)
         user32.RegisterHotKey(None, 2, MOD_NOREPEAT, VK_F9)
+        user32.RegisterHotKey(None, 3, MOD_NOREPEAT, VK_F10)
         msg = wintypes.MSG()
         while user32.GetMessageW(ctypes.byref(msg), None, 0, 0) != 0:
             if msg.message == WM_HOTKEY:
-                events.put("toggle" if msg.wParam == 1 else "lock")
+                events.put({1: "toggle", 2: "lock", 3: "quit"}.get(msg.wParam, "lock"))
 
     threading.Thread(target=loop, daemon=True).start()
 
@@ -87,8 +90,13 @@ class Overlay:
         self.title_lbl = tk.Label(head, text="⚔ Witcher 3 Guide", bg="#1f1a15", fg=GOLD,
                                   font=("Segoe UI", 12, "bold"), anchor="w")
         self.title_lbl.pack(side="left", padx=8, pady=6)
+        close = tk.Label(head, text="\u2715", bg="#1f1a15", fg=DIM, font=("Segoe UI", 12), padx=8, cursor="hand2")
+        close.pack(side="right")
+        close.bind("<Button-1>", lambda e: self.quit())
+        close.bind("<Enter>", lambda e: close.config(fg=RED))
+        close.bind("<Leave>", lambda e: close.config(fg=DIM))
         self.lock_lbl = tk.Label(head, text="", bg="#1f1a15", fg=DIM, font=("Segoe UI", 9))
-        self.lock_lbl.pack(side="right", padx=8)
+        self.lock_lbl.pack(side="right", padx=4)
         for w in (head, self.title_lbl):
             w.bind("<ButtonPress-1>", lambda e: setattr(self, "_drag", (e.x_root - r.winfo_x(), e.y_root - r.winfo_y())))
             w.bind("<B1-Motion>", lambda e: r.geometry(f"+{e.x_root - self._drag[0]}+{e.y_root - self._drag[1]}"))
@@ -235,6 +243,9 @@ class Overlay:
         else:
             self.refresh()
 
+    def quit(self):
+        self.root.destroy()
+
     def set_visible(self, visible):
         self.visible = visible
         (self.root.deiconify if visible else self.root.withdraw)()
@@ -253,6 +264,9 @@ class Overlay:
                     self.set_visible(False)
                 elif ev == "lock":
                     self._set_click_through(not self.locked)
+                elif ev == "quit":
+                    self.quit()
+                    return
         except queue.Empty:
             pass
         self.root.after(80, self._poll)
@@ -267,6 +281,7 @@ def run(on_ready=None, start_hidden=False, track_game=True):
     if not IS_WINDOWS:  # dev fallback: no global hotkeys, so use local keys
         root.bind("<F8>", lambda e: ov.events.put("toggle"))
         root.bind("<F9>", lambda e: ov.events.put("lock"))
+        root.bind("<F10>", lambda e: ov.events.put("quit"))
     root.bind("<Escape>", lambda e: root.destroy())
     if track_game:
         tracker.start_tracking(ov.events)

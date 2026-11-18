@@ -78,6 +78,18 @@ def acquire_single_instance():
     return not already
 
 
+def tell_already_running():
+    """The overlay has no console, so say why a second launch does nothing."""
+    msg = ("The Witcher 3 guide overlay is already running.\n\n"
+           "F8 shows or hides it, F10 quits it.\n"
+           "If you can't see it, it may be hidden (F8) or an older copy is still running.")
+    if sys.platform == "win32":
+        import ctypes
+        ctypes.windll.user32.MessageBoxW(None, msg, "Witcher 3 Guide", 0x40)
+    else:
+        print(msg)
+
+
 def _winreg():
     if sys.platform != "win32":
         raise SystemExit("This command is only supported on Windows.")
@@ -108,7 +120,8 @@ def main(argv=None):
         return
 
     if not acquire_single_instance():
-        return  # already running
+        tell_already_running()
+        return
     from witcher_guide import overlay
 
     def ready(ov):
