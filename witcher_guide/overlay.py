@@ -11,7 +11,7 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 
-from witcher_guide import core
+from witcher_guide import core, tracker
 
 IS_WINDOWS = sys.platform == "win32"
 
@@ -49,6 +49,7 @@ class Overlay:
         self.root = root
         self.data = data or core.load_data()
         self.progress = progress or core.Progress()
+        self.tracker = tracker.Tracker(self.progress, self.data)
         self.region = None  # None = all regions
         self.locked = False
         self.visible = True
@@ -101,6 +102,9 @@ class Overlay:
             b.bind("<Button-1>", lambda e, n=name: self.set_region(n))
             self.tab_btns[name] = b
 
+        self.track_lbl = tk.Label(r, text="", bg=BG, fg=BLUE, anchor="w", font=("Segoe UI", 9, "bold"))
+        self.track_lbl.pack(fill="x", padx=8)
+
         bar = tk.Frame(r, bg=BG)
         bar.pack(fill="x", padx=8, pady=6)
         self.search_var = tk.StringVar()
@@ -119,7 +123,7 @@ class Overlay:
 
         self.tree = ttk.Treeview(r, style="T.Treeview", show="tree", selectmode="browse")
         self.tree.pack(fill="both", expand=True, padx=8, pady=6)
-        for tag, col in (("done", DIM), ("available", GREEN), ("blocked", FG), ("missed", RED), ("missable", GOLD)):
+        for tag, col in (("done", DIM), ("available", GREEN), ("blocked", FG), ("missed", RED), ("missable", GOLD), ("tracked", BLUE)):
             self.tree.tag_configure(tag, foreground=col)
         self.tree.bind("<<TreeviewSelect>>", self._show_detail)
         self.tree.bind("<Double-1>", self._toggle_selected)
@@ -134,18 +138,24 @@ class Overlay:
         self.refresh()
 
     def refresh(self):
-        done = self.progress.done
+        done, failed = self.progress.all_done(), self.progress.auto_failed
         for n, b in self.tab_btns.items():
             b.config(fg=GOLD if n == self.region else DIM)
         self.tree.delete(*self.tree.get_children())
-        rows = core.search(self.data, done, self.search_var.get(), self.region, self.miss_var.get())
+        rows = core.search(self.data, done, self.search_var.get(), self.region, self.miss_var.get(), failed=failed)
         # recommended next quests float to the top
         rows.sort(key=lambda q: 0 if q["status"] == core.AVAILABLE else 1)
         for q in rows:
             tags = [q["status"]] + (["missable"] if q.get("missable") and q["status"] != core.DONE else [])
+            if q["id"] == self.progress.tracked:
+                tags.append("tracked")
             star = " ⚠" if q.get("missable") else ""
-            self.tree.insert("", "end", iid=q["id"], text=f' {ICON[q["status"]]}  {q["name"]}{star}', tags=tags)
-        al = core.alerts(self.data, done)
+            mark = "\u25C9" if q["id"] == self.progress.tracked else ICON[q["status"]]
+            self.tree.insert("", "end", iid=q["id"], text=f' {mark}  {q["name"]}{star}', tags=tags)
+        names = {q["id"]: q["name"] for q in self.data["quests"]}
+        t = self.progress.tracked
+        self.track_lbl.config(text=f"\u25C9 Tracking in game: {names[t]}" if t in names else "")
+        al = core.alerts(self.data, done, failed)
         by_id = {q["id"]: q["name"] for q in self.data["quests"]}
         lost = [a["name"] for a in al if a["status"] == core.MISSED]
         msg = []
@@ -162,7 +172,7 @@ class Overlay:
         self.alert_lbl.pack_forget() if not msg else self.alert_lbl.pack(fill="x", padx=8, before=self.tree)
 
     def _quest(self, qid):
-        return next((q for q in core.annotate(self.data, self.progress.done) if q["id"] == qid), None)
+        return next((q for q in core.annotate(self.data, self.progress.all_done(), self.progress.auto_failed) if q["id"] == qid), None)
 
     def _show_detail(self, _e=None):
         sel = self.tree.selection()
@@ -170,7 +180,7 @@ class Overlay:
         if not q:
             return
         lines = [f'{q["name"]}  [{q["region"]} • {q["type"]} • {q["status"]}]']
-        miss = core.missing_prereqs(q, self.data, self.progress.done)
+        miss = core.missing_prereqs(q, self.data, self.progress.all_done())
         if miss and q["status"] == core.BLOCKED:
             lines.append("Do first: " + ", ".join(miss))
         if q.get("notes"):
@@ -206,6 +216,25 @@ class Overlay:
         style = style | WS_EX_TRANSPARENT if on else style & ~WS_EX_TRANSPARENT
         u.SetWindowLongW(h, GWL_EXSTYLE, style)
 
+    def apply_log_lines(self, lines):
+        """Feed game log lines to the tracker and refresh; jump to a newly tracked quest."""
+        changes = {c for c in (self.tracker.feed(l) for l in lines) if c}
+        if not changes:
+            return
+        if "tracked" in changes and self.progress.tracked:
+            qid = self.progress.tracked
+            if not self.tree.exists(qid):  # hidden by a filter: clear filters so it shows
+                self.region = None
+                self.search_var.set("")
+                self.miss_var.set(False)
+            self.refresh()
+            if self.tree.exists(qid):
+                self.tree.selection_set(qid)
+                self.tree.see(qid)
+                self._show_detail()
+        else:
+            self.refresh()
+
     def set_visible(self, visible):
         self.visible = visible
         (self.root.deiconify if visible else self.root.withdraw)()
@@ -214,7 +243,9 @@ class Overlay:
         try:
             while True:
                 ev = self.events.get_nowait()
-                if ev == "toggle":
+                if isinstance(ev, tuple) and ev[0] == "lines":
+                    self.apply_log_lines(ev[1])
+                elif ev == "toggle":
                     self.set_visible(not self.visible)
                 elif ev == "show":
                     self.set_visible(True)
@@ -227,7 +258,7 @@ class Overlay:
         self.root.after(80, self._poll)
 
 
-def run(on_ready=None, start_hidden=False):
+def run(on_ready=None, start_hidden=False, track_game=True):
     """Create the overlay and run the Tk loop. `on_ready(overlay)` runs once it exists."""
     root = tk.Tk()
     ov = Overlay(root)
@@ -237,6 +268,8 @@ def run(on_ready=None, start_hidden=False):
         root.bind("<F8>", lambda e: ov.events.put("toggle"))
         root.bind("<F9>", lambda e: ov.events.put("lock"))
     root.bind("<Escape>", lambda e: root.destroy())
+    if track_game:
+        tracker.start_tracking(ov.events)
     if on_ready:
         on_ready(ov)
     root.mainloop()
