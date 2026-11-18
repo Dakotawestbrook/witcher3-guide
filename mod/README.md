@@ -17,6 +17,8 @@ isn't there, extract them with WolvenKit or the Mod Kit, the same files Script M
 python mod/install_mod.py --game "C:\Program Files (x86)\Steam\steamapps\common\The Witcher 3"
 ```
 
+You can also just double-click `mod/install_mod.py`: it looks for your game folder, asks you to confirm or paste it, and waits for Enter before closing so you can read the result.
+
 This builds `<game>\mods\modWitcherGuide`. It copies three of your own vanilla script files,
 inserts **one line** into each (marked `// modWitcherGuide`), and adds `witcherGuide.ws`.
 No game code is stored in this repository. If your scripts are elsewhere, add

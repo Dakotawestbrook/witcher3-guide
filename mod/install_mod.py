@@ -94,24 +94,62 @@ def build(scripts_dir, out_dir):
     return written
 
 
+def candidate_game_dirs():
+    """Common install locations that exist on this machine."""
+    roots = [r"C:\Program Files (x86)\Steam\steamapps\common\The Witcher 3",
+             r"C:\Program Files\Steam\steamapps\common\The Witcher 3",
+             r"C:\GOG Games\The Witcher 3 Wild Hunt GOTY", r"C:\GOG Games\The Witcher 3 Wild Hunt",
+             r"C:\Program Files (x86)\GOG Galaxy\Games\The Witcher 3 Wild Hunt GOTY",
+             r"C:\Program Files\Epic Games\TheWitcher3"]
+    return [Path(r) for r in roots if (Path(r) / "content").exists()]
+
+
+def ask_game_dir(ask=None, candidates=None):
+    """Interactive prompt used when the script is started without arguments (double-click)."""
+    ask = ask or input  # looked up at call time so callers/tests can substitute it
+    found = candidate_game_dirs() if candidates is None else candidates
+    if found:
+        print(f"Found a Witcher 3 install:\n  {found[0]}")
+        if ask("Use this folder? [Y/n] ").strip().lower() in ("", "y", "yes"):
+            return found[0]
+    print("Paste the Witcher 3 install folder (the one that contains 'content' and 'bin').")
+    print("Steam: right-click the game > Manage > Browse local files, then copy the address.")
+    return Path(ask("Folder: ").strip().strip('"'))
+
+
+def run(game=None, scripts=None, out=None):
+    """Builds the mod and prints a summary. Raises PatchError on problems."""
+    scripts = Path(scripts) if scripts else Path(game) / "content" / "content0" / "scripts"
+    out = Path(out) if out else Path(game or ".") / "mods" / MOD_NAME
+    files = build(scripts, out)
+    print(f"Wrote {len(files)} files to {out}:")
+    for f in files:
+        print("  ", f.relative_to(out))
+    print("\nNext: run Script Merger if you use other mods, then launch the game with -debugscripts.")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--game", help="The Witcher 3 install folder")
     ap.add_argument("--scripts", help="folder holding the vanilla scripts (default: <game>/content/content0/scripts)")
     ap.add_argument("--out", help=f"output mod folder (default: <game>/mods/{MOD_NAME})")
     a = ap.parse_args(argv)
-    if not (a.scripts or a.game):
-        ap.error("give --game or --scripts")
-    scripts = Path(a.scripts) if a.scripts else Path(a.game) / "content" / "content0" / "scripts"
-    out = Path(a.out) if a.out else Path(a.game or ".") / "mods" / MOD_NAME
+
+    if not (a.scripts or a.game):  # started with no arguments, e.g. by double-clicking
+        print("Witcher Guide mod installer\n")
+        try:
+            game = ask_game_dir()
+            run(game=game)
+        except PatchError as e:
+            print(f"\nError: {e}")
+        except (OSError, EOFError) as e:
+            print(f"\nError: {e}")
+        input("\nPress Enter to close this window...")
+        return
     try:
-        files = build(scripts, out)
+        run(a.game, a.scripts, a.out)
     except PatchError as e:
         sys.exit(f"Error: {e}")
-    print(f"Wrote {len(files)} files to {out}:")
-    for f in files:
-        print("  ", f.relative_to(out))
-    print("\nNext: run Script Merger if you use other mods, then launch the game with -debugscripts.")
 
 
 if __name__ == "__main__":

@@ -59,6 +59,35 @@ class TestInstaller(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d, self.assertRaises(im.PatchError):
             im.build(Path(d), Path(d) / "out")
 
+    def test_ask_game_dir_uses_detected_folder_on_yes_and_pasted_path_otherwise(self):
+        found = [Path("C:/found")]
+        self.assertEqual(im.ask_game_dir(ask=lambda _: "", candidates=found), found[0])
+        self.assertEqual(im.ask_game_dir(ask=lambda _: "y", candidates=found), found[0])
+        answers = iter(["n", '"D:/My Games/Witcher 3"  '])
+        self.assertEqual(im.ask_game_dir(ask=lambda _: next(answers), candidates=found), Path("D:/My Games/Witcher 3"))
+        self.assertEqual(im.ask_game_dir(ask=lambda _: " E:/W3 ", candidates=[]), Path("E:/W3"))
+
+    def test_no_arguments_waits_for_enter_so_the_window_stays_open(self):
+        import builtins
+        import contextlib
+        import io
+        prompts = []
+
+        def fake_input(prompt=""):
+            prompts.append(prompt)
+            return "bogus-folder-that-does-not-exist" if "Folder" in prompt else ""
+
+        real_input, real_cands = builtins.input, im.candidate_game_dirs
+        builtins.input, im.candidate_game_dirs = fake_input, lambda: []
+        out = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(out):
+                im.main([])  # must return normally after printing the error
+        finally:
+            builtins.input, im.candidate_game_dirs = real_input, real_cands
+        self.assertIn("Error:", out.getvalue())
+        self.assertTrue(any("Press Enter" in p for p in prompts))
+
     def test_mod_script_defines_every_function_the_patches_call(self):
         ws = (Path(im.__file__).parent / "witcherGuide.ws").read_text()
         for _, stmt in im.PATCHES.values():
