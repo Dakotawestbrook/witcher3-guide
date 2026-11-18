@@ -41,6 +41,13 @@ the game's vanilla scripts, but **not yet run in the game**. Setup is in
 the game with `-debugscripts`). Until the mod is installed, everything works as before with
 manual ticking.
 
+## Resizing
+
+Drag the **◢** grip in the bottom-right corner to make the window wider or taller (unlock with F9
+first). The quest list takes the extra height, always in whole rows, and the warnings and detail text
+re-wrap to the new width. The window can't get smaller than its content needs (at least 400 px wide).
+The size is remembered in `settings.json`.
+
 ## Warnings
 
 - **Tracking a quest that closes others:** if the quest you are tracking in the game would make you miss

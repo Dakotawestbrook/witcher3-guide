@@ -26,7 +26,11 @@ BG, FG, DIM = KEY, "#f2e8d0", "#a89d86"
 # Colours used instead of KEY when the dark backing panel is switched on (F11).
 PANEL = {"base": "#14110f", "head": "#1f1a15", "entry": "#241e18", "alert": "#2a1411", "detail": "#1f1a15"}
 PANEL_SELECTED = "#2c2620"
-WIDTH = 470
+WIDTH = 470  # default width
+MIN_W = 400
+ROW_H = 24  # list row height in px (matches the Treeview style)
+MIN_ROWS = 3  # list rows at the smallest size
+DEFAULT_EXTRA_ROWS, MAX_EXTRA_ROWS = 8, 60  # rows added on top of MIN_ROWS
 DETAIL_LINES = 7  # detail text taller than this collapses behind a clickable 'more'
 SHORT = {"Hearts of Stone": "Hearts", "Blood and Wine": "Blood&Wine"}  # keep the tab rows from overflowing
 GOLD, RED, GREEN, BLUE = "#e8b85a", "#ff6b62", "#7fd685", "#7ab8f0"
@@ -76,7 +80,10 @@ class Overlay:
         self._roles = {}
         self.transparent = False
         self._settings_path = self.progress.path.parent / "settings.json"
-        self.backdrop = self._load_settings().get("backdrop", False)
+        st = self._load_settings()
+        self.backdrop = st.get("backdrop", False)
+        self.width = self._clamp_width(st.get("width", WIDTH))
+        self.extra_rows = self._clamp_rows(st.get("extra_rows", DEFAULT_EXTRA_ROWS))
         self.back = None  # the click-catching window, created below
         self._open = set()  # which truncated texts the user has expanded: alerts / risk / detail
         self._ready = False
@@ -93,7 +100,7 @@ class Overlay:
         self._build()
         self.refresh()
         root.update_idletasks()
-        root.geometry(f"{WIDTH}x{root.winfo_reqheight()}+30+60")
+        root.geometry(f"{self.width}x{root.winfo_reqheight() + self.extra_rows * ROW_H}+30+60")
         self._ready = True
         if self._want_backing:
             self._make_backing()
@@ -152,7 +159,7 @@ class Overlay:
         self._tag("base", self.track_lbl)
         # shown only while the tracked quest would close a missable quest you haven't finished
         self.risk_lbl = tk.Label(r, text="", bg=BG, fg=RED, justify="left", anchor="w",
-                                 wraplength=WIDTH - 30, font=("Segoe UI", 10, "bold"))
+                                 wraplength=self.width - 30, font=("Segoe UI", 10, "bold"))
         self.risk_lbl.bind("<Button-1>", lambda e: self._toggle("risk"))
         self._tag("alert", self.risk_lbl)
 
@@ -172,13 +179,15 @@ class Overlay:
                         command=self.refresh).pack(side="left", padx=(8, 0))
 
         self.alert_lbl = tk.Label(r, text="", bg=BG, fg=RED, justify="left", anchor="w",
-                                  wraplength=WIDTH - 30, font=("Segoe UI", 9, "bold"))
+                                  wraplength=self.width - 30, font=("Segoe UI", 9, "bold"))
         self.alert_lbl.pack(fill="x", padx=8)
         self.alert_lbl.bind("<Button-1>", lambda e: self._toggle("alerts"))
         self._tag("alert", self.alert_lbl)
 
-        self.tree = ttk.Treeview(r, style="T.Treeview", show="tree", selectmode="browse", height=11)
-        self.tree.pack(fill="x", padx=8, pady=6)  # fixed rows: no half-cut row at the bottom
+        self.tree = ttk.Treeview(r, style="T.Treeview", show="tree", selectmode="browse", height=MIN_ROWS)
+        # The list takes whatever height is left. The window height is always a whole number of
+        # rows (see _fit), so there is never a half-cut row at the bottom.
+        self.tree.pack(fill="both", expand=True, padx=8, pady=6)
         for tag, col in (("done", DIM), ("available", GREEN), ("blocked", FG), ("missed", RED), ("missable", GOLD), ("tracked", BLUE), ("atrisk", RED)):
             self.tree.tag_configure(tag, foreground=col)
         self.tree.bind("<<TreeviewSelect>>", self._show_detail)
@@ -193,6 +202,14 @@ class Overlay:
         self.more_lbl.pack(fill="x", padx=8, pady=(0, 8))
         self._tag("detail", self.detail, self.more_lbl)
         self._set_detail("Double-click a quest to mark it done.")
+
+        # drag this corner to resize the window
+        self.grip = tk.Label(r, text="\u25E2", bg=BG, fg=DIM, font=("Segoe UI", 11), cursor="size_nw_se" if IS_WINDOWS else "bottom_right_corner")
+        self.grip.place(relx=1.0, rely=1.0, anchor="se")
+        self.grip.bind("<ButtonPress-1>", self._grip_press)
+        self.grip.bind("<B1-Motion>", self._grip_drag)
+        self.grip.bind("<ButtonRelease-1>", lambda e: self._save_size())
+        self._tag("base", self.grip)
 
     # ---- State ----------------------------------------------------------
     def set_region(self, name):
@@ -291,19 +308,61 @@ class Overlay:
         d.config(height=n if (open_ or not over) else DETAIL_LINES)
         if over:
             self.more_lbl.config(text="\u25B2 show less" if open_ else
-                                 f"\u25BC {n - DETAIL_LINES} more lines (click to expand)", cursor="hand2")
+                                 f"\u25BC {n - DETAIL_LINES} more line{'s' if n - DETAIL_LINES > 1 else ''} (click to expand)", cursor="hand2")
         else:
             self.more_lbl.config(text="", cursor="arrow")
         self._fit()
 
     def _fit(self):
-        """Resize the window to its content so expanded text is never cut off."""
+        """Keep the window at its content's minimum height plus the rows the user added, so
+        expanded text is never cut off and the list always shows whole rows."""
         if not self._ready:
             return
         self.root.update_idletasks()
-        h = self.root.winfo_reqheight()
-        if h != self.root.winfo_height():
-            self.root.geometry(f"{WIDTH}x{h}")  # size only: the position is kept
+        h = self.root.winfo_reqheight() + self.extra_rows * ROW_H
+        if (self.width, h) != (self.root.winfo_width(), self.root.winfo_height()):
+            self.root.geometry(f"{self.width}x{h}")  # size only: the position is kept
+        self.grip.lift()
+
+    # ---- Resizing ---------------------------------------------------------------
+    @staticmethod
+    def _clamp_width(w):
+        try:
+            return max(MIN_W, int(w))
+        except (TypeError, ValueError):
+            return WIDTH
+
+    @staticmethod
+    def _clamp_rows(n):
+        try:
+            return min(max(0, int(n)), MAX_EXTRA_ROWS)
+        except (TypeError, ValueError):
+            return DEFAULT_EXTRA_ROWS
+
+    def _grip_press(self, e):
+        self._rs = (e.x_root, e.y_root, self.width, self.root.winfo_reqheight() + self.extra_rows * ROW_H)
+
+    def _grip_drag(self, e):
+        x0, y0, w0, h0 = self._rs
+        width = self._clamp_width(w0 + e.x_root - x0)
+        rows = self._clamp_rows(round((h0 + e.y_root - y0 - self.root.winfo_reqheight()) / ROW_H))
+        if (width, rows) == (self.width, self.extra_rows):
+            return
+        widened = width != self.width
+        self.width, self.extra_rows = width, rows
+        self._fit()
+        if widened:
+            self._reflow()
+
+    def _reflow(self):
+        """The width changed: re-wrap the warnings and recount the detail text's lines."""
+        for lbl in (self.alert_lbl, self.risk_lbl):
+            lbl.config(wraplength=self.width - 30)
+        self._render_banners(*self._last_banners)
+        self._set_detail(self._detail_text)
+
+    def _save_size(self):
+        self._save_settings()
 
     def _quest(self, qid):
         return next((q for q in core.annotate(self.data, self.progress.all_done(), self.progress.auto_failed) if q["id"] == qid), None)
@@ -428,7 +487,8 @@ class Overlay:
     def _save_settings(self):
         try:
             self._settings_path.parent.mkdir(parents=True, exist_ok=True)
-            self._settings_path.write_text(json.dumps(dict(self._load_settings(), backdrop=self.backdrop)), encoding="utf-8")
+            data = dict(self._load_settings(), backdrop=self.backdrop, width=self.width, extra_rows=self.extra_rows)
+            self._settings_path.write_text(json.dumps(data), encoding="utf-8")
         except OSError:
             pass
 
