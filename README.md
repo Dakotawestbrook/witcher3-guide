@@ -23,19 +23,18 @@ python -m witcher_guide
 - If you ran an earlier version's `install_autostart.bat`, remove its startup entry with
   `python witcher_guide.pyw --uninstall`.
 
-## Automatic quest tracking (in progress)
+## Automatic quest tracking
 
-The overlay can follow the game: finished quests are ticked automatically, quests the
-game reports as failed show as missed, and the quest you select in the game's journal is
-highlighted ("Tracking in game") with the list jumping to it. It reads messages the game
-would write to its script log (`Documents\The Witcher 3\scriptlog.txt`, which needs the
-game launched with `-debugscripts`).
+The overlay can follow the game: finished quests are ticked automatically, quests the game
+reports as failed show as missed, and the quest you select in the game's journal is
+highlighted ("Tracking in game") with the list jumping to it. A small script mod makes the
+game write this information to its script log; the overlay reads that log.
 
-**Status:** the overlay side is built and tested with simulated logs. The in-game mod that
-writes those messages is **not written yet**; see [`mod/README.md`](mod/README.md) for the
-message format and what is needed to finish it. Until then everything works as before
-(manual ticking). Quest titles the game reports that don't match `quests.json` are listed
-in `unmatched_quests.txt` next to `progress.json`; map them in `witcher_guide/data/aliases.json`.
+**Status:** the mod and the overlay side are written and tested against simulated logs and
+the game's vanilla scripts, but **not yet run in the game**. Setup is in
+[`mod/README.md`](mod/README.md) (build the mod with `python mod/install_mod.py`, then launch
+the game with `-debugscripts`). Until the mod is installed, everything works as before with
+manual ticking.
 
 ## Quest data
 

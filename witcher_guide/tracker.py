@@ -74,6 +74,7 @@ class Tracker:
         self.matcher = Matcher(data, load_aliases() if aliases is None else aliases)
         self.unmatched = set()
         self._snap = None  # (done, failed) while a snapshot is being received
+        self._snap_seen = 0  # quest lines in the current snapshot
 
     def _ids(self, title):
         ids = self.matcher.match(title)
@@ -98,12 +99,14 @@ class Tracker:
         pr = self.progress
         if ev[0] == "snapshot":
             if ev[1] == "begin":
-                self._snap = (set(), set())
+                self._snap, self._snap_seen = (set(), set()), 0
                 return None
             if self._snap is None:
                 return None
             done, failed = self._snap
-            self._snap = None
+            seen, self._snap = self._snap_seen, None
+            if not seen:  # an empty snapshot (journal not loaded yet) must never wipe progress
+                return None
             changed = (done, failed) != (pr.auto_done, pr.auto_failed)
             pr.auto_done, pr.auto_failed = done, failed
             if changed:
@@ -117,6 +120,8 @@ class Tracker:
             pr.tracked = new
             return "tracked"
         _, title, state = ev
+        if self._snap is not None:
+            self._snap_seen += 1
         if state not in ("success", "failed"):
             self._ids(title)  # still learn about unmatched titles
             return None

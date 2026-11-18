@@ -1,41 +1,68 @@
-# In-game quest reporter (mod side) - NOT WRITTEN YET
+# In-game quest reporter (the mod)
 
-The overlay already understands the messages below and has been tested against
-simulated logs. What is missing is the small WitcherScript mod that makes the game
-write them. It has not been written because the game's journal API names could not be
-confirmed from documentation, and a script mod that guesses names can break a game
-install. It needs to be written against the real scripts.
+A tiny WitcherScript mod that makes the game write quest state to its script log, which the
+overlay reads to tick finished quests, mark failed ones, and highlight the tracked quest.
 
-## What the mod must do
+**Status: written, not yet run in the game.** The journal functions it calls and the three
+places it hooks into were checked against the game's vanilla scripts, the installer was run
+against those scripts, and the overlay side was tested with simulated logs. Nobody has yet
+compiled it with the game or watched it produce a real log, so expect to test it.
 
-Write lines to the script log (`Documents\The Witcher 3\scriptlog.txt`; the game must be
-launched with `-debugscripts`) using `LogChannel('modWG', "<line>")`. The overlay only
-looks for the marker `@@WG@@`, so any prefix the game adds is fine.
+## Install
 
-| When | Line |
+You need the game's vanilla scripts (usually `<game>\content\content0\scripts`; if that folder
+isn't there, extract them with WolvenKit or the Mod Kit, the same files Script Merger uses).
+
+```bash
+python mod/install_mod.py --game "C:\Program Files (x86)\Steam\steamapps\common\The Witcher 3"
+```
+
+This builds `<game>\mods\modWitcherGuide`. It copies three of your own vanilla script files,
+inserts **one line** into each (marked `// modWitcherGuide`), and adds `witcherGuide.ws`.
+No game code is stored in this repository. If your scripts are elsewhere, add
+`--scripts DIR`. If the installer says it can't find the place to patch, your game version
+differs; add the three lines below by hand.
+
+Then:
+1. If you use other mods, run **Script Merger** (they may change the same files).
+2. Launch the game with the launch option **`-debugscripts`** (Steam: Properties -> Launch
+   Options). Without it the game doesn't write the log.
+3. Start the overlay as usual. It reads `Documents\The Witcher 3\scriptlog.txt`.
+
+To uninstall, delete `<game>\mods\modWitcherGuide`.
+
+## What it hooks (verified to exist in the vanilla scripts)
+
+| File | Where | Line added |
+|---|---|---|
+| `game/gui/hud/hud.ws` | `event OnQuestEvent`, after its `LogChannel(...)` line | `WG_Snapshot();` |
+| `game/gui/hud/modules/hudModuleQuests.ws` | `OnQuestTrackingStarted`, after `e.eventType = EUET_StartedTracking;` | `WG_LogTracked( journalQuest );` |
+| `game/player/playerWitcher.ws` | `OnSpawned`, after `ApplyPatchFixes();` (only runs when a save is loaded) | `WG_Snapshot();` |
+
+`witcherGuide.ws` uses only functions the game's own scripts use: `GetJournalManager`,
+`GetActivatedOfType('CJournalQuest', ...)`, `GetEntryStatus` (`JS_Success`, `JS_Failed`,
+`JS_Active`, `JS_Inactive`), `GetTrackedQuest`, `GetTitleStringId` + `GetLocStringById`,
+and `LogChannel`.
+
+## Log format (what the overlay parses)
+
+Lines containing `@@WG@@`; anything before it (timestamps, channel names) is ignored.
+
+| Line | Meaning |
 |---|---|
-| A save is loaded / the game starts | `@@WG@@\|snapshot\|begin`, then one `@@WG@@\|q\|<title>\|<state>` per journal quest, then `@@WG@@\|snapshot\|end` |
-| A quest's status changes | `@@WG@@\|q\|<title>\|<state>` |
-| The tracked quest changes | `@@WG@@\|tracked\|<title>` (empty title = nothing tracked) |
+| `@@WG@@\|snapshot\|begin` ... `@@WG@@\|snapshot\|end` | full journal dump; replaces the automatic state, so loading an older save corrects it. An empty snapshot is ignored. |
+| `@@WG@@\|q\|<title>\|<state>` | one quest; state = `active`, `success`, `failed`, `inactive` |
+| `@@WG@@\|tracked\|<title>` | the tracked quest (empty = none) |
 
-`<title>` is the quest's English display name (for example `Imperial Audience`).
-`<state>` is one of `active`, `success`, `failed`, `inactive`.
+`<title>` is the quest's display name in your game language. The overlay matches it to
+`quests.json` by name (English); titles it can't match are listed in `unmatched_quests.txt`
+next to `progress.json` so you can map them in `witcher_guide/data/aliases.json`.
 
-## What I need to write it
+## Things still unverified
 
-From your installed game's scripts (or the community's decompiled script dumps), the
-exact names and signatures for:
-
-1. getting the journal manager and iterating all quests,
-2. a quest's display name and status (and the status values),
-3. the currently tracked quest,
-4. a good place to hook "status changed", "tracked quest changed" and "save loaded".
-
-Pasting the relevant function signatures into chat is enough. Please don't commit
-game script files to this public repository.
-
-## Things I have not been able to check
-
-- Whether `-debugscripts` has side effects you'd care about.
-- Whether script mods work on the remastered edition.
-- Script Merger may be needed if the hook sits in a file other mods also change.
+- Whether the quest-event hook fires before or after the status changes (the overlay corrects
+  itself on the next event or save load either way).
+- Whether `-debugscripts` has side effects you'd care about, and whether script mods work on
+  the remastered edition.
+- That the log file name on your system is `scriptlog.txt` (the overlay also accepts
+  `scriptslog.txt`).

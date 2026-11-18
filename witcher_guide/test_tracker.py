@@ -70,6 +70,14 @@ class TestTracker(unittest.TestCase):
         self.assertEqual(self.tr.feed("@@WG@@|snapshot|end"), "progress")
         self.assertEqual(self.progress.auto_done, {"lilac"})
 
+    def test_empty_snapshot_never_wipes_progress(self):
+        self.tr.feed("@@WG@@|q|Lilac and Gooseberries|success")
+        feed_all(self.tr, ["@@WG@@|snapshot|begin", "@@WG@@|snapshot|end"])  # journal not loaded yet
+        self.assertEqual(self.progress.auto_done, {"lilac"})
+        # but a real snapshot with only unfinished quests (earlier save) does reset it
+        feed_all(self.tr, ["@@WG@@|snapshot|begin", "@@WG@@|q|Lilac and Gooseberries|active", "@@WG@@|snapshot|end"])
+        self.assertEqual(self.progress.auto_done, set())
+
     def test_manual_ticks_survive_snapshots(self):
         self.progress.toggle("gear_cat")  # an item the game journal doesn't report
         feed_all(self.tr, ["@@WG@@|snapshot|begin", "@@WG@@|snapshot|end"])
