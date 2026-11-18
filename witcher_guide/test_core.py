@@ -159,7 +159,10 @@ class TestCore(unittest.TestCase):
         text = " ".join(o["result"] for o in hill["options"])
         for fact in ("incurably sick", "violet flower", "hangs himself", "Downwarren"):
             self.assertIn(fact, text)
-        self.assertEqual(hill["best_moral"]["basis"], "judgement")  # my inference, so it is labelled as such
+        self.assertIn("orphans die", text)                           # killing the tree kills the orphans (player-confirmed)
+        self.assertNotIn("orphans' fate is unknown. The military", text)
+        self.assertIsNone(hill["best_moral"])                        # genuinely a trade-off: no recommended pick
+        self.assertIn("No clear better pick", hill["note"])
         self.assertIn("baron_hillock", {d["id"] for d in core.decisions_for(core.load_decisions(), {"whisper"})})
         self.assertTrue(core.has_conflict(decs["baron_pellar"]))    # rewards: Axii, morals: offer to heal
         self.assertEqual(decs["baron_barn"]["best_rewards"]["basis"], "stated")

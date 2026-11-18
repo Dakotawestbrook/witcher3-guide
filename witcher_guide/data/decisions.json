@@ -216,7 +216,7 @@
     {
      "label": "Kill the spirit (Option A, shorter)",
      "type": "action",
-     "result": "Anna is left incurably sick in her mind and the Baron takes her home to a healer. The people of Downwarren are safe. The orphans' fate is unknown. The military rules Velen."
+     "result": "Anna is left incurably sick in her mind and the Baron takes her home to a healer. The people of Downwarren are safe. The orphans die (gamepressure.com calls their fate unknown, but a player confirms killing the tree kills them). The military rules Velen."
     },
     {
      "label": "Free the spirit (Option B, longer)",
@@ -225,15 +225,11 @@
     }
    ],
    "best_rewards": null,
-   "best_moral": {
-    "pick": "Kill the spirit",
-    "why": "Anna and Downwarren survive, whereas freeing it ends with Anna, the Baron and the villagers dead.",
-    "basis": "judgement"
-   },
+   "best_moral": null,
    "best_outcome": null,
-   "note": "Both endings are grim and the sources call the Baron's fate similar either way. To play Option B you must not start The Whispering Hillock until you have found the swamp village. Read the Return to the Crookback Bog walkthrough before starting Ladies of the Wood. Guides disagree on what happens to the orphans.",
+   "note": "No clear better pick for morals: killing the spirit costs the orphans' lives, while freeing it saves the children but costs Anna, the Baron and the people of Downwarren. The sources call the Baron's fate similar either way. To play Option B you must not start The Whispering Hillock until you have found the swamp village. Read the Return to the Crookback Bog walkthrough before starting Ladies of the Wood.",
    "affects_ending": false,
-   "source": "gamepressure.com: Return to the Crookback Bog; gamepressure.com: Major supporting characters; gamepressure.com: Family Matters"
+   "source": "gamepressure.com: Return to the Crookback Bog; gamepressure.com: Major supporting characters; gamepressure.com: Family Matters; player report (orphans)"
   },
   {
    "id": "ciri_overview",
