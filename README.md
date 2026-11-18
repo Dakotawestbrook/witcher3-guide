@@ -36,6 +36,12 @@ the game's vanilla scripts, but **not yet run in the game**. Setup is in
 the game with `-debugscripts`). Until the mod is installed, everything works as before with
 manual ticking.
 
+## Troubleshooting automatic tracking
+
+Run `python -m witcher_guide.diagnose` from this folder. It checks whether the game wrote a log,
+whether the mod's lines are in it, whether the overlay can read them, and whether the quest
+titles match `quests.json`, then prints a report you can paste when asking for help.
+
 ## Quest data
 
 `witcher_guide/data/quests.json` holds 262 entries across White Orchard, Velen,
