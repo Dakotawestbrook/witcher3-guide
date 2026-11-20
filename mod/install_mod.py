@@ -128,12 +128,35 @@ def run(game=None, scripts=None, out=None):
     print("\nNext: run Script Merger if you use other mods, then launch the game with -debugscripts.")
 
 
+def uninstall(game=None, out=None):
+    """Removes the mod folder. The game's own files were never modified, so this restores the base game."""
+    import shutil
+    out = Path(out) if out else Path(game) / "mods" / MOD_NAME
+    if not out.exists():
+        print(f"Nothing to remove: {out} does not exist.")
+        return False
+    if out.name != MOD_NAME:
+        raise PatchError(f"Refusing to delete {out}: it is not a {MOD_NAME} folder.")
+    shutil.rmtree(out)
+    print(f"Removed {out}. The game is back to normal (remove -debugscripts from its launch options if you added it).")
+    return True
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--game", help="The Witcher 3 install folder")
     ap.add_argument("--scripts", help="folder holding the vanilla scripts (default: <game>/content/content0/scripts)")
     ap.add_argument("--out", help=f"output mod folder (default: <game>/mods/{MOD_NAME})")
+    ap.add_argument("--uninstall", action="store_true", help="remove the mod and return to the base game")
     a = ap.parse_args(argv)
+    if a.uninstall:
+        if not (a.game or a.out):
+            sys.exit("Error: pass --game (or --out) with --uninstall.")
+        try:
+            uninstall(a.game, a.out)
+        except PatchError as e:
+            sys.exit(f"Error: {e}")
+        return
 
     if not (a.scripts or a.game):  # started with no arguments, e.g. by double-clicking
         print("Witcher Guide mod installer\n")

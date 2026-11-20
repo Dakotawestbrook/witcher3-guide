@@ -31,7 +31,7 @@ Then:
    Options). Without it the game doesn't write the log.
 3. Start the overlay as usual. It reads `Documents\The Witcher 3\scriptlog.txt`.
 
-To uninstall, delete `<game>\mods\modWitcherGuide`.
+To uninstall, delete `<game>\mods\modWitcherGuide` (or run `python mod/install_mod.py --uninstall --game "<game folder>"`), and remove `-debugscripts` from the game's launch options.
 
 ## What it hooks (verified to exist in the vanilla scripts)
 
